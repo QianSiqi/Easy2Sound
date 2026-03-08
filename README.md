@@ -36,7 +36,7 @@
 
 ## 3. 此程序相关法律条文
 
-**3.1** 本程序遵守 **CC BY-NC-SA 4.0** 协议  
+**3.1** 本程序遵守 **MIT** 协议  
 详情阅读：  
 [https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode.zh-hans](https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode.zh-hans)
 
