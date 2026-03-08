@@ -37,8 +37,7 @@
 ## 3. 此程序相关法律条文
 
 **3.1** 本程序遵守 **MIT** 协议  
-详情阅读：  
-[https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode.zh-hans](https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode.zh-hans)
+
 
 **3.2** 您不得以任何方式盗用倒卖此程序，否则我们将追究您的法律责任！
 
