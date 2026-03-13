@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+    <title>Easy2Sound-DOWN</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background-image: url('two.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            min-height: 100vh;
+            color: white;
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        
+        .nav {
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 20px;
+            font-size: 18px;
+            padding: 10px 20px;
+            display: inline-block;
+        }
+        
+        .nav a:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+        }
+        
+        .download-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: rgba(0, 0, 0, 0.6);
+            border-radius: 10px;
+            padding: 30px;
+        }
+        
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .software-showcase {
+            display: flex;
+            gap: 40px;
+            align-items: flex-start;
+        }
+        
+        .icon-section {
+            flex: 0 0 auto;
+            text-align: center;
+        }
+        
+        .software-icon {
+            width: auto;
+            height: auto;
+            max-width: 200px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .info-section {
+            flex: 1;
+        }
+        
+        .version-description {
+            font-size: 16px;
+            line-height: 1.6;
+            background-color: rgba(255,255,255,0.05);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+        }
+        
+        .download-area {
+            margin-top: 20px;
+        }
+        
+        .custom-btn {
+            display: inline-block;
+            margin-right: 15px;
+            margin-bottom: 10px;
+            text-decoration: none;
+            border-radius: 8px;
+            overflow: hidden;
+            transition: transform 0.3s, opacity 0.3s;
+        }
+        
+        /* ✅ 已修复：不拉伸、不超出、大小合适 */
+        .custom-btn img {
+            display: block;
+            width: 100%;
+            max-width: 180px;
+            height: auto;
+            object-fit: contain;
+        }
+        
+        .custom-btn:hover {
+            transform: scale(1.05);
+            opacity: 0.9;
+        }
+        
+        .file-info {
+            background-color: rgba(255,255,255,0.05);
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            font-size: 14px;
+        }
+        
+        @media (max-width: 768px) {
+            .software-showcase {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .icon-section {
+                margin: 0 auto;
+            }
+            
+            .custom-btn {
+                display: inline-block;
+                margin-right: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="nav">
+        <a href="index.html">主页</a>
+        <a href="down.html">下载</a>
+        <a href="details.html">详细介绍</a>
+        <a href="feedback.html">反馈问题</a>
+        <a href="love.html">感 动 E 2 S 的 1 0 大 人 物</a>
+	      <a href="donation.html">投喂</a>
+        <a href="yuandaima.html">源代码</a>
+    </div>
+    
+    <div class="download-container">
+        <h1>下载 Easy2Sound</h1>
+        
+        <div class="software-showcase">
+            <div class="icon-section">
+                <img src="图标.jpg" alt="图标.jpg" class="software-icon">
+                <h3>Easy2Sound</h3>
+                <p>v1.0.0</p>
+            </div>
+            
+            <div class="info-section">
+                <div class="version-description">
+                    <h3>最新版本介绍</h3>
+                    <p>这是 Easy2Sound 的最新版本，可能包含了最新的功能更新和性能优化吧。(嗯，对，大概就是主体和合成器是分开的，点进去主体之后，请点击软件自带的下载合成器，选择合成器，选择完成后自动下载，但前提得有网。)</p>
+                </div>
+                
+                <div class="download-area">
+                    <h5>windows</h5>
+                    <a href="EXE/Easy2Sound下载引导包.exe" class="custom-btn">
+                        <img src="windows.jpg" alt="Windows">
+                    </a>
+                    
+                    <h5>mac os</h5>
+                    <a href="MAC/Easy2Sound_Mac.dmg" class="custom-btn">
+                        <img src="Mac.jpg" alt="Mac">
+                    </a>
+                    
+                    <h5>linux</h5>
+                    <a href="LINUX/Easy2Sound_Linux.tar.gz" class="custom-btn">
+                        <img src="Linux.jpg" alt="Linux">
+                    </a>
+                </div>
+                
+                <div class="file-info">
+                    <p><strong>文件信息：</strong></p>
+                    <p>• 文件名：Easy2Sound下载引导包</p>
+                    <p>• 文件大小：见正式文件</p>
+                    <p>• 版本号：我不知道啊</p>
+					<p>• 更新日期：见 <a href="https://space.bilibili.com/3690997441628574?spm_id_from=333.337.0.0" style="color:white; text-decoration: underline;">哔哩哔哩帐号</a> 和 <a href="https://github.com/QianSiqi/Easy2Sound" style="color:white; text-decoration: underline;">github仓库</a></p>
+                    <p>• 支持系统：见上</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
