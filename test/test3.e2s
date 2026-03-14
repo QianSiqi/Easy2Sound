@@ -1,0 +1,17 @@
+resampler=resampler.exe
+wavtool=python wavtool.py
+singer=kasaneteto_cut
+phonemer=jp-ddy-ysq
+
+1:
+lyric=か
+phoneme=ka
+crossfade=50
+pitch=C4
+velocity=100
+flags=g0B0H0P86
+length=5000
+volume=100
+modulation=0
+tempo=120
+pitch_string=AA#95#

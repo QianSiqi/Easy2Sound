@@ -1,0 +1,7 @@
+1:
+file=test.e2s
+volume=0.0
+
+2:
+file=test2.e2s
+volume=-1.0

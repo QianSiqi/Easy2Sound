@@ -1,0 +1,8 @@
+[package]
+name = "ipa-ysq"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+voirs-g2p =  { version = "0.1.0-alpha.2", default-features = false, features = ["english"] }
+tokio = { version = "1.0", features = ["full"] }

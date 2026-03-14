@@ -1,0 +1,7 @@
+[package]
+name = "ch-ddy-ysq"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+pinyin = "0.11.0"

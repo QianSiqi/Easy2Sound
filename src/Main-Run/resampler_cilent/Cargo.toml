@@ -1,0 +1,10 @@
+[package]
+name = "resampler"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+# 移除所有特性，使用默认配置（包含tokio运行时）
+reqwest = "0.11"
+# 显式指定tokio版本和必要特性
+tokio = { version = "1.0", features = ["macros", "rt-multi-thread", "net"] }
