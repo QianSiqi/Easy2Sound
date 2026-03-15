@@ -55,6 +55,44 @@
             pointer-events: none;
             opacity: 0.7;
         }
+        /* 新增：历史反馈列表样式 */
+        .feedback-list {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            margin-top: 30px;
+        }
+        .feedback-list h2 {
+            color: #4a90e2;
+            font-size: 24px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+        }
+        .feedback-item {
+            padding: 15px;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+        .feedback-item .time {
+            color: #999;
+            font-size: 12px;
+            margin-bottom: 8px;
+        }
+        .feedback-item .content {
+            color: #333;
+            font-size: 16px;
+            padding: 0;
+            max-width: 100%;
+            margin: 0;
+        }
+        .no-feedback {
+            color: #999;
+            text-align: center;
+            padding: 20px;
+            font-size: 16px;
+        }
     </style>
 </head>
 <body>
@@ -72,6 +110,8 @@
 
 <div class="content">
     <h1>Easy2Sound 意见反馈</h1>
+    
+    <!-- 反馈提交表单 -->
     <div class="feedback-form">
         <div class="input-container">
             <input type="text" class="feedback-input" placeholder="请输入您的宝贵意见...">
@@ -83,6 +123,15 @@
             <p>3. 我们会定期查看</p>
         </div>
     </div>
+
+    <!-- 新增：历史反馈列表 -->
+    <div class="feedback-list">
+        <h2>历史反馈列表</h2>
+        <div id="feedbackListContainer">
+            <!-- 加载中的提示 -->
+            <div class="no-feedback">正在加载历史反馈...</div>
+        </div>
+    </div>
 </div>
 
 <script>
@@ -90,17 +139,61 @@
     const JSONBIN_BIN_ID = "69b6a3e2aa77b81da9e7df6c";
     const JSONBIN_API_KEY = "$2a$10$ZFc5L2RPCj9xB0IE2HeopeUFjvLhnkyLZ7VRx.MWmOqBa69Ueokc6";
 
-    function formatDateTime() {
-        const now = new Date();
-        const y = now.getFullYear();
-        const m = String(now.getMonth() + 1).padStart(2, '0');
-        const d = String(now.getDate()).padStart(2, '0');
-        const h = String(now.getHours()).padStart(2, '0');
-        const i = String(now.getMinutes()).padStart(2, '0');
-        const s = String(now.getSeconds()).padStart(2, '0');
-        return y + m + d + h + i + s;
+    // 格式化时间戳为易读格式
+    function formatDateTime(timestamp) {
+        if (typeof timestamp === 'object') { // 如果是新提交的时间对象
+            const now = timestamp;
+            const y = now.getFullYear();
+            const m = String(now.getMonth() + 1).padStart(2, '0');
+            const d = String(now.getDate()).padStart(2, '0');
+            const h = String(now.getHours()).padStart(2, '0');
+            const i = String(now.getMinutes()).padStart(2, '0');
+            const s = String(now.getSeconds()).padStart(2, '0');
+            return `${y}-${m}-${d} ${h}:${i}:${s}`;
+        } else { // 如果是已存储的时间戳字符串
+            // 解析格式：20260315233000 → 2026-03-15 23:30:00
+            if (timestamp.length !== 14) return timestamp;
+            return `${timestamp.slice(0,4)}-${timestamp.slice(4,6)}-${timestamp.slice(6,8)} ${timestamp.slice(8,10)}:${timestamp.slice(10,12)}:${timestamp.slice(12,14)}`;
+        }
     }
 
+    // 加载历史反馈列表
+    async function loadFeedbackList() {
+        const container = document.getElementById('feedbackListContainer');
+        try {
+            const res = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}/latest`, {
+                method: 'GET',
+                headers: {
+                    'X-Master-Key': JSONBIN_API_KEY
+                }
+            });
+            const getData = await getRes.json();
+            const feedbacks = getData.record.feedbacks || [];
+
+            if (feedbacks.length === 0) {
+                container.innerHTML = '<div class="no-feedback">暂无反馈内容</div>';
+                return;
+            }
+
+            // 生成反馈列表HTML（按时间倒序排列）
+            let html = '';
+            feedbacks.reverse().forEach(item => {
+                const formattedTime = formatDateTime(item.timestamp);
+                html += `
+                    <div class="feedback-item">
+                        <div class="time">提交时间：${formattedTime}</div>
+                        <div class="content">${item.content}</div>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        } catch (e) {
+            container.innerHTML = '<div class="no-feedback">加载历史反馈失败：' + e.message + '</div>';
+            console.error('加载反馈列表失败：', e);
+        }
+    }
+
+    // 提交反馈
     async function submitFeedback() {
         const input = document.querySelector('.feedback-input');
         const btn = document.querySelector('.submit-btn');
@@ -126,10 +219,11 @@
             const currentFeedbacks = getData.record.feedbacks || [];
 
             // 2. 追加新反馈
+            const now = new Date();
             const newFeedback = {
-                timestamp: formatDateTime(),
+                timestamp: formatDateTime(now).replace(/[-: ]/g, ''), // 存储为纯数字时间戳
                 content: text,
-                userAgent: navigator.userAgent // 可选：记录浏览器信息
+                userAgent: navigator.userAgent
             };
             const updatedFeedbacks = [...currentFeedbacks, newFeedback];
 
@@ -147,6 +241,9 @@
             
             alert('反馈提交成功！已存储到云端。');
             input.value = '';
+            
+            // 提交成功后刷新反馈列表
+            loadFeedbackList();
         } catch (e) {
             console.error(e);
             alert('提交失败：' + e.message + '\n请检查网络或 JSONBin 配置');
@@ -156,10 +253,16 @@
         }
     }
 
-    document.querySelector('.submit-btn').addEventListener('click', submitFeedback);
-    document.querySelector('.feedback-input').addEventListener('keypress', e => {
-        if (e.key === 'Enter') submitFeedback();
-    });
+    // 页面加载完成后立即加载反馈列表
+    window.onload = function() {
+        loadFeedbackList();
+        
+        // 绑定提交事件
+        document.querySelector('.submit-btn').addEventListener('click', submitFeedback);
+        document.querySelector('.feedback-input').addEventListener('keypress', e => {
+            if (e.key === 'Enter') submitFeedback();
+        });
+    };
 </script>
 
 </body>
