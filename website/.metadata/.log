@@ -1,0 +1,705 @@
+!SESSION 2026-01-29 23:09:28.445 -----------------------------------------------
+eclipse.buildId=unknown
+java.version=1.7.0_51
+java.vendor=Oracle Corporation
+BootLoader constants: OS=win32, ARCH=x86, WS=win32, NL=zh_CN
+Framework arguments:  -login -application com.aptana.commandline.launcher.LauncherApplication C:\Users\lenovo\Desktop\E2S\down.html
+Command-line arguments:  -os win32 -ws win32 -arch x86 -login -data   -application com.aptana.commandline.launcher.LauncherApplication C:\Users\lenovo\Desktop\E2S\down.html
+
+!ENTRY org.eclipse.ui 2 0 2026-01-29 23:09:29.014
+!MESSAGE Warnings while parsing the key bindings from the 'org.eclipse.ui.commands' extension point
+!SUBENTRY 1 org.eclipse.ui 2 0 2026-01-29 23:09:29.015
+!MESSAGE Could not parse key sequence: plug-in='com.pandora.ui', id='org.eclipse.ui.edit.text.contentAssist.proposals', keySequence='Ctrl+Sapce'
+
+!ENTRY com.aptana.rcp 4 0 2026-01-29 23:09:29.166
+!MESSAGE ********HBuilder正常启动：preStartup********
+
+!ENTRY com.aptana.scripting 4 0 2026-01-29 23:09:30.826
+!MESSAGE (Build null) [ERROR]  An error occurred while parsing scope 'Build–in constant' : Cannot recover from the syntax error
+
+!ENTRY com.aptana.scripting 4 0 2026-01-29 23:09:30.826
+!MESSAGE (Build null) [ERROR]  An error occurred while parsing scope 'library class/type' : Cannot recover from the syntax error
+
+!ENTRY com.aptana.rcp 4 0 2026-01-29 23:09:31.131
+!MESSAGE ---------------------start check----------------------
+
+!ENTRY com.aptana.rcp 4 0 2026-01-29 23:09:31.131
+!MESSAGE check mode
+
+!ENTRY com.aptana.rcp 4 0 2026-01-29 23:09:31.253
+!MESSAGE workspace : file:\C:\Users\lenovo\Desktop\E2S
+
+!ENTRY com.aptana.rcp 4 0 2026-01-29 23:09:31.850
+!MESSAGE ********HBuilder正常启动：postStartup********
+
+!ENTRY com.pandora.rcp.upgrade 4 0 2026-01-29 23:09:31.947
+!MESSAGE (Build null) [ERROR]  HBuilder当前版本: 9.1.29.201811231920
+
+!ENTRY com.aptana.editor.css 4 0 2026-01-29 23:09:32.083
+!MESSAGE (Build null) [ERROR]  开始清理css错误marker...
+
+!ENTRY com.aptana.editor.css 4 0 2026-01-29 23:09:32.087
+!MESSAGE (Build null) [ERROR]  清理css错误marker结束
+
+!ENTRY com.pandora.index.store 4 0 2026-01-29 23:09:32.239
+!MESSAGE (Build null) [ERROR]  Port already in use: 56789; nested exception is: 
+	java.net.BindException: Address already in use: JVM_Bind
+!STACK 0
+java.rmi.server.ExportException: Port already in use: 56789; nested exception is: 
+	java.net.BindException: Address already in use: JVM_Bind
+	at sun.rmi.transport.tcp.TCPTransport.listen(Unknown Source)
+	at sun.rmi.transport.tcp.TCPTransport.exportObject(Unknown Source)
+	at sun.rmi.transport.tcp.TCPEndpoint.exportObject(Unknown Source)
+	at sun.rmi.transport.LiveRef.exportObject(Unknown Source)
+	at sun.rmi.server.UnicastServerRef.exportObject(Unknown Source)
+	at sun.rmi.registry.RegistryImpl.setup(Unknown Source)
+	at sun.rmi.registry.RegistryImpl.<init>(Unknown Source)
+	at java.rmi.registry.LocateRegistry.createRegistry(Unknown Source)
+	at com.pandora.index.store.IndexStoreStartup.run(IndexStoreStartup.java:28)
+	at com.pandora.index.store.IndexStoreStartup.earlyStartup(IndexStoreStartup.java:18)
+	at org.eclipse.ui.internal.EarlyStartupRunnable.runEarlyStartup(EarlyStartupRunnable.java:87)
+	at org.eclipse.ui.internal.EarlyStartupRunnable.run(EarlyStartupRunnable.java:66)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:42)
+	at org.eclipse.ui.internal.Workbench$69.run(Workbench.java:2726)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:54)
+Caused by: java.net.BindException: Address already in use: JVM_Bind
+	at java.net.TwoStacksPlainSocketImpl.socketBind(Native Method)
+	at java.net.TwoStacksPlainSocketImpl.socketBind(Unknown Source)
+	at java.net.AbstractPlainSocketImpl.bind(Unknown Source)
+	at java.net.TwoStacksPlainSocketImpl.bind(Unknown Source)
+	at java.net.PlainSocketImpl.bind(Unknown Source)
+	at java.net.ServerSocket.bind(Unknown Source)
+	at java.net.ServerSocket.<init>(Unknown Source)
+	at java.net.ServerSocket.<init>(Unknown Source)
+	at sun.rmi.transport.proxy.RMIDirectSocketFactory.createServerSocket(Unknown Source)
+	at sun.rmi.transport.proxy.RMIMasterSocketFactory.createServerSocket(Unknown Source)
+	at sun.rmi.transport.tcp.TCPEndpoint.newServerSocket(Unknown Source)
+	... 15 more
+
+!ENTRY com.pandora.core 4 0 2026-01-29 23:09:32.261
+!MESSAGE (Build null) [ERROR]  peer not authenticated
+!STACK 0
+javax.net.ssl.SSLPeerUnverifiedException: peer not authenticated
+	at sun.security.ssl.SSLSessionImpl.getPeerCertificates(Unknown Source)
+	at org.apache.http.conn.ssl.AbstractVerifier.verify(AbstractVerifier.java:128)
+	at org.apache.http.conn.ssl.SSLSocketFactory.connectSocket(SSLSocketFactory.java:397)
+	at org.apache.http.conn.ssl.SSLSocketFactory.connectSocket(SSLSocketFactory.java:495)
+	at org.apache.http.conn.scheme.SchemeSocketFactoryAdaptor.connectSocket(SchemeSocketFactoryAdaptor.java:62)
+	at org.apache.http.impl.conn.DefaultClientConnectionOperator.openConnection(DefaultClientConnectionOperator.java:148)
+	at org.apache.http.impl.conn.AbstractPoolEntry.open(AbstractPoolEntry.java:149)
+	at org.apache.http.impl.conn.AbstractPooledConnAdapter.open(AbstractPooledConnAdapter.java:121)
+	at org.apache.http.impl.client.DefaultRequestDirector.tryConnect(DefaultRequestDirector.java:573)
+	at org.apache.http.impl.client.DefaultRequestDirector.execute(DefaultRequestDirector.java:425)
+	at org.apache.http.impl.client.AbstractHttpClient.execute(AbstractHttpClient.java:820)
+	at org.apache.http.impl.client.AbstractHttpClient.execute(AbstractHttpClient.java:941)
+	at org.apache.http.impl.client.AbstractHttpClient.execute(AbstractHttpClient.java:919)
+	at org.apache.http.impl.client.AbstractHttpClient.execute(AbstractHttpClient.java:910)
+	at com.pandora.core.httpclient.HttpClientUtils.excuteCustomStringPost(HttpClientUtils.java:441)
+	at com.pandora.core.httpclient.HttpClientUtils.excute(HttpClientUtils.java:382)
+	at com.pandora.core.httpclient.HttpClientUtils.excute(HttpClientUtils.java:354)
+	at com.pandora.core.httpclient.HttpClientUtils.excute(HttpClientUtils.java:332)
+	at com.pandora.rcp.upgrade.P2UpgradeUtils.checkGrayUpdate(P2UpgradeUtils.java:902)
+	at com.pandora.rcp.upgrade.P2UpgradeUtils$1.run(P2UpgradeUtils.java:191)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:54)
+
+!ENTRY com.pandora.launcher.core 4 0 2026-01-29 23:09:32.641
+!MESSAGE (Build null) [ERROR]  系统找不到指定的文件。
+!STACK 0
+com.sun.jna.platform.win32.Win32Exception: 系统找不到指定的文件。
+	at com.sun.jna.platform.win32.Advapi32Util.registryGetStringValue(Advapi32Util.java:552)
+	at com.pandora.launcher.core.iphone.jna.LibraryFinder.loadPath(LibraryFinder.java:58)
+	at com.pandora.launcher.core.iphone.jna.LibraryFinder.<clinit>(LibraryFinder.java:50)
+	at com.pandora.launcher.core.iphone.jna.md.LibraryInstance.getMDLibrary(LibraryInstance.java:15)
+	at com.pandora.launcher.core.iphone.jna.idevice.win.WinDeviceLibrary.<clinit>(WinDeviceLibrary.java:72)
+	at com.pandora.launcher.core.iphone.jna.idevice.DeviceLibraryRegistry.getDeviceLibrary(DeviceLibraryRegistry.java:15)
+	at com.pandora.launcher.core.iphone.IPhoneLauncher.<init>(IPhoneLauncher.java:109)
+	at com.pandora.launcher.core.listener.DeviceStartupListener.earlyStartup(DeviceStartupListener.java:29)
+	at org.eclipse.ui.internal.EarlyStartupRunnable.runEarlyStartup(EarlyStartupRunnable.java:87)
+	at org.eclipse.ui.internal.EarlyStartupRunnable.run(EarlyStartupRunnable.java:66)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:42)
+	at org.eclipse.ui.internal.Workbench$69.run(Workbench.java:2726)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:54)
+
+!ENTRY com.pandora.launcher.core 4 0 2026-01-29 23:09:32.738
+!MESSAGE (Build null) [ERROR]  系统找不到指定的文件。
+!STACK 0
+com.sun.jna.platform.win32.Win32Exception: 系统找不到指定的文件。
+	at com.sun.jna.platform.win32.Advapi32Util.registryGetStringValue(Advapi32Util.java:552)
+	at com.pandora.launcher.core.iphone.jna.LibraryFinder.loadPath(LibraryFinder.java:58)
+	at com.pandora.launcher.core.iphone.jna.LibraryFinder.getMDLibrary(LibraryFinder.java:122)
+	at com.pandora.launcher.core.iphone.jna.md.LibraryInstance.getMDLibrary(LibraryInstance.java:15)
+	at com.pandora.launcher.core.iphone.jna.idevice.win.WinDeviceLibrary.<clinit>(WinDeviceLibrary.java:72)
+	at com.pandora.launcher.core.iphone.jna.idevice.DeviceLibraryRegistry.getDeviceLibrary(DeviceLibraryRegistry.java:15)
+	at com.pandora.launcher.core.iphone.IPhoneLauncher.<init>(IPhoneLauncher.java:109)
+	at com.pandora.launcher.core.listener.DeviceStartupListener.earlyStartup(DeviceStartupListener.java:29)
+	at org.eclipse.ui.internal.EarlyStartupRunnable.runEarlyStartup(EarlyStartupRunnable.java:87)
+	at org.eclipse.ui.internal.EarlyStartupRunnable.run(EarlyStartupRunnable.java:66)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:42)
+	at org.eclipse.ui.internal.Workbench$69.run(Workbench.java:2726)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:54)
+
+!ENTRY com.pandora.launcher.core 4 0 2026-01-29 23:09:32.754
+!MESSAGE (Build null) [ERROR]  添加Android设备监听......
+
+!ENTRY com.pandora.launcher.core 4 0 2026-01-29 23:09:32.825
+!MESSAGE (Build null) [ERROR]  系统找不到指定的文件。
+!STACK 0
+com.sun.jna.platform.win32.Win32Exception: 系统找不到指定的文件。
+	at com.sun.jna.platform.win32.Advapi32Util.registryGetStringValue(Advapi32Util.java:552)
+	at com.pandora.launcher.core.iphone.jna.LibraryFinder.loadPath(LibraryFinder.java:58)
+	at com.pandora.launcher.core.iphone.jna.LibraryFinder.getMDLibrary(LibraryFinder.java:122)
+	at com.pandora.launcher.core.iphone.jna.md.LibraryInstance.getMDLibrary(LibraryInstance.java:15)
+	at com.pandora.launcher.core.iphone.jna.idevice.win.WinDeviceLibrary.addNotificationHandler(WinDeviceLibrary.java:77)
+	at com.pandora.launcher.core.iphone.IPhoneLauncher$5.run(IPhoneLauncher.java:799)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:54)
+
+!ENTRY com.pandora.stats.core 1 0 2026-01-29 23:09:32.877
+!MESSAGE 
+
+!ENTRY com.pandora.launcher.core 4 0 2026-01-29 23:09:32.925
+!MESSAGE (Build null) [ERROR]  library is null!!!!!
+
+!ENTRY org.eclipse.equinox.p2.repository 4 0 2026-01-29 23:09:35.589
+!MESSAGE C:\Users\lenovo\Desktop\文件\HBuilder\p2\org.eclipse.equinox.p2.repository\cache\content-561804826.jar 是合法的jar
+
+!ENTRY com.aptana.parsing 4 0 2026-01-29 23:09:36.320
+!MESSAGE (Build null) [ERROR]  无效的属性类型“.webkit.SearchBoxImpl@4135441”属性“searchBoxJavaBridge_”
+
+!ENTRY com.pandora.tools.android 4 0 2026-01-29 23:09:37.372
+!MESSAGE (Build null) [ERROR]  ADB PID:::17984
+
+!ENTRY com.pandora.tools.android 4 0 2026-01-29 23:09:37.525
+!MESSAGE (Build null) [ERROR]  ADB PID:::17984
+
+!ENTRY org.eclipse.equinox.p2.repository 4 0 2026-01-29 23:09:37.747
+!MESSAGE C:\Users\lenovo\Desktop\文件\HBuilder\p2\org.eclipse.equinox.p2.repository\cache\content1190459293.jar 是合法的jar
+
+!ENTRY com.pandora.tools.android 4 0 2026-01-29 23:09:38.133
+!MESSAGE (Build null) [ERROR]  ===Caption  ExecutablePath
+
+!ENTRY com.pandora.tools.android 4 0 2026-01-29 23:09:38.134
+!MESSAGE (Build null) [ERROR]  ===Caption  ExecutablePath
+
+!ENTRY com.pandora.tools.android 4 0 2026-01-29 23:09:38.134
+!MESSAGE (Build null) [ERROR]  ===adb.exe  C:\Users\lenovo\Desktop\文件\HBuilder\tools\adbs\adb.exe
+
+!ENTRY com.pandora.tools.android 4 0 2026-01-29 23:09:38.135
+!MESSAGE (Build null) [ERROR]  ===adb.exe  C:\Users\lenovo\Desktop\文件\HBuilder\tools\adbs\adb.exe
+
+!ENTRY com.pandora.tools.android 4 0 2026-01-29 23:09:38.137
+!MESSAGE (Build null) [ERROR]  exe===adb.exe   path===c:\users\lenovo\desktop\文件\hbuilder\tools\adbs\adb.exe
+
+!ENTRY com.pandora.tools.android 4 0 2026-01-29 23:09:38.138
+!MESSAGE (Build null) [ERROR]  exe===adb.exe   path===c:\users\lenovo\desktop\文件\hbuilder\tools\adbs\adb.exe
+
+!ENTRY com.pandora.tools.android 4 0 2026-01-29 23:09:38.199
+!MESSAGE (Build null) [ERROR]  ADB Path===c:\users\lenovo\desktop\文件\hbuilder\tools\adbs\adb.exe
+
+!ENTRY com.pandora.tools.android 4 0 2026-01-29 23:09:38.215
+!MESSAGE (Build null) [ERROR]  ADB Path===c:\users\lenovo\desktop\文件\hbuilder\tools\adbs\adb.exe
+
+!ENTRY com.aptana.scripting 4 0 2026-01-29 23:09:38.985
+!MESSAGE (Build null) [ERROR]  loadBundles异常
+!STACK 0
+org.jruby.exceptions.RaiseException: (Errno::EINVAL) =::
+	at org.jruby.RubyHash.replace(org/jruby/RubyHash.java:1623)
+
+!ENTRY com.pandora.core 4 0 2026-01-29 23:09:42.978
+!MESSAGE (Build null) [ERROR]  peer not authenticated
+!STACK 0
+javax.net.ssl.SSLPeerUnverifiedException: peer not authenticated
+	at sun.security.ssl.SSLSessionImpl.getPeerCertificates(Unknown Source)
+	at org.apache.http.conn.ssl.AbstractVerifier.verify(AbstractVerifier.java:128)
+	at org.apache.http.conn.ssl.SSLSocketFactory.connectSocket(SSLSocketFactory.java:397)
+	at org.apache.http.conn.ssl.SSLSocketFactory.connectSocket(SSLSocketFactory.java:495)
+	at org.apache.http.conn.scheme.SchemeSocketFactoryAdaptor.connectSocket(SchemeSocketFactoryAdaptor.java:62)
+	at org.apache.http.impl.conn.DefaultClientConnectionOperator.openConnection(DefaultClientConnectionOperator.java:148)
+	at org.apache.http.impl.conn.AbstractPoolEntry.open(AbstractPoolEntry.java:149)
+	at org.apache.http.impl.conn.AbstractPooledConnAdapter.open(AbstractPooledConnAdapter.java:121)
+	at org.apache.http.impl.client.DefaultRequestDirector.tryConnect(DefaultRequestDirector.java:573)
+	at org.apache.http.impl.client.DefaultRequestDirector.execute(DefaultRequestDirector.java:425)
+	at org.apache.http.impl.client.AbstractHttpClient.execute(AbstractHttpClient.java:820)
+	at org.apache.http.impl.client.AbstractHttpClient.execute(AbstractHttpClient.java:941)
+	at org.apache.http.impl.client.AbstractHttpClient.execute(AbstractHttpClient.java:919)
+	at org.apache.http.impl.client.AbstractHttpClient.execute(AbstractHttpClient.java:910)
+	at com.pandora.core.httpclient.HttpClientUtils.excuteCustomStringPost(HttpClientUtils.java:441)
+	at com.pandora.core.httpclient.HttpClientUtils.excute(HttpClientUtils.java:382)
+	at com.pandora.core.httpclient.HttpClientUtils.excute(HttpClientUtils.java:354)
+	at com.pandora.core.httpclient.HttpClientUtils.excute(HttpClientUtils.java:332)
+	at com.pandora.stats.core.UploadStatsSchedule.uploadNow(UploadStatsSchedule.java:148)
+	at com.pandora.stats.core.UploadStatsSchedule.uploadMemoryData(UploadStatsSchedule.java:128)
+	at com.pandora.stats.core.UploadStatsSchedule.handleDataStatsUpload(UploadStatsSchedule.java:105)
+	at com.pandora.stats.core.UploadStatsSchedule$1.run(UploadStatsSchedule.java:69)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:54)
+
+!ENTRY com.aptana.core 4 0 2026-01-29 23:09:42.979
+!MESSAGE (Build null) [ERROR]  Feedback Failed:999
+
+!ENTRY com.aptana.rcp 4 0 2026-01-29 23:09:46.645
+!MESSAGE ********HBuilder正常关闭：preShutdown********
+
+!ENTRY com.aptana.commandline.launcher 4 0 2026-01-29 23:09:46.647
+!MESSAGE socket closed
+!STACK 0
+java.net.SocketException: socket closed
+	at java.net.TwoStacksPlainSocketImpl.socketAccept(Native Method)
+	at java.net.AbstractPlainSocketImpl.accept(Unknown Source)
+	at java.net.PlainSocketImpl.accept(Unknown Source)
+	at java.net.ServerSocket.implAccept(Unknown Source)
+	at java.net.ServerSocket.accept(Unknown Source)
+	at com.aptana.commandline.launcher.server.LauncherServer$CommandLineArgsServer.run(LauncherServer.java:129)
+
+!ENTRY com.aptana.rcp 4 0 2026-01-29 23:09:46.874
+!MESSAGE ********HBuilder正常关闭：postShutdown********
+
+!ENTRY com.aptana.rcp 1 0 2026-01-29 23:09:52.901
+!MESSAGE close CEF
+
+!ENTRY com.pandora.core 4 0 2026-01-29 23:09:53.017
+!MESSAGE (Build null) [ERROR]  peer not authenticated
+!STACK 0
+javax.net.ssl.SSLPeerUnverifiedException: peer not authenticated
+	at sun.security.ssl.SSLSessionImpl.getPeerCertificates(Unknown Source)
+	at org.apache.http.conn.ssl.AbstractVerifier.verify(AbstractVerifier.java:128)
+	at org.apache.http.conn.ssl.SSLSocketFactory.connectSocket(SSLSocketFactory.java:397)
+	at org.apache.http.conn.ssl.SSLSocketFactory.connectSocket(SSLSocketFactory.java:495)
+	at org.apache.http.conn.scheme.SchemeSocketFactoryAdaptor.connectSocket(SchemeSocketFactoryAdaptor.java:62)
+	at org.apache.http.impl.conn.DefaultClientConnectionOperator.openConnection(DefaultClientConnectionOperator.java:148)
+	at org.apache.http.impl.conn.AbstractPoolEntry.open(AbstractPoolEntry.java:149)
+	at org.apache.http.impl.conn.AbstractPooledConnAdapter.open(AbstractPooledConnAdapter.java:121)
+	at org.apache.http.impl.client.DefaultRequestDirector.tryConnect(DefaultRequestDirector.java:573)
+	at org.apache.http.impl.client.DefaultRequestDirector.execute(DefaultRequestDirector.java:425)
+	at org.apache.http.impl.client.AbstractHttpClient.execute(AbstractHttpClient.java:820)
+	at org.apache.http.impl.client.AbstractHttpClient.execute(AbstractHttpClient.java:941)
+	at org.apache.http.impl.client.AbstractHttpClient.execute(AbstractHttpClient.java:919)
+	at org.apache.http.impl.client.AbstractHttpClient.execute(AbstractHttpClient.java:910)
+	at com.pandora.core.httpclient.HttpClientUtils.excuteCustomStringPost(HttpClientUtils.java:441)
+	at com.pandora.core.httpclient.HttpClientUtils.excute(HttpClientUtils.java:382)
+	at com.pandora.core.httpclient.HttpClientUtils.excute(HttpClientUtils.java:354)
+	at com.pandora.core.httpclient.HttpClientUtils.excute(HttpClientUtils.java:332)
+	at com.pandora.stats.core.UploadStatsSchedule.uploadNow(UploadStatsSchedule.java:148)
+	at com.pandora.stats.core.UploadStatsSchedule.uploadMemoryData(UploadStatsSchedule.java:128)
+	at com.pandora.stats.core.UploadStatsSchedule.handleDataStatsUpload(UploadStatsSchedule.java:105)
+	at com.pandora.stats.core.UploadStatsSchedule.execute(UploadStatsSchedule.java:54)
+	at com.pandora.stats.core.Activator.stop(Activator.java:47)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl$2.run(BundleContextImpl.java:771)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl.stop(BundleContextImpl.java:764)
+	at org.eclipse.osgi.framework.internal.core.BundleHost.stopWorker(BundleHost.java:510)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.suspend(AbstractBundle.java:565)
+	at org.eclipse.osgi.framework.internal.core.Framework.suspendBundle(Framework.java:1161)
+	at org.eclipse.osgi.framework.internal.core.StartLevelManager.decFWSL(StartLevelManager.java:595)
+	at org.eclipse.osgi.framework.internal.core.StartLevelManager.doSetStartLevel(StartLevelManager.java:257)
+	at org.eclipse.osgi.framework.internal.core.StartLevelManager.shutdown(StartLevelManager.java:215)
+	at org.eclipse.osgi.framework.internal.core.InternalSystemBundle.suspend(InternalSystemBundle.java:284)
+	at org.eclipse.osgi.framework.internal.core.Framework.shutdown(Framework.java:691)
+	at org.eclipse.osgi.framework.internal.core.Framework.close(Framework.java:598)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.shutdown(EclipseStarter.java:394)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:202)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+	at java.lang.reflect.Method.invoke(Unknown Source)
+	at org.eclipse.equinox.launcher.Main.invokeFramework(Main.java:655)
+	at org.eclipse.equinox.launcher.Main.basicRun(Main.java:610)
+	at org.eclipse.equinox.launcher.Main.run(Main.java:1491)
+
+!ENTRY com.aptana.core 4 0 2026-01-29 23:09:53.019
+!MESSAGE (Build null) [ERROR]  Feedback Failed:999
+
+!ENTRY org.eclipse.core.jobs 2 2 2026-01-29 23:09:54.041
+!MESSAGE Job found still running after platform shutdown.  Jobs should be canceled by the plugin that scheduled them during shutdown: org.eclipse.ui.internal.AbstractWorkingSetManager$10
+
+!ENTRY org.eclipse.core.jobs 2 2 2026-01-29 23:09:54.042
+!MESSAGE Job found still running after platform shutdown.  Jobs should be canceled by the plugin that scheduled them during shutdown: com.pandora.pack.core.download.StartupDownloadPackage$1
+
+!ENTRY org.eclipse.core.jobs 2 2 2026-01-29 23:09:54.042
+!MESSAGE Job found still running after platform shutdown.  Jobs should be canceled by the plugin that scheduled them during shutdown: org.eclipse.ui.internal.AbstractWorkingSetManager$10
+!SESSION 2026-01-30 18:40:39.150 -----------------------------------------------
+eclipse.buildId=unknown
+java.version=1.7.0_51
+java.vendor=Oracle Corporation
+BootLoader constants: OS=win32, ARCH=x86, WS=win32, NL=zh_CN
+Framework arguments:  -login -application com.aptana.commandline.launcher.LauncherApplication C:\Users\lenovo\Desktop\E2S\what.html
+Command-line arguments:  -os win32 -ws win32 -arch x86 -login -data   -application com.aptana.commandline.launcher.LauncherApplication C:\Users\lenovo\Desktop\E2S\what.html
+
+!ENTRY org.eclipse.ui 2 0 2026-01-30 18:40:41.776
+!MESSAGE Warnings while parsing the key bindings from the 'org.eclipse.ui.commands' extension point
+!SUBENTRY 1 org.eclipse.ui 2 0 2026-01-30 18:40:41.776
+!MESSAGE Could not parse key sequence: plug-in='com.pandora.ui', id='org.eclipse.ui.edit.text.contentAssist.proposals', keySequence='Ctrl+Sapce'
+
+!ENTRY com.aptana.rcp 4 0 2026-01-30 18:40:42.570
+!MESSAGE ********HBuilder正常启动：preStartup********
+
+!ENTRY com.aptana.rcp 1 0 2026-01-30 18:40:42.596
+!MESSAGE 备份  workbench.xml 文件
+
+!ENTRY com.aptana.scripting 4 0 2026-01-30 18:40:48.191
+!MESSAGE (Build null) [ERROR]  An error occurred while parsing scope 'Build–in constant' : Cannot recover from the syntax error
+
+!ENTRY com.aptana.scripting 4 0 2026-01-30 18:40:48.192
+!MESSAGE (Build null) [ERROR]  An error occurred while parsing scope 'library class/type' : Cannot recover from the syntax error
+
+!ENTRY com.aptana.rcp 4 0 2026-01-30 18:40:48.504
+!MESSAGE ---------------------start check----------------------
+
+!ENTRY com.aptana.rcp 4 0 2026-01-30 18:40:48.504
+!MESSAGE check mode
+
+!ENTRY com.aptana.rcp 4 0 2026-01-30 18:40:48.515
+!MESSAGE workspace : file:\C:\Users\lenovo\Desktop\E2S
+
+!ENTRY com.aptana.rcp 4 0 2026-01-30 18:40:48.871
+!MESSAGE ********HBuilder正常启动：postStartup********
+
+!ENTRY com.pandora.index.store 4 0 2026-01-30 18:40:51.486
+!MESSAGE (Build null) [ERROR]  Port already in use: 56789; nested exception is: 
+	java.net.BindException: Address already in use: JVM_Bind
+!STACK 0
+java.rmi.server.ExportException: Port already in use: 56789; nested exception is: 
+	java.net.BindException: Address already in use: JVM_Bind
+	at sun.rmi.transport.tcp.TCPTransport.listen(Unknown Source)
+	at sun.rmi.transport.tcp.TCPTransport.exportObject(Unknown Source)
+	at sun.rmi.transport.tcp.TCPEndpoint.exportObject(Unknown Source)
+	at sun.rmi.transport.LiveRef.exportObject(Unknown Source)
+	at sun.rmi.server.UnicastServerRef.exportObject(Unknown Source)
+	at sun.rmi.registry.RegistryImpl.setup(Unknown Source)
+	at sun.rmi.registry.RegistryImpl.<init>(Unknown Source)
+	at java.rmi.registry.LocateRegistry.createRegistry(Unknown Source)
+	at com.pandora.index.store.IndexStoreStartup.run(IndexStoreStartup.java:28)
+	at com.pandora.index.store.IndexStoreStartup.earlyStartup(IndexStoreStartup.java:18)
+	at org.eclipse.ui.internal.EarlyStartupRunnable.runEarlyStartup(EarlyStartupRunnable.java:87)
+	at org.eclipse.ui.internal.EarlyStartupRunnable.run(EarlyStartupRunnable.java:66)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:42)
+	at org.eclipse.ui.internal.Workbench$69.run(Workbench.java:2726)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:54)
+Caused by: java.net.BindException: Address already in use: JVM_Bind
+	at java.net.TwoStacksPlainSocketImpl.socketBind(Native Method)
+	at java.net.TwoStacksPlainSocketImpl.socketBind(Unknown Source)
+	at java.net.AbstractPlainSocketImpl.bind(Unknown Source)
+	at java.net.TwoStacksPlainSocketImpl.bind(Unknown Source)
+	at java.net.PlainSocketImpl.bind(Unknown Source)
+	at java.net.ServerSocket.bind(Unknown Source)
+	at java.net.ServerSocket.<init>(Unknown Source)
+	at java.net.ServerSocket.<init>(Unknown Source)
+	at sun.rmi.transport.proxy.RMIDirectSocketFactory.createServerSocket(Unknown Source)
+	at sun.rmi.transport.proxy.RMIMasterSocketFactory.createServerSocket(Unknown Source)
+	at sun.rmi.transport.tcp.TCPEndpoint.newServerSocket(Unknown Source)
+	... 15 more
+
+!ENTRY com.pandora.launcher.core 4 0 2026-01-30 18:40:51.788
+!MESSAGE (Build null) [ERROR]  系统找不到指定的文件。
+!STACK 0
+com.sun.jna.platform.win32.Win32Exception: 系统找不到指定的文件。
+	at com.sun.jna.platform.win32.Advapi32Util.registryGetStringValue(Advapi32Util.java:552)
+	at com.pandora.launcher.core.iphone.jna.LibraryFinder.loadPath(LibraryFinder.java:58)
+	at com.pandora.launcher.core.iphone.jna.LibraryFinder.<clinit>(LibraryFinder.java:50)
+	at com.pandora.launcher.core.iphone.jna.md.LibraryInstance.getMDLibrary(LibraryInstance.java:15)
+	at com.pandora.launcher.core.iphone.jna.idevice.win.WinDeviceLibrary.<clinit>(WinDeviceLibrary.java:72)
+	at com.pandora.launcher.core.iphone.jna.idevice.DeviceLibraryRegistry.getDeviceLibrary(DeviceLibraryRegistry.java:15)
+	at com.pandora.launcher.core.iphone.IPhoneLauncher.<init>(IPhoneLauncher.java:109)
+	at com.pandora.launcher.core.listener.DeviceStartupListener.earlyStartup(DeviceStartupListener.java:29)
+	at org.eclipse.ui.internal.EarlyStartupRunnable.runEarlyStartup(EarlyStartupRunnable.java:87)
+	at org.eclipse.ui.internal.EarlyStartupRunnable.run(EarlyStartupRunnable.java:66)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:42)
+	at org.eclipse.ui.internal.Workbench$69.run(Workbench.java:2726)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:54)
+
+!ENTRY com.pandora.launcher.core 4 0 2026-01-30 18:40:51.799
+!MESSAGE (Build null) [ERROR]  系统找不到指定的文件。
+!STACK 0
+com.sun.jna.platform.win32.Win32Exception: 系统找不到指定的文件。
+	at com.sun.jna.platform.win32.Advapi32Util.registryGetStringValue(Advapi32Util.java:552)
+	at com.pandora.launcher.core.iphone.jna.LibraryFinder.loadPath(LibraryFinder.java:58)
+	at com.pandora.launcher.core.iphone.jna.LibraryFinder.getMDLibrary(LibraryFinder.java:122)
+	at com.pandora.launcher.core.iphone.jna.md.LibraryInstance.getMDLibrary(LibraryInstance.java:15)
+	at com.pandora.launcher.core.iphone.jna.idevice.win.WinDeviceLibrary.<clinit>(WinDeviceLibrary.java:72)
+	at com.pandora.launcher.core.iphone.jna.idevice.DeviceLibraryRegistry.getDeviceLibrary(DeviceLibraryRegistry.java:15)
+	at com.pandora.launcher.core.iphone.IPhoneLauncher.<init>(IPhoneLauncher.java:109)
+	at com.pandora.launcher.core.listener.DeviceStartupListener.earlyStartup(DeviceStartupListener.java:29)
+	at org.eclipse.ui.internal.EarlyStartupRunnable.runEarlyStartup(EarlyStartupRunnable.java:87)
+	at org.eclipse.ui.internal.EarlyStartupRunnable.run(EarlyStartupRunnable.java:66)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:42)
+	at org.eclipse.ui.internal.Workbench$69.run(Workbench.java:2726)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:54)
+
+!ENTRY com.pandora.launcher.core 4 0 2026-01-30 18:40:51.828
+!MESSAGE (Build null) [ERROR]  添加Android设备监听......
+
+!ENTRY com.pandora.launcher.core 4 0 2026-01-30 18:40:51.859
+!MESSAGE (Build null) [ERROR]  系统找不到指定的文件。
+!STACK 0
+com.sun.jna.platform.win32.Win32Exception: 系统找不到指定的文件。
+	at com.sun.jna.platform.win32.Advapi32Util.registryGetStringValue(Advapi32Util.java:552)
+	at com.pandora.launcher.core.iphone.jna.LibraryFinder.loadPath(LibraryFinder.java:58)
+	at com.pandora.launcher.core.iphone.jna.LibraryFinder.getMDLibrary(LibraryFinder.java:122)
+	at com.pandora.launcher.core.iphone.jna.md.LibraryInstance.getMDLibrary(LibraryInstance.java:15)
+	at com.pandora.launcher.core.iphone.jna.idevice.win.WinDeviceLibrary.addNotificationHandler(WinDeviceLibrary.java:77)
+	at com.pandora.launcher.core.iphone.IPhoneLauncher$5.run(IPhoneLauncher.java:799)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:54)
+
+!ENTRY com.pandora.launcher.core 4 0 2026-01-30 18:40:51.894
+!MESSAGE (Build null) [ERROR]  library is null!!!!!
+
+!ENTRY com.aptana.editor.css 4 0 2026-01-30 18:40:51.955
+!MESSAGE (Build null) [ERROR]  Buffer underflow.
+!STACK 0
+com.esotericsoftware.kryo.KryoException: Buffer underflow.
+	at com.esotericsoftware.kryo.io.Input.require(Input.java:156)
+	at com.esotericsoftware.kryo.io.Input.readInt(Input.java:337)
+	at com.esotericsoftware.kryo.util.DefaultClassResolver.readClass(DefaultClassResolver.java:109)
+	at com.esotericsoftware.kryo.Kryo.readClass(Kryo.java:610)
+	at com.esotericsoftware.kryo.Kryo.readClassAndObject(Kryo.java:721)
+	at com.aptana.editor.css.contentassist.index.CSSIndexCacher.deSerialize(CSSIndexCacher.java:90)
+	at com.aptana.editor.css.CSSMetadataLoader.loadMetadataCacheIndex(CSSMetadataLoader.java:181)
+	at com.aptana.editor.css.CSSMetadataLoader.loadIndexCacher(CSSMetadataLoader.java:160)
+	at com.aptana.editor.common.contentassist.MetadataLoader.run(MetadataLoader.java:239)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:54)
+
+!ENTRY com.pandora.rcp.upgrade 4 0 2026-01-30 18:40:52.189
+!MESSAGE (Build null) [ERROR]  HBuilder当前版本: 9.1.29.201811231920
+
+!ENTRY com.pandora.stats.core 1 0 2026-01-30 18:40:52.418
+!MESSAGE 
+
+!ENTRY com.pandora.tools.android 4 0 2026-01-30 18:40:52.502
+!MESSAGE (Build null) [ERROR]  ADB PID:::12364
+
+!ENTRY com.pandora.core 4 0 2026-01-30 18:40:53.097
+!MESSAGE (Build null) [ERROR]  peer not authenticated
+!STACK 0
+javax.net.ssl.SSLPeerUnverifiedException: peer not authenticated
+	at sun.security.ssl.SSLSessionImpl.getPeerCertificates(Unknown Source)
+	at org.apache.http.conn.ssl.AbstractVerifier.verify(AbstractVerifier.java:128)
+	at org.apache.http.conn.ssl.SSLSocketFactory.connectSocket(SSLSocketFactory.java:397)
+	at org.apache.http.conn.ssl.SSLSocketFactory.connectSocket(SSLSocketFactory.java:495)
+	at org.apache.http.conn.scheme.SchemeSocketFactoryAdaptor.connectSocket(SchemeSocketFactoryAdaptor.java:62)
+	at org.apache.http.impl.conn.DefaultClientConnectionOperator.openConnection(DefaultClientConnectionOperator.java:148)
+	at org.apache.http.impl.conn.AbstractPoolEntry.open(AbstractPoolEntry.java:149)
+	at org.apache.http.impl.conn.AbstractPooledConnAdapter.open(AbstractPooledConnAdapter.java:121)
+	at org.apache.http.impl.client.DefaultRequestDirector.tryConnect(DefaultRequestDirector.java:573)
+	at org.apache.http.impl.client.DefaultRequestDirector.execute(DefaultRequestDirector.java:425)
+	at org.apache.http.impl.client.AbstractHttpClient.execute(AbstractHttpClient.java:820)
+	at org.apache.http.impl.client.AbstractHttpClient.execute(AbstractHttpClient.java:941)
+	at org.apache.http.impl.client.AbstractHttpClient.execute(AbstractHttpClient.java:919)
+	at org.apache.http.impl.client.AbstractHttpClient.execute(AbstractHttpClient.java:910)
+	at com.pandora.core.httpclient.HttpClientUtils.excuteCustomStringPost(HttpClientUtils.java:441)
+	at com.pandora.core.httpclient.HttpClientUtils.excute(HttpClientUtils.java:382)
+	at com.pandora.core.httpclient.HttpClientUtils.excute(HttpClientUtils.java:354)
+	at com.pandora.core.httpclient.HttpClientUtils.excute(HttpClientUtils.java:332)
+	at com.pandora.rcp.upgrade.P2UpgradeUtils.checkGrayUpdate(P2UpgradeUtils.java:902)
+	at com.pandora.rcp.upgrade.P2UpgradeUtils$1.run(P2UpgradeUtils.java:191)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:54)
+
+!ENTRY com.pandora.tools.android 4 0 2026-01-30 18:40:53.245
+!MESSAGE (Build null) [ERROR]  ===Caption  ExecutablePath
+
+!ENTRY com.pandora.tools.android 4 0 2026-01-30 18:40:53.245
+!MESSAGE (Build null) [ERROR]  ===adb.exe  C:\Users\lenovo\Desktop\文件\HBuilder\tools\adbs\adb.exe
+
+!ENTRY com.pandora.tools.android 4 0 2026-01-30 18:40:53.246
+!MESSAGE (Build null) [ERROR]  exe===adb.exe   path===c:\users\lenovo\desktop\文件\hbuilder\tools\adbs\adb.exe
+
+!ENTRY com.pandora.tools.android 4 0 2026-01-30 18:40:53.327
+!MESSAGE (Build null) [ERROR]  ADB Path===c:\users\lenovo\desktop\文件\hbuilder\tools\adbs\adb.exe
+
+!ENTRY com.pandora.tools.android 4 0 2026-01-30 18:40:53.513
+!MESSAGE (Build null) [ERROR]  ADB PID:::12364
+
+!ENTRY com.pandora.tools.android 4 0 2026-01-30 18:40:54.093
+!MESSAGE (Build null) [ERROR]  ===Caption  ExecutablePath
+
+!ENTRY com.pandora.tools.android 4 0 2026-01-30 18:40:54.093
+!MESSAGE (Build null) [ERROR]  ===adb.exe  C:\Users\lenovo\Desktop\文件\HBuilder\tools\adbs\adb.exe
+
+!ENTRY com.pandora.tools.android 4 0 2026-01-30 18:40:54.094
+!MESSAGE (Build null) [ERROR]  exe===adb.exe   path===c:\users\lenovo\desktop\文件\hbuilder\tools\adbs\adb.exe
+
+!ENTRY com.pandora.tools.android 4 0 2026-01-30 18:40:54.116
+!MESSAGE (Build null) [ERROR]  ADB Path===c:\users\lenovo\desktop\文件\hbuilder\tools\adbs\adb.exe
+
+!ENTRY com.aptana.scripting 4 0 2026-01-30 18:40:54.776
+!MESSAGE (Build null) [ERROR]  loadBundles异常
+!STACK 0
+org.jruby.exceptions.RaiseException: (Errno::EINVAL) =::
+	at org.jruby.RubyHash.replace(org/jruby/RubyHash.java:1623)
+
+!ENTRY org.eclipse.equinox.p2.repository 4 0 2026-01-30 18:40:58.754
+!MESSAGE C:\Users\lenovo\Desktop\文件\HBuilder\p2\org.eclipse.equinox.p2.repository\cache\content-561804826.jar 是合法的jar
+
+!ENTRY com.pandora.core 4 0 2026-01-30 18:41:02.730
+!MESSAGE (Build null) [ERROR]  peer not authenticated
+!STACK 0
+javax.net.ssl.SSLPeerUnverifiedException: peer not authenticated
+	at sun.security.ssl.SSLSessionImpl.getPeerCertificates(Unknown Source)
+	at org.apache.http.conn.ssl.AbstractVerifier.verify(AbstractVerifier.java:128)
+	at org.apache.http.conn.ssl.SSLSocketFactory.connectSocket(SSLSocketFactory.java:397)
+	at org.apache.http.conn.ssl.SSLSocketFactory.connectSocket(SSLSocketFactory.java:495)
+	at org.apache.http.conn.scheme.SchemeSocketFactoryAdaptor.connectSocket(SchemeSocketFactoryAdaptor.java:62)
+	at org.apache.http.impl.conn.DefaultClientConnectionOperator.openConnection(DefaultClientConnectionOperator.java:148)
+	at org.apache.http.impl.conn.AbstractPoolEntry.open(AbstractPoolEntry.java:149)
+	at org.apache.http.impl.conn.AbstractPooledConnAdapter.open(AbstractPooledConnAdapter.java:121)
+	at org.apache.http.impl.client.DefaultRequestDirector.tryConnect(DefaultRequestDirector.java:573)
+	at org.apache.http.impl.client.DefaultRequestDirector.execute(DefaultRequestDirector.java:425)
+	at org.apache.http.impl.client.AbstractHttpClient.execute(AbstractHttpClient.java:820)
+	at org.apache.http.impl.client.AbstractHttpClient.execute(AbstractHttpClient.java:941)
+	at org.apache.http.impl.client.AbstractHttpClient.execute(AbstractHttpClient.java:919)
+	at org.apache.http.impl.client.AbstractHttpClient.execute(AbstractHttpClient.java:910)
+	at com.pandora.core.httpclient.HttpClientUtils.excuteCustomStringPost(HttpClientUtils.java:441)
+	at com.pandora.core.httpclient.HttpClientUtils.excute(HttpClientUtils.java:382)
+	at com.pandora.core.httpclient.HttpClientUtils.excute(HttpClientUtils.java:354)
+	at com.pandora.core.httpclient.HttpClientUtils.excute(HttpClientUtils.java:332)
+	at com.pandora.stats.core.UploadStatsSchedule.uploadNow(UploadStatsSchedule.java:148)
+	at com.pandora.stats.core.UploadStatsSchedule.uploadMemoryData(UploadStatsSchedule.java:128)
+	at com.pandora.stats.core.UploadStatsSchedule.handleDataStatsUpload(UploadStatsSchedule.java:105)
+	at com.pandora.stats.core.UploadStatsSchedule$1.run(UploadStatsSchedule.java:69)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:54)
+
+!ENTRY com.aptana.core 4 0 2026-01-30 18:41:02.731
+!MESSAGE (Build null) [ERROR]  Feedback Failed:999
+
+!ENTRY org.eclipse.equinox.p2.repository 4 0 2026-01-30 18:41:02.843
+!MESSAGE C:\Users\lenovo\Desktop\文件\HBuilder\p2\org.eclipse.equinox.p2.repository\cache\content1190459293.jar 是合法的jar
+
+!ENTRY com.pandora.stats.core 4 0 2026-01-30 18:41:55.758
+!MESSAGE (Build null) [ERROR]  list job time: 3327
+
+!ENTRY com.pandora.core 4 0 2026-01-30 18:51:02.846
+!MESSAGE (Build null) [ERROR]  peer not authenticated
+!STACK 0
+javax.net.ssl.SSLPeerUnverifiedException: peer not authenticated
+	at sun.security.ssl.SSLSessionImpl.getPeerCertificates(Unknown Source)
+	at org.apache.http.conn.ssl.AbstractVerifier.verify(AbstractVerifier.java:128)
+	at org.apache.http.conn.ssl.SSLSocketFactory.connectSocket(SSLSocketFactory.java:397)
+	at org.apache.http.conn.ssl.SSLSocketFactory.connectSocket(SSLSocketFactory.java:495)
+	at org.apache.http.conn.scheme.SchemeSocketFactoryAdaptor.connectSocket(SchemeSocketFactoryAdaptor.java:62)
+	at org.apache.http.impl.conn.DefaultClientConnectionOperator.openConnection(DefaultClientConnectionOperator.java:148)
+	at org.apache.http.impl.conn.AbstractPoolEntry.open(AbstractPoolEntry.java:149)
+	at org.apache.http.impl.conn.AbstractPooledConnAdapter.open(AbstractPooledConnAdapter.java:121)
+	at org.apache.http.impl.client.DefaultRequestDirector.tryConnect(DefaultRequestDirector.java:573)
+	at org.apache.http.impl.client.DefaultRequestDirector.execute(DefaultRequestDirector.java:425)
+	at org.apache.http.impl.client.AbstractHttpClient.execute(AbstractHttpClient.java:820)
+	at org.apache.http.impl.client.AbstractHttpClient.execute(AbstractHttpClient.java:941)
+	at org.apache.http.impl.client.AbstractHttpClient.execute(AbstractHttpClient.java:919)
+	at org.apache.http.impl.client.AbstractHttpClient.execute(AbstractHttpClient.java:910)
+	at com.pandora.core.httpclient.HttpClientUtils.excuteCustomStringPost(HttpClientUtils.java:441)
+	at com.pandora.core.httpclient.HttpClientUtils.excute(HttpClientUtils.java:382)
+	at com.pandora.core.httpclient.HttpClientUtils.excute(HttpClientUtils.java:354)
+	at com.pandora.core.httpclient.HttpClientUtils.excute(HttpClientUtils.java:332)
+	at com.pandora.stats.core.UploadStatsSchedule.uploadNow(UploadStatsSchedule.java:148)
+	at com.pandora.stats.core.UploadStatsSchedule.uploadMemoryData(UploadStatsSchedule.java:128)
+	at com.pandora.stats.core.UploadStatsSchedule.handleDataStatsUpload(UploadStatsSchedule.java:105)
+	at com.pandora.stats.core.UploadStatsSchedule$1.run(UploadStatsSchedule.java:69)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:54)
+
+!ENTRY com.aptana.core 4 0 2026-01-30 18:51:02.848
+!MESSAGE (Build null) [ERROR]  Feedback Failed:999
+
+!ENTRY com.pandora.core 4 0 2026-01-30 19:01:02.959
+!MESSAGE (Build null) [ERROR]  peer not authenticated
+!STACK 0
+javax.net.ssl.SSLPeerUnverifiedException: peer not authenticated
+	at sun.security.ssl.SSLSessionImpl.getPeerCertificates(Unknown Source)
+	at org.apache.http.conn.ssl.AbstractVerifier.verify(AbstractVerifier.java:128)
+	at org.apache.http.conn.ssl.SSLSocketFactory.connectSocket(SSLSocketFactory.java:397)
+	at org.apache.http.conn.ssl.SSLSocketFactory.connectSocket(SSLSocketFactory.java:495)
+	at org.apache.http.conn.scheme.SchemeSocketFactoryAdaptor.connectSocket(SchemeSocketFactoryAdaptor.java:62)
+	at org.apache.http.impl.conn.DefaultClientConnectionOperator.openConnection(DefaultClientConnectionOperator.java:148)
+	at org.apache.http.impl.conn.AbstractPoolEntry.open(AbstractPoolEntry.java:149)
+	at org.apache.http.impl.conn.AbstractPooledConnAdapter.open(AbstractPooledConnAdapter.java:121)
+	at org.apache.http.impl.client.DefaultRequestDirector.tryConnect(DefaultRequestDirector.java:573)
+	at org.apache.http.impl.client.DefaultRequestDirector.execute(DefaultRequestDirector.java:425)
+	at org.apache.http.impl.client.AbstractHttpClient.execute(AbstractHttpClient.java:820)
+	at org.apache.http.impl.client.AbstractHttpClient.execute(AbstractHttpClient.java:941)
+	at org.apache.http.impl.client.AbstractHttpClient.execute(AbstractHttpClient.java:919)
+	at org.apache.http.impl.client.AbstractHttpClient.execute(AbstractHttpClient.java:910)
+	at com.pandora.core.httpclient.HttpClientUtils.excuteCustomStringPost(HttpClientUtils.java:441)
+	at com.pandora.core.httpclient.HttpClientUtils.excute(HttpClientUtils.java:382)
+	at com.pandora.core.httpclient.HttpClientUtils.excute(HttpClientUtils.java:354)
+	at com.pandora.core.httpclient.HttpClientUtils.excute(HttpClientUtils.java:332)
+	at com.pandora.stats.core.UploadStatsSchedule.uploadNow(UploadStatsSchedule.java:148)
+	at com.pandora.stats.core.UploadStatsSchedule.uploadMemoryData(UploadStatsSchedule.java:128)
+	at com.pandora.stats.core.UploadStatsSchedule.handleDataStatsUpload(UploadStatsSchedule.java:105)
+	at com.pandora.stats.core.UploadStatsSchedule$1.run(UploadStatsSchedule.java:69)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:54)
+
+!ENTRY com.aptana.core 4 0 2026-01-30 19:01:02.961
+!MESSAGE (Build null) [ERROR]  Feedback Failed:999
+
+!ENTRY com.aptana.rcp 4 0 2026-01-30 19:01:35.244
+!MESSAGE ********HBuilder正常关闭：preShutdown********
+
+!ENTRY com.aptana.commandline.launcher 4 0 2026-01-30 19:01:35.246
+!MESSAGE socket closed
+!STACK 0
+java.net.SocketException: socket closed
+	at java.net.TwoStacksPlainSocketImpl.socketAccept(Native Method)
+	at java.net.AbstractPlainSocketImpl.accept(Unknown Source)
+	at java.net.PlainSocketImpl.accept(Unknown Source)
+	at java.net.ServerSocket.implAccept(Unknown Source)
+	at java.net.ServerSocket.accept(Unknown Source)
+	at com.aptana.commandline.launcher.server.LauncherServer$CommandLineArgsServer.run(LauncherServer.java:129)
+
+!ENTRY com.aptana.rcp 4 0 2026-01-30 19:01:35.483
+!MESSAGE ********HBuilder正常关闭：postShutdown********
+
+!ENTRY com.aptana.rcp 1 0 2026-01-30 19:01:36.935
+!MESSAGE close CEF
+
+!ENTRY com.pandora.core 4 0 2026-01-30 19:01:37.105
+!MESSAGE (Build null) [ERROR]  peer not authenticated
+!STACK 0
+javax.net.ssl.SSLPeerUnverifiedException: peer not authenticated
+	at sun.security.ssl.SSLSessionImpl.getPeerCertificates(Unknown Source)
+	at org.apache.http.conn.ssl.AbstractVerifier.verify(AbstractVerifier.java:128)
+	at org.apache.http.conn.ssl.SSLSocketFactory.connectSocket(SSLSocketFactory.java:397)
+	at org.apache.http.conn.ssl.SSLSocketFactory.connectSocket(SSLSocketFactory.java:495)
+	at org.apache.http.conn.scheme.SchemeSocketFactoryAdaptor.connectSocket(SchemeSocketFactoryAdaptor.java:62)
+	at org.apache.http.impl.conn.DefaultClientConnectionOperator.openConnection(DefaultClientConnectionOperator.java:148)
+	at org.apache.http.impl.conn.AbstractPoolEntry.open(AbstractPoolEntry.java:149)
+	at org.apache.http.impl.conn.AbstractPooledConnAdapter.open(AbstractPooledConnAdapter.java:121)
+	at org.apache.http.impl.client.DefaultRequestDirector.tryConnect(DefaultRequestDirector.java:573)
+	at org.apache.http.impl.client.DefaultRequestDirector.execute(DefaultRequestDirector.java:425)
+	at org.apache.http.impl.client.AbstractHttpClient.execute(AbstractHttpClient.java:820)
+	at org.apache.http.impl.client.AbstractHttpClient.execute(AbstractHttpClient.java:941)
+	at org.apache.http.impl.client.AbstractHttpClient.execute(AbstractHttpClient.java:919)
+	at org.apache.http.impl.client.AbstractHttpClient.execute(AbstractHttpClient.java:910)
+	at com.pandora.core.httpclient.HttpClientUtils.excuteCustomStringPost(HttpClientUtils.java:441)
+	at com.pandora.core.httpclient.HttpClientUtils.excute(HttpClientUtils.java:382)
+	at com.pandora.core.httpclient.HttpClientUtils.excute(HttpClientUtils.java:354)
+	at com.pandora.core.httpclient.HttpClientUtils.excute(HttpClientUtils.java:332)
+	at com.pandora.stats.core.UploadStatsSchedule.uploadNow(UploadStatsSchedule.java:148)
+	at com.pandora.stats.core.UploadStatsSchedule.uploadMemoryData(UploadStatsSchedule.java:128)
+	at com.pandora.stats.core.UploadStatsSchedule.handleDataStatsUpload(UploadStatsSchedule.java:105)
+	at com.pandora.stats.core.UploadStatsSchedule.execute(UploadStatsSchedule.java:54)
+	at com.pandora.stats.core.Activator.stop(Activator.java:47)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl$2.run(BundleContextImpl.java:771)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl.stop(BundleContextImpl.java:764)
+	at org.eclipse.osgi.framework.internal.core.BundleHost.stopWorker(BundleHost.java:510)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.suspend(AbstractBundle.java:565)
+	at org.eclipse.osgi.framework.internal.core.Framework.suspendBundle(Framework.java:1161)
+	at org.eclipse.osgi.framework.internal.core.StartLevelManager.decFWSL(StartLevelManager.java:595)
+	at org.eclipse.osgi.framework.internal.core.StartLevelManager.doSetStartLevel(StartLevelManager.java:257)
+	at org.eclipse.osgi.framework.internal.core.StartLevelManager.shutdown(StartLevelManager.java:215)
+	at org.eclipse.osgi.framework.internal.core.InternalSystemBundle.suspend(InternalSystemBundle.java:284)
+	at org.eclipse.osgi.framework.internal.core.Framework.shutdown(Framework.java:691)
+	at org.eclipse.osgi.framework.internal.core.Framework.close(Framework.java:598)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.shutdown(EclipseStarter.java:394)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:202)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+	at java.lang.reflect.Method.invoke(Unknown Source)
+	at org.eclipse.equinox.launcher.Main.invokeFramework(Main.java:655)
+	at org.eclipse.equinox.launcher.Main.basicRun(Main.java:610)
+	at org.eclipse.equinox.launcher.Main.run(Main.java:1491)
+
+!ENTRY com.aptana.core 4 0 2026-01-30 19:01:37.109
+!MESSAGE (Build null) [ERROR]  Feedback Failed:999
+
+!ENTRY org.eclipse.core.jobs 2 2 2026-01-30 19:01:38.120
+!MESSAGE Job found still running after platform shutdown.  Jobs should be canceled by the plugin that scheduled them during shutdown: org.eclipse.ui.internal.AbstractWorkingSetManager$10
+
+!ENTRY org.eclipse.core.jobs 2 2 2026-01-30 19:01:38.121
+!MESSAGE Job found still running after platform shutdown.  Jobs should be canceled by the plugin that scheduled them during shutdown: com.pandora.pack.core.download.StartupDownloadPackage$1
