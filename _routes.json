@@ -1,19 +1,14 @@
 {
   "version": 1,
-  "include": ["/*"],
   "routes": [
     {
       "src": "/api/feedback",
       "dest": "http://39.96.215.72:60438/save-feedback",
+      "methods": ["POST", "OPTIONS"],
       "headers": {
         "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-        "Access-Control-Allow-Headers": "Content-Type, Authorization"
-      },
-      "methods": ["POST", "OPTIONS"]
+        "Access-Control-Allow-Headers": "Content-Type, Accept"
+      }
     }
-  ],
-  "error_pages": {
-    "404": "/404.html"
-  }
+  ]
 }
