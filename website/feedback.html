@@ -177,7 +177,7 @@
     </div>
 
     <script>
-        // 格式化时间戳为文件名格式（年-月-日-时-分-秒，避免特殊字符）
+        // 格式化时间戳为文件名格式
         function formatDateTime() {
             const now = new Date();
             const year = now.getFullYear();
@@ -206,8 +206,9 @@
             submitBtn.disabled = true;
 
             try {
-                // 注意：若前端是HTTPS，此处需改为https://39.96.215.72:64580/save-feedback
-                const response = await fetch('http://39.96.215.72:60438/save-feedback', {
+                // ✅ 核心修改：改为HTTPS的域名转发地址（解决混合内容问题）
+                // 配合Cloudflare转发规则：https://easy2sound.xyz/api/feedback → http://39.96.215.72:60438/save-feedback
+                const response = await fetch('https://easy2sound.xyz/api/feedback', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -216,7 +217,8 @@
                         content: feedbackText,
                         timestamp: formatDateTime()
                     }),
-                    // 允许跨域携带cookie（可选）
+                    // 跨域配置优化
+                    mode: 'cors',
                     credentials: 'include'
                 });
 
@@ -230,8 +232,8 @@
                 }
             } catch (error) {
                 console.error('提交反馈出错:', error);
-                // 针对性提示混合内容/跨域问题
-                alert('提交失败！请检查服务器协议（HTTP/HTTPS）是否与前端一致，或确认服务器已启动并开放60438端口');
+                // 更精准的错误提示
+                alert(`提交失败！\n可能原因：\n1. Cloudflare转发规则未配置\n2. 服务器60438端口未开放\n3. 后端服务未启动`);
             } finally {
                 submitBtn.classList.remove('loading');
                 submitBtn.disabled = false;
