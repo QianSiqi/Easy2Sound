@@ -4,26 +4,525 @@
     <meta charset="UTF-8">
     <title>Easy2Sound-WTF</title>
     <link rel="stylesheet" href="导航栏.css">
+    <style>
+        /* 统一的导航栏容器样式（和其他页面保持一致） */
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: rgba(0, 0, 0, 0.85);
+            padding: 0 20px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav {
+            display: flex;
+            justify-content: center;
+            flex: 1;
+        }
+
+        .nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 18px;
+            padding: 12px 24px;
+            display: inline-block;
+        }
+
+        .nav a:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+        }
+
+        /* 右上角用户信息样式（和其他页面保持一致） */
+        .user-info {
+            display: flex;
+            align-items: center;
+            color: white;
+            gap: 15px;
+            padding: 12px 24px;
+        }
+
+        .username-display {
+            font-size: 16px;
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        .logout-btn {
+            padding: 6px 12px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .logout-btn:hover {
+            background: #5a6edb;
+        }
+
+        .login-entrance {
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+            padding: 6px 12px;
+            background: #667eea;
+            border-radius: 4px;
+            transition: background 0.3s;
+        }
+
+        .login-entrance:hover {
+            background: #5a6edb;
+        }
+
+        /* 登录弹窗样式（和其他页面保持一致） */
+        .login-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 999;
+            padding: 20px;
+        }
+
+        .login-modal.active {
+            display: flex;
+        }
+
+        .modal-container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+            width: 100%;
+            max-width: 450px;
+            padding: 40px;
+            position: relative;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 24px;
+            cursor: pointer;
+            color: #666;
+            transition: color 0.3s;
+            background: none;
+            border: none;
+            width: auto;
+            padding: 0;
+        }
+
+        .close-modal:hover {
+            color: #c62828;
+            background: none;
+        }
+
+        /* 登录/注册标签样式 */
+        .tabs {
+            display: flex;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #eee;
+        }
+
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: 600;
+            color: #666;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .tab.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+        }
+
+        .form-section {
+            display: none;
+        }
+
+        .form-section.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #333;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border 0.3s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-btn {
+            width: 100%;
+            padding: 14px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .form-btn:hover {
+            background: #5a6edb;
+        }
+
+        .message {
+            margin-top: 20px;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            display: none;
+        }
+
+        .success {
+            background: #e8f5e9;
+            color: #2e7d32;
+            display: block;
+        }
+
+        .error {
+            background: #ffebee;
+            color: #c62828;
+            display: block;
+        }
+
+        /* 原有页面内容样式优化（保留原有文字内容） */
+        .content {
+            padding: 50px;
+            text-align: center;
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            margin-top: 30px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .content h1 {
+            color: #333;
+            font-size: 36px;
+            margin-bottom: 20px;
+        }
+        
+        .content h2 {
+            color: #666;
+            font-size: 24px;
+            margin: 15px 0;
+            line-height: 1.6;
+        }
+
+        /* 响应式适配 */
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+                padding: 10px;
+            }
+            .nav {
+                flex-wrap: wrap;
+                padding: 10px 0;
+            }
+            .nav a {
+                margin: 5px 10px;
+                padding: 8px 15px;
+                font-size: 16px;
+            }
+            .user-info {
+                margin-top: 10px;
+                padding: 8px 0;
+            }
+            .content {
+                padding: 30px 20px;
+            }
+            .content h1 {
+                font-size: 28px;
+            }
+            .content h2 {
+                font-size: 20px;
+            }
+        }
+    </style>
 </head>
 <body>
-    <div class="nav">
-        <a href="index.html">主页</a>
-        <a href="down.html">下载</a>
-        <a href="details.html">详细介绍</a>
-        <a href="feedback.html">反馈问题</a>
-        <a href="love.html">感 动 E 2 S 的 1 0 大 人 物</a>
-		<a href="donation.html">投喂</a>
-    	<a href="yuandaima.html">源代码</a>
-    	<a href="test.html">登录</a>
+    <!-- 统一的导航栏容器（包含用户信息区域） -->
+    <div class="nav-container">
+        <div class="nav">
+            <a href="index.html">主页</a>
+            <a href="down.html">下载</a>
+            <a href="details.html">详细介绍</a>
+            <a href="feedback.html">反馈问题</a>
+            <a href="love.html">感 动 E 2 S 的 1 0 大 人 物</a>
+            <a href="donation.html">投喂</a>
+            <a href="yuandaima.html">源代码</a>
+        </div>
+        
+        <!-- 右上角用户信息区域 -->
+        <div class="user-info" id="userInfo">
+            <!-- 未登录状态 -->
+            <a href="javascript:void(0)" class="login-entrance" id="loginEntrance">登录/注册</a>
+        </div>
     </div>
 
-    <div style="padding: 50px; text-align: center;">
-	<h1 style="color:black;">创始人 テト普照大地</h1>
-	<h2 style="color:black;">创始人的朋友小猫你可以吃芝士汉堡是个底层开发</h2>
-	<h2 style="color:black;">Spinglan是网页开发者(提供后期维护)</h2>
-	<h2 style="color:black;">无尽夏.画画很好看(UI)</h2>
-	<h2 style="color:black;">Evidence 是模型训练师</h2>
-	<h2 style="color:black;">还有好多采样组...</h2>
+    <!-- 原有页面内容（优化样式，保留文字） -->
+    <div class="content">
+        <h1>创始人 テト普照大地</h1>
+        <h2>创始人的朋友小猫你可以吃芝士汉堡是个底层开发</h2>
+        <h2>Spinglan是网页开发者(提供后期维护)</h2>
+        <h2>无尽夏.画画很好看(UI)</h2>
+        <h2>Evidence 是模型训练师</h2>
+        <h2>还有好多采样组...</h2>
     </div>
+
+    <!-- 登录/注册弹窗（和其他页面保持一致） -->
+    <div class="login-modal" id="loginModal">
+        <div class="modal-container">
+            <button class="close-modal" id="closeModal">&times;</button>
+            
+            <div class="tabs">
+                <div class="tab active" data-tab="login">登录</div>
+                <div class="tab" data-tab="register">注册</div>
+            </div>
+
+            <!-- 登录表单 -->
+            <div class="form-section active" id="login">
+                <div class="form-group">
+                    <label for="login-username">用户名</label>
+                    <input type="text" id="login-username" placeholder="请输入用户名" required>
+                </div>
+                <div class="form-group">
+                    <label for="login-password">密码</label>
+                    <input type="password" id="login-password" placeholder="请输入密码" required>
+                </div>
+                <button class="form-btn" id="login-btn">登录</button>
+                <div class="message" id="login-message"></div>
+            </div>
+
+            <!-- 注册表单 -->
+            <div class="form-section" id="register">
+                <div class="form-group">
+                    <label for="reg-username">用户名</label>
+                    <input type="text" id="reg-username" placeholder="请设置用户名" required>
+                </div>
+                <div class="form-group">
+                    <label for="reg-email">邮箱</label>
+                    <input type="email" id="reg-email" placeholder="请输入邮箱" required>
+                </div>
+                <div class="form-group">
+                    <label for="reg-password">密码</label>
+                    <input type="password" id="reg-password" placeholder="请设置密码" required>
+                </div>
+                <button class="form-btn" id="register-btn">注册</button>
+                <div class="message" id="register-message"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ========== 登录功能配置项 ==========
+        const API_BASE_URL = 'https://api.easy2sound.xyz'; // 你的API地址
+        const USER_INFO_KEY = 'easy2sound_user_info'; // localStorage存储键名
+
+        // ========== 页面加载初始化 ==========
+        window.onload = function() {
+            // 初始化登录相关功能
+            initUserInfo();
+            initModalClose();
+            initTabSwitch();
+            initLoginRegisterForm();
+        };
+
+        // ========== 登录功能核心逻辑 ==========
+        // 初始化用户信息显示
+        function initUserInfo() {
+            const userInfo = JSON.parse(localStorage.getItem(USER_INFO_KEY));
+            const userInfoContainer = document.getElementById('userInfo');
+            
+            if (userInfo && userInfo.username) {
+                // 已登录状态：显示用户名 + 退出按钮
+                userInfoContainer.innerHTML = `
+                    <span class="username-display">欢迎，${userInfo.username}</span>
+                    <button class="logout-btn" id="logoutBtn">退出登录</button>
+                `;
+                // 绑定退出登录事件
+                document.getElementById('logoutBtn').addEventListener('click', logout);
+            } else {
+                // 未登录状态：显示登录/注册入口
+                userInfoContainer.innerHTML = `
+                    <a href="javascript:void(0)" class="login-entrance" id="loginEntrance">登录/注册</a>
+                `;
+                // 绑定登录入口点击事件
+                document.getElementById('loginEntrance').addEventListener('click', () => {
+                    document.getElementById('loginModal').classList.add('active');
+                });
+            }
+        }
+
+        // 退出登录功能
+        function logout() {
+            localStorage.removeItem(USER_INFO_KEY);
+            alert('退出登录成功！');
+            // 刷新用户信息显示
+            initUserInfo();
+        }
+
+        // 初始化弹窗关闭功能
+        function initModalClose() {
+            // 关闭按钮点击
+            document.getElementById('closeModal').addEventListener('click', () => {
+                document.getElementById('loginModal').classList.remove('active');
+            });
+            // 点击弹窗外区域关闭
+            document.getElementById('loginModal').addEventListener('click', (e) => {
+                if (e.target === document.getElementById('loginModal')) {
+                    document.getElementById('loginModal').classList.remove('active');
+                }
+            });
+        }
+
+        // 初始化标签切换
+        function initTabSwitch() {
+            const tabs = document.querySelectorAll('.tab');
+            const sections = document.querySelectorAll('.form-section');
+
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    // 移除所有激活状态
+                    tabs.forEach(t => t.classList.remove('active'));
+                    sections.forEach(s => s.classList.remove('active'));
+                    
+                    // 添加当前激活状态
+                    tab.classList.add('active');
+                    const target = tab.dataset.tab;
+                    document.getElementById(target).classList.add('active');
+                });
+            });
+        }
+
+        // 显示消息提示
+        function showMessage(elementId, text, isSuccess) {
+            const message = document.getElementById(elementId);
+            message.textContent = text;
+            message.className = 'message ' + (isSuccess ? 'success' : 'error');
+            // 3秒后隐藏
+            setTimeout(() => {
+                message.className = 'message';
+            }, 3000);
+        }
+
+        // 初始化登录/注册表单（对接真实API）
+        function initLoginRegisterForm() {
+            // 登录功能（真实API调用）
+            document.getElementById('login-btn').addEventListener('click', async () => {
+                const username = document.getElementById('login-username').value.trim();
+                const password = document.getElementById('login-password').value.trim();
+
+                if (!username || !password) {
+                    showMessage('login-message', '请输入用户名和密码', false);
+                    return;
+                }
+
+                try {
+                    const response = await fetch(`${API_BASE_URL}/login`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ username, password })
+                    });
+
+                    const data = await response.json();
+
+                    if (data.ok) {
+                        // 登录成功 - 保存用户信息到本地
+                        localStorage.setItem(USER_INFO_KEY, JSON.stringify(data.user));
+                        showMessage('login-message', `登录成功！欢迎你，${data.user.username}`, true);
+                        // 关闭弹窗并刷新用户信息
+                        setTimeout(() => {
+                            document.getElementById('loginModal').classList.remove('active');
+                            initUserInfo();
+                        }, 1500);
+                    } else {
+                        showMessage('login-message', data.error || '登录失败', false);
+                    }
+                } catch (error) {
+                    showMessage('login-message', '网络错误，请检查连接或VPN', false);
+                    console.error('登录错误:', error);
+                }
+            });
+
+            // 注册功能（真实API调用）
+            document.getElementById('register-btn').addEventListener('click', async () => {
+                const username = document.getElementById('reg-username').value.trim();
+                const email = document.getElementById('reg-email').value.trim();
+                const password = document.getElementById('reg-password').value.trim();
+
+                if (!username || !email || !password) {
+                    showMessage('register-message', '请填写所有信息', false);
+                    return;
+                }
+
+                try {
+                    const response = await fetch(`${API_BASE_URL}/register`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ username, email, password })
+                    });
+
+                    const data = await response.json();
+
+                    if (data.ok) {
+                        showMessage('register-message', '注册成功！欢迎邮件已发送', true);
+                        // 注册成功后自动切换到登录标签
+                        setTimeout(() => {
+                            document.querySelectorAll('.tab')[0].click();
+                            document.getElementById('login-username').value = username;
+                        }, 1500);
+                    } else {
+                        showMessage('register-message', data.error || '注册失败', false);
+                    }
+                } catch (error) {
+                    showMessage('register-message', '网络错误，请检查连接或VPN', false);
+                    console.error('注册错误:', error);
+                }
+            });
+        }
+    </script>
 </body>
 </html>
