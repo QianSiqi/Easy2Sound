@@ -3,26 +3,12 @@
 <head>
 	<meta charset="utf-8" />
     <title>Easy2Sound-feedback</title>
-    <!-- 引入和主页相同的导航栏样式文件 -->
     <link rel="stylesheet" href="导航栏.css">
     <style>
-        /* 新增：导航栏容器样式（兼容原有导航栏样式） */
-        .nav-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background-color: rgba(0, 0, 0, 0.85);
-            padding: 0 20px;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-
-        .nav {
-            display: flex;
-            justify-content: center;
-            flex: 1;
-        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
 
         .nav a {
             color: white;
@@ -31,672 +17,168 @@
             font-size: 18px;
             padding: 12px 24px;
             display: inline-block;
+            transition: all 0.3s ease;
+            border-radius: 5px;
         }
-
-        /* 新增：右上角用户信息样式 */
-        .user-info {
-            display: flex;
-            align-items: center;
-            color: white;
-            gap: 15px;
-            padding: 12px 24px;
+        .nav a:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-3px);
         }
-
-        .username-display {
-            font-size: 16px;
-            color: #667eea;
-            font-weight: 600;
-        }
-
-        .logout-btn {
-            padding: 6px 12px;
-            background: #667eea;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            font-size: 14px;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-
-        .logout-btn:hover {
-            background: #5a6edb;
-        }
-
-        .login-entrance {
-            color: white;
-            text-decoration: none;
-            font-size: 16px;
-            padding: 6px 12px;
-            background: #667eea;
-            border-radius: 4px;
-            transition: background 0.3s;
-        }
-
-        .login-entrance:hover {
-            background: #5a6edb;
-        }
-
-        /* 新增：登录弹窗样式 */
-        .login-modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 999;
-            padding: 20px;
-        }
-
-        .login-modal.active {
-            display: flex;
-        }
-
-        .modal-container {
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.15);
-            width: 100%;
-            max-width: 450px;
-            padding: 40px;
-            position: relative;
-        }
-
-        .close-modal {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            font-size: 24px;
-            cursor: pointer;
-            color: #666;
-            transition: color 0.3s;
-            background: none;
-            border: none;
-            width: auto;
-            padding: 0;
-        }
-
-        .close-modal:hover {
-            color: #c62828;
-            background: none;
-        }
-
-        /* 登录/注册标签样式 */
-        .tabs {
-            display: flex;
-            margin-bottom: 30px;
-            border-bottom: 2px solid #eee;
-        }
-
-        .tab {
-            padding: 10px 20px;
-            cursor: pointer;
-            font-size: 18px;
-            font-weight: 600;
-            color: #666;
-            border-bottom: 3px solid transparent;
-            transition: all 0.3s;
-        }
-
-        .tab.active {
-            color: #667eea;
-            border-bottom-color: #667eea;
-        }
-
-        .form-section {
-            display: none;
-        }
-
-        .form-section.active {
-            display: block;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-            color: #333;
-        }
-
-        input {
-            width: 100%;
-            padding: 12px 15px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            font-size: 16px;
-            transition: border 0.3s;
-        }
-
-        input:focus {
-            outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-        }
-
-        .form-btn {
-            width: 100%;
-            padding: 14px;
-            background: #667eea;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-
-        .form-btn:hover {
-            background: #5a6edb;
-        }
-
-        .message {
-            margin-top: 20px;
-            padding: 12px;
-            border-radius: 8px;
-            text-align: center;
-            display: none;
-        }
-
-        .success {
-            background: #e8f5e9;
-            color: #2e7d32;
-            display: block;
-        }
-
-        .error {
-            background: #ffebee;
-            color: #c62828;
-            display: block;
-        }
-
-        /* 原有反馈页面样式完全保留 */
         .content {
             padding: 60px 20px;
+            text-align: center;
             max-width: 800px;
             margin: 0 auto;
         }
         h1 {
             font-size: 48px;
+            margin-bottom: 40px;
+            text-shadow: 2px 2px 6px rgba(0,0,0,0.7);
             color: #fff;
-            background-color: #4a90e2;
+            background-color: rgba(0, 0, 0, 0.5);
             padding: 20px;
             border-radius: 10px;
-            text-align: center;
         }
         .feedback-form {
-            background: white;
+            background-color: rgba(255, 255, 255, 0.9);
             padding: 40px;
             border-radius: 15px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.4);
             margin-top: 30px;
         }
         .input-container {
             display: flex;
+            margin-bottom: 20px;
         }
         .feedback-input {
-            flex: 1;
+            flex-grow: 1;
             padding: 18px;
-            font-size: 16px;
             border: 2px solid #ddd;
             border-radius: 8px 0 0 8px;
+            font-size: 16px;
+            outline: none;
+            color: #333;
+            background-color: white;
+        }
+        .feedback-input:focus {
+            border-color: #4a90e2;
         }
         .submit-btn {
-            background: #4a90e2;
+            background-color: #4a90e2;
             color: white;
             border: none;
-            width: 140px;
+            padding: 0;
             font-size: 18px;
+            font-weight: bold;
             border-radius: 0 8px 8px 0;
             cursor: pointer;
+            transition: background-color 0.3s;
+            width: 150px; /* 设置按钮宽度 */
+            overflow: hidden; /* 防止图片溢出 */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .submit-btn:hover {
+            background-color: #3a7bc8;
+        }
+        .submit-btn img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* 保持图片比例 */
         }
         .notice {
-            margin-top: 20px;
-            padding: 15px;
-            background: #f5f5f5;
-            border-radius: 8px;
-        }
-        .loading {
-            pointer-events: none;
-            opacity: 0.7;
-        }
-        /* 历史反馈列表样式 */
-        .feedback-list {
-            background: white;
-            padding: 40px;
-            border-radius: 15px;
-            margin-top: 30px;
-        }
-        .feedback-list h2 {
-            color: #4a90e2;
-            font-size: 24px;
-            margin-bottom: 20px;
-            border-bottom: 2px solid #eee;
-            padding-bottom: 10px;
-        }
-        .feedback-item {
-            padding: 15px;
-            border: 1px solid #eee;
-            border-radius: 8px;
-            margin-bottom: 15px;
-        }
-        .feedback-item .time {
-            color: #999;
-            font-size: 12px;
-            margin-bottom: 8px;
-        }
-        .feedback-item .content {
+            background-color: rgba(255, 255, 255, 0.8);
             color: #333;
-            font-size: 16px;
-            padding: 0;
-            max-width: 100%;
-            margin: 0;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 25px;
+            font-size: 14px;
+            text-align: left;
         }
-        .no-feedback {
-            color: #999;
-            text-align: center;
+        .notice h3 {
+            color: #4a90e2;
+            margin-bottom: 10px;
+        }
+        .footer {
+            margin-top: 40px;
             padding: 20px;
-            font-size: 16px;
+            background-color: rgba(0, 0, 0, 0.7);
+            border-radius: 10px;
+            font-size: 14px;
+        }
+        /* 备用文本样式 - 如果图片加载失败 */
+        .submit-btn .btn-text {
+            display: none;
+            padding: 0 20px;
+        }
+        .submit-btn img.error + .btn-text {
+            display: block;
         }
     </style>
 </head>
 <body>
-
-<!-- 导航栏（新增容器，保留原有导航链接） -->
-<div class="nav-container">
     <div class="nav">
         <a href="index.html">主页</a>
         <a href="down.html">下载</a>
         <a href="details.html">详细介绍</a>
         <a href="feedback.html">反馈问题</a>
         <a href="love.html">感 动 E 2 S 的 1 0 大 人 物</a>
-        <a href="donation.html">投喂</a>
-        <a href="yuandaima.html">源代码</a>
+		<a href="donation.html">投喂</a>
+	    <a href="yuandaima.html">源代码</a>
+	    <a href="test.html">登录</a>
     </div>
     
-    <!-- 右上角用户信息区域 -->
-    <div class="user-info" id="userInfo">
-        <!-- 未登录状态 -->
-        <a href="javascript:void(0)" class="login-entrance" id="loginEntrance">登录/注册</a>
-    </div>
-</div>
-
-<div class="content">
-    <h1>Easy2Sound 意见反馈</h1>
-    
-    <!-- 反馈提交表单 -->
-    <div class="feedback-form">
-        <div class="input-container">
-            <input type="text" class="feedback-input" placeholder="请输入您的宝贵意见...">
-            <button class="submit-btn">提交反馈</button>
-        </div>
-        <div class="notice">
-            <p>1. 您的意见将存储在 JSONBin 云端</p>
-            <p>2. 请尽量详细描述问题</p>
-            <p>3. 我们会定期查看</p>
-        </div>
-    </div>
-
-    <!-- 新增：历史反馈列表 -->
-    <div class="feedback-list">
-        <h2>历史反馈列表</h2>
-        <div id="feedbackListContainer">
-            <!-- 加载中的提示 -->
-            <div class="no-feedback">正在加载历史反馈...</div>
-        </div>
-    </div>
-</div>
-
-<!-- 登录/注册弹窗 -->
-<div class="login-modal" id="loginModal">
-    <div class="modal-container">
-        <button class="close-modal" id="closeModal">&times;</button>
+    <div class="content">
+        <h1>Easy2Sound 意见反馈</h1>
         
-        <div class="tabs">
-            <div class="tab active" data-tab="login">登录</div>
-            <div class="tab" data-tab="register">注册</div>
-        </div>
-
-        <!-- 登录表单 -->
-        <div class="form-section active" id="login">
-            <div class="form-group">
-                <label for="login-username">用户名</label>
-                <input type="text" id="login-username" placeholder="请输入用户名" required>
+        <div class="feedback-form">
+            <div class="input-container">
+                <input type="text" class="feedback-input" placeholder="请输入您的宝贵意见...">
+                <button class="submit-btn" type="button">
+                    <img src="上传.jpg" alt="上传按钮" onerror="handleImageError(this)">
+                    <span class="btn-text">上传.JPG</span>
+                </button>
             </div>
-            <div class="form-group">
-                <label for="login-password">密码</label>
-                <input type="password" id="login-password" placeholder="请输入密码" required>
-            </div>
-            <button class="form-btn" id="login-btn">登录</button>
-            <div class="message" id="login-message"></div>
-        </div>
-
-        <!-- 注册表单 -->
-        <div class="form-section" id="register">
-            <div class="form-group">
-                <label for="reg-username">用户名</label>
-                <input type="text" id="reg-username" placeholder="请设置用户名" required>
-            </div>
-            <div class="form-group">
-                <label for="reg-email">邮箱</label>
-                <input type="email" id="reg-email" placeholder="请输入邮箱" required>
-            </div>
-            <div class="form-group">
-                <label for="reg-password">密码</label>
-                <input type="password" id="reg-password" placeholder="请设置密码" required>
-            </div>
-            <button class="form-btn" id="register-btn">注册</button>
-            <div class="message" id="register-message"></div>
-        </div>
-    </div>
-</div>
-
-<script>
-    // ========== 登录功能配置项 ==========
-    const API_BASE_URL = 'https://api.easy2sound.xyz'; // 替换为你的实际API地址
-    const USER_INFO_KEY = 'easy2sound_user_info'; // localStorage存储用户信息的key
-
-    // ========== 反馈功能配置项 ==========
-    const JSONBIN_BIN_ID = "69b6a3e2aa77b81da9e7df6c";
-    const JSONBIN_API_KEY = "$2a$10$ZFc5L2RPCj9xB0IE2HeopeUFjvLhnkyLZ7VRx.MWmOqBa69Ueokc6";
-
-    // ========== 页面加载初始化 ==========
-    window.onload = function() {
-        // 初始化登录相关功能
-        initUserInfo();
-        initModalClose();
-        initTabSwitch();
-        initLoginRegisterForm();
-        
-        // 初始化反馈相关功能
-        loadFeedbackList();
-        // 绑定反馈提交事件
-        document.querySelector('.submit-btn').addEventListener('click', submitFeedback);
-        document.querySelector('.feedback-input').addEventListener('keypress', e => {
-            if (e.key === 'Enter') submitFeedback();
-        });
-    };
-
-    // ========== 登录功能核心逻辑 ==========
-    // 初始化用户信息显示
-    function initUserInfo() {
-        const userInfo = JSON.parse(localStorage.getItem(USER_INFO_KEY));
-        const userInfoContainer = document.getElementById('userInfo');
-        
-        if (userInfo && userInfo.username) {
-            // 已登录状态：显示用户名 + 退出按钮
-            userInfoContainer.innerHTML = `
-                <span class="username-display">欢迎，${userInfo.username}</span>
-                <button class="logout-btn" id="logoutBtn">退出登录</button>
-            `;
-            // 绑定退出登录事件
-            document.getElementById('logoutBtn').addEventListener('click', logout);
-        } else {
-            // 未登录状态：显示登录/注册入口
-            userInfoContainer.innerHTML = `
-                <a href="javascript:void(0)" class="login-entrance" id="loginEntrance">登录/注册</a>
-            `;
-            // 绑定登录入口点击事件
-            document.getElementById('loginEntrance').addEventListener('click', () => {
-                document.getElementById('loginModal').classList.add('active');
-            });
-        }
-    }
-
-    // 退出登录功能
-    function logout() {
-        localStorage.removeItem(USER_INFO_KEY);
-        alert('退出登录成功！');
-        // 刷新用户信息显示
-        initUserInfo();
-    }
-
-    // 初始化弹窗关闭功能
-    function initModalClose() {
-        // 关闭按钮点击
-        document.getElementById('closeModal').addEventListener('click', () => {
-            document.getElementById('loginModal').classList.remove('active');
-        });
-        // 点击弹窗外区域关闭
-        document.getElementById('loginModal').addEventListener('click', (e) => {
-            if (e.target === document.getElementById('loginModal')) {
-                document.getElementById('loginModal').classList.remove('active');
-            }
-        });
-    }
-
-    // 初始化标签切换
-    function initTabSwitch() {
-        const tabs = document.querySelectorAll('.tab');
-        const sections = document.querySelectorAll('.form-section');
-
-        tabs.forEach(tab => {
-            tab.addEventListener('click', () => {
-                // 移除所有激活状态
-                tabs.forEach(t => t.classList.remove('active'));
-                sections.forEach(s => s.classList.remove('active'));
-                
-                // 添加当前激活状态
-                tab.classList.add('active');
-                const target = tab.dataset.tab;
-                document.getElementById(target).classList.add('active');
-            });
-        });
-    }
-
-    // 显示消息提示
-    function showMessage(elementId, text, isSuccess) {
-        const message = document.getElementById(elementId);
-        message.textContent = text;
-        message.className = 'message ' + (isSuccess ? 'success' : 'error');
-        // 3秒后隐藏
-        setTimeout(() => {
-            message.className = 'message';
-        }, 3000);
-    }
-
-    // 初始化登录/注册表单（对接真实API）
-    function initLoginRegisterForm() {
-        // 登录功能（真实API调用）
-        document.getElementById('login-btn').addEventListener('click', async () => {
-            const username = document.getElementById('login-username').value.trim();
-            const password = document.getElementById('login-password').value.trim();
-
-            if (!username || !password) {
-                showMessage('login-message', '请输入用户名和密码', false);
-                return;
-            }
-
-            try {
-                const response = await fetch(`${API_BASE_URL}/login`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ username, password })
-                });
-
-                const data = await response.json();
-
-                if (data.ok) {
-                    // 登录成功 - 保存用户信息到本地
-                    localStorage.setItem(USER_INFO_KEY, JSON.stringify(data.user));
-                    showMessage('login-message', `登录成功！欢迎你，${data.user.username}`, true);
-                    // 关闭弹窗并刷新用户信息
-                    setTimeout(() => {
-                        document.getElementById('loginModal').classList.remove('active');
-                        initUserInfo();
-                    }, 1500);
-                } else {
-                    showMessage('login-message', data.error || '登录失败', false);
-                }
-            } catch (error) {
-                showMessage('login-message', '网络错误，请检查连接或VPN', false);
-                console.error('登录错误:', error);
-            }
-        });
-
-        // 注册功能（真实API调用）
-        document.getElementById('register-btn').addEventListener('click', async () => {
-            const username = document.getElementById('reg-username').value.trim();
-            const email = document.getElementById('reg-email').value.trim();
-            const password = document.getElementById('reg-password').value.trim();
-
-            if (!username || !email || !password) {
-                showMessage('register-message', '请填写所有信息', false);
-                return;
-            }
-
-            try {
-                const response = await fetch(`${API_BASE_URL}/register`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ username, email, password })
-                });
-
-                const data = await response.json();
-
-                if (data.ok) {
-                    showMessage('register-message', '注册成功！欢迎邮件已发送', true);
-                    // 注册成功后自动切换到登录标签
-                    setTimeout(() => {
-                        document.querySelectorAll('.tab')[0].click();
-                        document.getElementById('login-username').value = username;
-                    }, 1500);
-                } else {
-                    showMessage('register-message', data.error || '注册失败', false);
-                }
-            } catch (error) {
-                showMessage('register-message', '网络错误，请检查连接或VPN', false);
-                console.error('注册错误:', error);
-            }
-        });
-    }
-
-    // ========== 反馈功能核心逻辑 ==========
-    // 格式化时间戳为易读格式
-    function formatDateTime(timestamp) {
-        if (typeof timestamp === 'object') { // 如果是新提交的时间对象
-            const now = timestamp;
-            const y = now.getFullYear();
-            const m = String(now.getMonth() + 1).padStart(2, '0');
-            const d = String(now.getDate()).padStart(2, '0');
-            const h = String(now.getHours()).padStart(2, '0');
-            const i = String(now.getMinutes()).padStart(2, '0');
-            const s = String(now.getSeconds()).padStart(2, '0');
-            return `${y}-${m}-${d} ${h}:${i}:${s}`;
-        } else { // 如果是已存储的时间戳字符串
-            // 解析格式：20260315233000 → 2026-03-15 23:30:00
-            if (timestamp.length !== 14) return timestamp;
-            return `${timestamp.slice(0,4)}-${timestamp.slice(4,6)}-${timestamp.slice(6,8)} ${timestamp.slice(8,10)}:${timestamp.slice(10,12)}:${timestamp.slice(12,14)}`;
-        }
-    }
-
-    // 加载历史反馈列表
-    async function loadFeedbackList() {
-        const container = document.getElementById('feedbackListContainer');
-        try {
-            const getRes = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}/latest`, {
-                method: 'GET',
-                headers: {
-                    'X-Master-Key': JSONBIN_API_KEY
-                }
-            });
-            const getData = await getRes.json();
-            const feedbacks = getData.record.feedbacks || [];
-
-            if (feedbacks.length === 0) {
-                container.innerHTML = '<div class="no-feedback">暂无反馈内容</div>';
-                return;
-            }
-
-            // 生成反馈列表HTML（按时间倒序排列）
-            let html = '';
-            feedbacks.reverse().forEach(item => {
-                const formattedTime = formatDateTime(item.timestamp);
-                html += `
-                    <div class="feedback-item">
-                        <div class="time">提交时间：${formattedTime}</div>
-                        <div class="content">${item.content}</div>
-                    </div>
-                `;
-            });
-            container.innerHTML = html;
-        } catch (e) {
-            container.innerHTML = '<div class="no-feedback">加载历史反馈失败：' + e.message + '</div>';
-            console.error('加载反馈列表失败：', e);
-        }
-    }
-
-    // 提交反馈
-    async function submitFeedback() {
-        const input = document.querySelector('.feedback-input');
-        const btn = document.querySelector('.submit-btn');
-        const text = input.value.trim();
-
-        if (!text) {
-            alert('请输入反馈内容！');
-            return;
-        }
-
-        btn.classList.add('loading');
-        btn.disabled = true;
-
-        try {
-            // 1. 先获取当前 Bin 数据
-            const getRes = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}/latest`, {
-                method: 'GET',
-                headers: {
-                    'X-Master-Key': JSONBIN_API_KEY
-                }
-            });
-            const getData = await getRes.json();
-            const currentFeedbacks = getData.record.feedbacks || [];
-
-            // 2. 追加新反馈
-            const now = new Date();
-            const newFeedback = {
-                timestamp: formatDateTime(now).replace(/[-: ]/g, ''), // 存储为纯数字时间戳
-                content: text,
-                userAgent: navigator.userAgent
-            };
-            const updatedFeedbacks = [...currentFeedbacks, newFeedback];
-
-            // 3. 更新 Bin 数据
-            const updateRes = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-Master-Key': JSONBIN_API_KEY
-                },
-                body: JSON.stringify({ feedbacks: updatedFeedbacks })
-            });
-
-            if (!updateRes.ok) throw new Error('存储失败');
             
-            alert('反馈提交成功！已存储到云端。');
-            input.value = '';
+            <div class="notice">
+                <h3>反馈须知：</h3>
+                <p>1. 您的意见将被保存为TXT文件，并存储在服务器端</p>
+                <p>2. 请尽量详细描述您遇到的问题或建议</p>
+                <p>3. 我们会定期查看并处理所有反馈，感谢您的支持！</p>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Easy2Sound 意见反馈系统 | 提交的意见将生成TXT文件保存在服务器端</p>
+        </div>
+    </div>
+    <script>
+        document.querySelector('.submit-btn').addEventListener('click', function() {
+            const feedbackInput = document.querySelector('.feedback-input');
+            const feedbackText = feedbackInput.value.trim();
             
-            // 提交成功后刷新反馈列表
-            loadFeedbackList();
-        } catch (e) {
-            console.error(e);
-            alert('提交失败：' + e.message + '\n请检查网络或 JSONBin 配置');
-        } finally {
-            btn.classList.remove('loading');
-            btn.disabled = false;
-        }
-    }
-</script>
-
+            if (!feedbackText) {
+                alert('请输入反馈内容后再提交！');
+                feedbackInput.focus();
+                return;
+            }
+            
+            // 模拟提交到服务器（实际使用时需要后端支持）
+            alert('反馈已提交！内容："' + feedbackText + '"\n\n注意：在实际系统中，此内容将被保存为服务器端的TXT文件。');
+            
+            // 清空输入框
+            feedbackInput.value = '';
+            feedbackInput.focus();
+        });
+        
+        // 允许按Enter键提交
+        document.querySelector('.feedback-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                document.querySelector('.submit-btn').click();
+            }
+        });
+        
+    </script>
 </body>
 </html>

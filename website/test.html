@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="导航栏.css">
+    <title>Easy2Sound-Log</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        /* 导航栏样式 */
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+        }
+        .nav a {
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 500;
+        }
+        .nav a:hover {
+            opacity: 0.8;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 80px 20px 20px; /* 给顶部导航栏留出空间 */
+        }
+
+        .container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+            width: 100%;
+            max-width: 450px;
+            padding: 40px;
+        }
+
+        .tabs {
+            display: flex;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #eee;
+        }
+
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: 600;
+            color: #666;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .tab.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+        }
+
+        .form-section {
+            display: none;
+        }
+
+        .form-section.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #333;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border 0.3s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background: #5a6edb;
+        }
+
+        .message {
+            margin-top: 20px;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            display: none;
+        }
+
+        .success {
+            background: #e8f5e9;
+            color: #2e7d32;
+            display: block;
+        }
+
+        .error {
+            background: #ffebee;
+            color: #c62828;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏放在这里！body 内部最上方 -->
+    <div class="nav">
+        <a href="index.html">主页</a>
+        <a href="down.html">下载</a>
+        <a href="details.html">详细介绍</a>
+        <a href="feedback.html">反馈问题</a>
+        <a href="love.html">感 动 E 2 S 的 1 0 大 人 物</a>
+        <a href="donation.html">投喂</a>
+        <a href="yuandaima.html">源代码</a>
+        <a href="test.html">登录</a>
+    </div>
+
+    <div class="container">
+        <div class="tabs">
+            <div class="tab active" data-tab="login">登录</div>
+            <div class="tab" data-tab="register">注册</div>
+        </div>
+
+        <!-- 登录表单 -->
+        <div class="form-section active" id="login">
+            <div class="form-group">
+                <label for="login-username">用户名</label>
+                <input type="text" id="login-username" placeholder="请输入用户名" required>
+            </div>
+            <div class="form-group">
+                <label for="login-password">密码</label>
+                <input type="password" id="login-password" placeholder="请输入密码" required>
+            </div>
+            <button id="login-btn">登录</button>
+            <div class="message" id="login-message"></div>
+        </div>
+
+        <!-- 注册表单 -->
+        <div class="form-section" id="register">
+            <div class="form-group">
+                <label for="reg-username">用户名</label>
+                <input type="text" id="reg-username" placeholder="请设置用户名" required>
+            </div>
+            <div class="form-group">
+                <label for="reg-email">邮箱</label>
+                <input type="email" id="reg-email" placeholder="请输入邮箱" required>
+            </div>
+            <div class="form-group">
+                <label for="reg-password">密码</label>
+                <input type="password" id="reg-password" placeholder="请设置密码" required>
+            </div>
+            <button id="register-btn">注册</button>
+            <div class="message" id="register-message"></div>
+        </div>
+    </div>
+
+    <script>
+        // ========== 配置你的 API 地址 ==========
+        const API_BASE_URL = 'https://api.easy2sound.xyz';
+        
+        // ========== 标签切换逻辑 ==========
+        const tabs = document.querySelectorAll('.tab');
+        const sections = document.querySelectorAll('.form-section');
+
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                tabs.forEach(t => t.classList.remove('active'));
+                sections.forEach(s => s.classList.remove('active'));
+                tab.classList.add('active');
+                const target = tab.dataset.tab;
+                document.getElementById(target).classList.add('active');
+            });
+        });
+
+        // ========== 显示消息提示 ==========
+        function showMessage(elementId, text, isSuccess) {
+            const message = document.getElementById(elementId);
+            message.textContent = text;
+            message.className = 'message ' + (isSuccess ? 'success' : 'error');
+            setTimeout(() => {
+                message.className = 'message';
+            }, 3000);
+        }
+
+        // ========== 登录功能 ==========
+        document.getElementById('login-btn').addEventListener('click', async () => {
+            const username = document.getElementById('login-username').value.trim();
+            const password = document.getElementById('login-password').value.trim();
+
+            if (!username || !password) {
+                showMessage('login-message', '请输入用户名和密码', false);
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ username, password })
+                });
+
+                const data = await response.json();
+
+                if (data.ok) {
+                    showMessage('login-message', `登录成功！欢迎你，${data.user.username}`, true);
+                    console.log('用户信息:', data.user);
+                } else {
+                    showMessage('login-message', data.error || '登录失败', false);
+                }
+            } catch (error) {
+                showMessage('login-message', '网络错误，请检查连接或VPN', false);
+                console.error('登录错误:', error);
+            }
+        });
+
+        // ========== 注册功能 ==========
+        document.getElementById('register-btn').addEventListener('click', async () => {
+            const username = document.getElementById('reg-username').value.trim();
+            const email = document.getElementById('reg-email').value.trim();
+            const password = document.getElementById('reg-password').value.trim();
+
+            if (!username || !email || !password) {
+                showMessage('register-message', '请填写所有信息', false);
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/register`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ username, email, password })
+                });
+
+                const data = await response.json();
+
+                if (data.ok) {
+                    showMessage('register-message', '注册成功！欢迎邮件已发送', true);
+                    tabs[0].click();
+                    document.getElementById('login-username').value = username;
+                } else {
+                    showMessage('register-message', data.error || '注册失败', false);
+                }
+            } catch (error) {
+                showMessage('register-message', '网络错误，请检查连接或VPN', false);
+                console.error('注册错误:', error);
+            }
+        });
+    </script>
+</body>
+</html>
