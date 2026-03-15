@@ -3,28 +3,10 @@
 <head>
 	<meta charset="utf-8" />
     <title>Easy2Sound-feedback</title>
+    <!-- 引入和主页相同的导航栏样式文件 -->
+    <link rel="stylesheet" href="导航栏.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        .nav {
-            background-color: rgba(0, 0, 0, 0.85);
-            padding: 20px;
-            text-align: center;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-        .nav a {
-            color: white;
-            text-decoration: none;
-            margin: 0 15px;
-            font-size: 18px;
-            padding: 12px 24px;
-            display: inline-block;
-        }
+        /* 仅保留反馈表单必要样式，和整体风格统一 */
         .content {
             padding: 60px 20px;
             max-width: 800px;
@@ -77,12 +59,13 @@
 </head>
 <body>
 
+<!-- 和主页完全一致的导航栏 -->
 <div class="nav">
     <a href="index.html">主页</a>
     <a href="down.html">下载</a>
     <a href="details.html">详细介绍</a>
     <a href="feedback.html">反馈问题</a>
-    <a href="love.html">感动E2S的10大人物</a>
+    <a href="love.html">感 动 E 2 S 的 1 0 大 人 物</a>
     <a href="donation.html">投喂</a>
     <a href="yuandaima.html">源代码</a>
 </div>
@@ -103,9 +86,9 @@
 </div>
 
 <script>
-    // ========== 请替换成你的 JSONBin 信息 ==========
-    const JSONBIN_BIN_ID = "69b6a3e2aa77b81da9e7df6c"; // 例如 "66e6d2f1e024fd0d3f123456"
-    const JSONBIN_API_KEY = "$2a$10$ZFc5L2RPCj9xB0IE2HeopeUFjvLhnkyLZ7VRx.MWmOqBa69Ueokc6"; // 例如 "$2a$10$..."
+    // ========== 你的 JSONBin 配置（保持不变） ==========
+    const JSONBIN_BIN_ID = "69b6a3e2aa77b81da9e7df6c";
+    const JSONBIN_API_KEY = "$2a$10$ZFc5L2RPCj9xB0IE2HeopeUFjvLhnkyLZ7VRx.MWmOqBa69Ueokc6";
 
     function formatDateTime() {
         const now = new Date();
