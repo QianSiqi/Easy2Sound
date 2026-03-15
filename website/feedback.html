@@ -207,7 +207,7 @@
 
             try {
                 // 注意：若前端是HTTPS，此处需改为https://39.96.215.72:64580/save-feedback
-                const response = await fetch('http://39.96.215.72:64580/save-feedback', {
+                const response = await fetch('http://39.96.215.72:60438/save-feedback', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -231,7 +231,7 @@
             } catch (error) {
                 console.error('提交反馈出错:', error);
                 // 针对性提示混合内容/跨域问题
-                alert('提交失败！请检查服务器协议（HTTP/HTTPS）是否与前端一致，或确认服务器已启动并开放64580端口');
+                alert('提交失败！请检查服务器协议（HTTP/HTTPS）是否与前端一致，或确认服务器已启动并开放60438端口');
             } finally {
                 submitBtn.classList.remove('loading');
                 submitBtn.disabled = false;
