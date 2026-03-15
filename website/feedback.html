@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8" />
     <title>Easy2Sound-feedback</title>
-    <!-- 允许HTTPS页面跳转HTTP地址（解决混合内容） -->
+    <!-- 关键：允许 HTTPS 页面加载 HTTP 内容（解决混合内容错误） -->
     <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
     <style>
         * {
@@ -130,8 +130,8 @@
         btn.disabled = true;
 
         try {
-            // 核心：请求Cloudflare转发地址，浏览器自动跟随302重定向到后端
-            const res = await fetch('https://feedback.easy2sound.xyz/save-feedback', {
+            // ✅ 直接请求后端 HTTP 地址（绕开 Cloudflare）
+            const res = await fetch('http://39.96.215.72:60438/save-feedback', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -140,9 +140,8 @@
                     content: text,
                     timestamp: formatDateTime()
                 }),
-                mode: 'cors',
-                credentials: 'omit',
-                redirect: 'follow' // 强制跟随重定向（浏览器默认已开启）
+                mode: 'cors', // 允许跨域
+                credentials: 'omit'
             });
 
             if (!res.ok) {
@@ -157,7 +156,7 @@
                 alert('提交失败：' + (result.message || '未知错误'));
             }
         } catch (e) {
-            alert('提交失败：' + e.message + '\n请检查后端服务是否正常');
+            alert('提交失败：' + e.message + '\n请检查网络或后端服务是否运行');
             console.error('详细错误：', e);
         } finally {
             btn.classList.remove('loading');
