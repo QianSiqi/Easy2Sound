@@ -52,34 +52,34 @@ L7
 
 **4.2 意见部门**：  
 Teto-Kasane(qq:テト普照大地,3473850198)
-白糖の正义铃
-叽里咕噜说啥我要开始闯了
-少年?还是追逐?
-水山
-吟之和
+白糖の正义铃<br>
+叽里咕噜说啥我要开始闯了<br>
+少年?还是追逐?<br>
+水山<br>
+吟之和<br>
 
-**4.3 采样组**：  
+**4.3 采样组**<br>
 Leon Liu
 
-**4.4 UI组**：  
-白师傅
-AAA足力健批发供应商
-星空
+**4.4 UI组**<br>
+白师傅<br>
+AAA足力健批发供应商<br>
+星空<br>
 
-**4.5音素器组**
+**4.5音素器组**<br>
 地月系月球
 
-**4.6网页**
-Spinglan
-Teto-Kasane
+**4.6网页**<br>
+Spinglan<br>
+Teto-Kasane<br>
 
-**4.7采样组**
-ECHO
-Leon Liu
-皮塔豆子pitabeans
-人淡如菊
-由奈_
-(^Antipathy^)
+**4.7采样组**<br>
+ECHO<br>
+Leon Liu<br>
+皮塔豆子pitabeans<br>
+人淡如菊<br>
+由奈_<br>
+(^Antipathy^)<br>
 
-**4.8自动音高组**
-Evidence"
+**4.8自动音高组**<br>
+Evidence"<br>
