@@ -3,8 +3,6 @@
 <head>
 	<meta charset="utf-8" />
     <title>Easy2Sound-feedback</title>
-    <!-- 关键：允许 HTTPS 页面加载 HTTP 内容（解决混合内容错误） -->
-    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
     <style>
         * {
             margin: 0;
@@ -97,7 +95,7 @@
             <button class="submit-btn">提交反馈</button>
         </div>
         <div class="notice">
-            <p>1. 您的意见将保存为 TXT 文件</p>
+            <p>1. 您的意见将存储在 JSONBin 云端</p>
             <p>2. 请尽量详细描述问题</p>
             <p>3. 我们会定期查看</p>
         </div>
@@ -105,6 +103,10 @@
 </div>
 
 <script>
+    // ========== 请替换成你的 JSONBin 信息 ==========
+    const JSONBIN_BIN_ID = "69b6a3e2aa77b81da9e7df6c"; // 例如 "66e6d2f1e024fd0d3f123456"
+    const JSONBIN_API_KEY = "$2a$10$ZFc5L2RPCj9xB0IE2HeopeUFjvLhnkyLZ7VRx.MWmOqBa69Ueokc6"; // 例如 "$2a$10$..."
+
     function formatDateTime() {
         const now = new Date();
         const y = now.getFullYear();
@@ -130,34 +132,41 @@
         btn.disabled = true;
 
         try {
-            // ✅ 直接请求后端 HTTP 地址（绕开 Cloudflare）
-            const res = await fetch('http://39.96.215.72:60438/save-feedback', {
-                method: 'POST',
+            // 1. 先获取当前 Bin 数据
+            const getRes = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}/latest`, {
+                method: 'GET',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'X-Master-Key': JSONBIN_API_KEY
+                }
+            });
+            const getData = await getRes.json();
+            const currentFeedbacks = getData.record.feedbacks || [];
+
+            // 2. 追加新反馈
+            const newFeedback = {
+                timestamp: formatDateTime(),
+                content: text,
+                userAgent: navigator.userAgent // 可选：记录浏览器信息
+            };
+            const updatedFeedbacks = [...currentFeedbacks, newFeedback];
+
+            // 3. 更新 Bin 数据
+            const updateRes = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Master-Key': JSONBIN_API_KEY
                 },
-                body: JSON.stringify({
-                    content: text,
-                    timestamp: formatDateTime()
-                }),
-                mode: 'cors', // 允许跨域
-                credentials: 'omit'
+                body: JSON.stringify({ feedbacks: updatedFeedbacks })
             });
 
-            if (!res.ok) {
-                throw new Error(`请求失败 [${res.status}]：${res.statusText}`);
-            }
-
-            const result = await res.json();
-            if (result.success) {
-                alert('反馈提交成功！');
-                input.value = '';
-            } else {
-                alert('提交失败：' + (result.message || '未知错误'));
-            }
+            if (!updateRes.ok) throw new Error('存储失败');
+            
+            alert('反馈提交成功！已存储到云端。');
+            input.value = '';
         } catch (e) {
-            alert('提交失败：' + e.message + '\n请检查网络或后端服务是否运行');
-            console.error('详细错误：', e);
+            console.error(e);
+            alert('提交失败：' + e.message + '\n请检查网络或 JSONBin 配置');
         } finally {
             btn.classList.remove('loading');
             btn.disabled = false;
