@@ -203,33 +203,75 @@
             submitBtn.disabled = true;
 
             try {
-                // ✅ 核心修改：请求Cloudflare Pages代理路径（HTTPS）
+                // ✅ 完整修复跨域、405、JSON解析问题
                 const response = await fetch('/api/feedback', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json' // 明确接收JSON格式
+                    },
                     body: JSON.stringify({
                         content: feedbackText,
                         timestamp: formatDateTime()
-                    })
+                    }),
+                    mode: 'cors', // 明确跨域模式
+                    credentials: 'omit', // 关闭Cookie避免预检请求报错
+                    cache: 'no-cache' // 禁用缓存
                 });
 
-                const result = await response.json();
+                // ✅ 先校验响应状态，避免解析非JSON内容
+                if (!response.ok) {
+                    // 捕获405/500等错误状态
+                    const errorText = await response.text();
+                    throw new Error(`服务器返回错误 [${response.status}]：${errorText.substring(0, 100)}`);
+                }
 
-                if (result.success) {
+                // ✅ 安全解析JSON
+                let result;
+                try {
+                    result = await response.json();
+                } catch (jsonError) {
+                    throw new Error(`JSON解析失败：${jsonError.message}`);
+                }
+
+                if (result && result.success) {
                     alert(`反馈提交成功！\n文件已保存为：${result.filename}`);
                     feedbackInput.value = '';
                 } else {
-                    alert(`提交失败：${result.message || '服务器处理错误'}`);
+                    alert(`提交失败：${result?.message || '服务器未返回成功状态'}`);
                 }
             } catch (error) {
-                console.error('提交异常：', error);
-                alert('提交失败！请检查frp映射和后端服务是否正常');
+                console.error('提交异常详情：', error);
+                // ✅ 更精准的错误提示
+                alert(`提交失败！\n错误原因：${error.message}\n\n排查建议：\n1. 确认frp映射 39.96.215.72:60438 正常\n2. 确认后端Node.js服务已启动\n3. 检查Cloudflare Pages的_routes.json配置`);
             } finally {
                 submitBtn.classList.remove('loading');
                 submitBtn.disabled = false;
                 feedbackInput.focus();
             }
         }
+
+        // ✅ 新增：处理OPTIONS预检请求（防止浏览器拦截）
+        document.addEventListener('DOMContentLoaded', () => {
+            // 提前初始化，避免首次请求预检失败
+            const testPreflight = async () => {
+                try {
+                    await fetch('/api/feedback', {
+                        method: 'OPTIONS',
+                        headers: {
+                            'Access-Control-Request-Method': 'POST',
+                            'Access-Control-Request-Headers': 'Content-Type'
+                        },
+                        mode: 'cors',
+                        credentials: 'omit'
+                    });
+                } catch (e) {
+                    console.log('预检请求测试（非必要）：', e.message);
+                }
+            };
+            // 页面加载后异步执行预检请求
+            setTimeout(testPreflight, 1000);
+        });
 
         document.querySelector('.submit-btn').addEventListener('click', submitFeedback);
         document.querySelector('.feedback-input').addEventListener('keypress', function(e) {
