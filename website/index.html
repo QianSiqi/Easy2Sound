@@ -83,7 +83,7 @@
             background: #5a6edb;
         }
 
-        /* 登录弹窗样式 */
+        /* 登录弹窗样式 - 完全复用你原本的样式 */
         .login-modal {
             position: fixed;
             top: 0;
@@ -109,24 +109,8 @@
             width: 100%;
             max-width: 450px;
             padding: 40px;
-            position: relative;
         }
 
-        .close-modal {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            font-size: 24px;
-            cursor: pointer;
-            color: #666;
-            transition: color 0.3s;
-        }
-
-        .close-modal:hover {
-            color: #c62828;
-        }
-
-        /* 登录/注册标签样式 */
         .tabs {
             display: flex;
             margin-bottom: 30px;
@@ -219,6 +203,26 @@
             display: block;
         }
 
+        /* 关闭按钮样式 */
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 24px;
+            cursor: pointer;
+            color: #666;
+            transition: color 0.3s;
+            background: none;
+            border: none;
+            width: auto;
+            padding: 0;
+        }
+
+        .close-modal:hover {
+            color: #c62828;
+            background: none;
+        }
+
         /* 主页内容样式 */
         .content {
             padding: 60px 20px;
@@ -260,10 +264,11 @@
         <p>一站式音频工具平台，满足你的所有音频处理需求</p>
     </div>
 
-    <!-- 登录/注册弹窗 -->
+    <!-- 登录/注册弹窗 - 完全复用你原本的结构 -->
     <div class="login-modal" id="loginModal">
         <div class="modal-container">
-            <span class="close-modal" id="closeModal">&times;</span>
+            <!-- 新增关闭按钮 -->
+            <button class="close-modal" id="closeModal">&times;</button>
             
             <div class="tabs">
                 <div class="tab active" data-tab="login">登录</div>
@@ -305,19 +310,19 @@
     </div>
 
     <script>
-        // ========== JSONBin 配置（替换成你自己的！） ==========
-        const JSONBIN_BIN_ID = "69b6a3e2aa77b81da9e7df6c"; // 你的用户数据Bin ID
-        const JSONBIN_API_KEY = "$2a$10$ZFc5L2RPCj9xB0IE2HeopeUFjvLhnkyLZ7VRx.MWmOqBa69Ueokc6"; // 你的Master Key
+        // ========== 核心配置 - 完全复用你原本的API地址 ==========
+        const API_BASE_URL = 'https://api.easy2sound.xyz';
         const USER_INFO_KEY = 'easy2sound_user_info'; // localStorage存储用户信息的key
 
         // ========== 页面加载时初始化 ==========
         window.onload = function() {
-            initUserInfo();
-            initLoginModal();
-            initLoginRegisterForm();
+            initUserInfo();          // 初始化用户信息显示
+            initModalClose();        // 初始化弹窗关闭功能
+            initTabSwitch();         // 初始化标签切换（复用你的逻辑）
+            initLoginRegisterForm(); // 初始化登录/注册（完全复用你的逻辑）
         };
 
-        // ========== 初始化用户信息显示 ==========
+        // ========== 1. 初始化用户信息显示 ==========
         function initUserInfo() {
             const userInfo = JSON.parse(localStorage.getItem(USER_INFO_KEY));
             const userInfoContainer = document.getElementById('userInfo');
@@ -342,17 +347,16 @@
             }
         }
 
-        // ========== 退出登录功能 ==========
+        // ========== 2. 退出登录功能 ==========
         function logout() {
             localStorage.removeItem(USER_INFO_KEY);
             alert('退出登录成功！');
-            // 刷新用户信息显示
-            initUserInfo();
+            initUserInfo(); // 刷新用户信息显示
         }
 
-        // ========== 初始化登录弹窗 ==========
-        function initLoginModal() {
-            // 关闭弹窗
+        // ========== 3. 初始化弹窗关闭功能 ==========
+        function initModalClose() {
+            // 关闭按钮点击
             document.getElementById('closeModal').addEventListener('click', () => {
                 document.getElementById('loginModal').classList.remove('active');
             });
@@ -362,21 +366,28 @@
                     document.getElementById('loginModal').classList.remove('active');
                 }
             });
-            // 标签切换
+        }
+
+        // ========== 4. 标签切换逻辑 - 完全复用你的代码 ==========
+        function initTabSwitch() {
             const tabs = document.querySelectorAll('.tab');
             const sections = document.querySelectorAll('.form-section');
 
             tabs.forEach(tab => {
                 tab.addEventListener('click', () => {
+                    // 移除所有激活状态
                     tabs.forEach(t => t.classList.remove('active'));
                     sections.forEach(s => s.classList.remove('active'));
+                    
+                    // 添加当前激活状态
                     tab.classList.add('active');
-                    document.getElementById(tab.dataset.tab).classList.add('active');
+                    const target = tab.dataset.tab;
+                    document.getElementById(target).classList.add('active');
                 });
             });
         }
 
-        // ========== 显示消息提示 ==========
+        // ========== 5. 显示消息提示 - 完全复用你的函数 ==========
         function showMessage(elementId, text, isSuccess) {
             const message = document.getElementById(elementId);
             message.textContent = text;
@@ -387,171 +398,81 @@
             }, 3000);
         }
 
-        // ========== 获取所有用户数据（从JSONBin读取） ==========
-        async function getAllUsers() {
-            try {
-                const response = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}/latest`, {
-                    method: 'GET',
-                    headers: {
-                        'X-Master-Key': JSONBIN_API_KEY
-                    }
-                });
-                
-                if (!response.ok) {
-                    // 如果Bin不存在，初始化空的用户数据
-                    if (response.status === 404) {
-                        await initUserBin();
-                        return [];
-                    }
-                    throw new Error('获取用户数据失败');
-                }
-                
-                const data = await response.json();
-                // 返回用户列表（如果没有则返回空数组）
-                return data.record?.users || [];
-            } catch (error) {
-                console.error('获取用户数据出错：', error);
-                return [];
-            }
-        }
-
-        // ========== 初始化用户数据Bin（首次使用时创建） ==========
-        async function initUserBin() {
-            try {
-                await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}`, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-Master-Key': JSONBIN_API_KEY
-                    },
-                    body: JSON.stringify({ users: [] })
-                });
-            } catch (error) {
-                console.error('初始化用户Bin出错：', error);
-            }
-        }
-
-        // ========== 保存用户数据到JSONBin ==========
-        async function saveUsersToBin(users) {
-            try {
-                const response = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}`, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-Master-Key': JSONBIN_API_KEY
-                    },
-                    body: JSON.stringify({ users: users })
-                });
-                
-                if (!response.ok) {
-                    throw new Error('保存用户数据失败');
-                }
-                
-                return true;
-            } catch (error) {
-                console.error('保存用户数据出错：', error);
-                return false;
-            }
-        }
-
-        // ========== 初始化登录/注册表单（真实校验版） ==========
+        // ========== 6. 登录/注册功能 - 100% 复用你的原始代码 ==========
         function initLoginRegisterForm() {
-            // 登录功能（真实校验）
+            // ========== 登录功能（完全不变） ==========
             document.getElementById('login-btn').addEventListener('click', async () => {
                 const username = document.getElementById('login-username').value.trim();
                 const password = document.getElementById('login-password').value.trim();
 
-                // 空值校验
                 if (!username || !password) {
                     showMessage('login-message', '请输入用户名和密码', false);
                     return;
                 }
 
                 try {
-                    // 1. 从JSONBin获取所有用户
-                    const users = await getAllUsers();
-                    
-                    // 2. 查找匹配的用户
-                    const matchedUser = users.find(user => 
-                        user.username === username && user.password === password
-                    );
-                    
-                    // 3. 校验结果
-                    if (matchedUser) {
-                        // 登录成功 - 存储用户信息到本地
-                        localStorage.setItem(USER_INFO_KEY, JSON.stringify({ 
-                            username: matchedUser.username,
-                            email: matchedUser.email
-                        }));
-                        showMessage('login-message', `登录成功！欢迎你，${matchedUser.username}`, true);
-                        
+                    const response = await fetch(`${API_BASE_URL}/login`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ username, password })
+                    });
+
+                    const data = await response.json();
+
+                    if (data.ok) {
+                        // 登录成功 - 保存用户信息到本地
+                        localStorage.setItem(USER_INFO_KEY, JSON.stringify(data.user));
+                        showMessage('login-message', `登录成功！欢迎你，${data.user.username}`, true);
                         // 关闭弹窗并刷新用户信息
                         setTimeout(() => {
                             document.getElementById('loginModal').classList.remove('active');
                             initUserInfo();
                         }, 1500);
                     } else {
-                        // 登录失败
-                        showMessage('login-message', '用户名或密码错误', false);
+                        showMessage('login-message', data.error || '登录失败', false);
                     }
                 } catch (error) {
-                    showMessage('login-message', '登录失败：' + error.message, false);
+                    showMessage('login-message', '网络错误，请检查连接或VPN', false);
                     console.error('登录错误:', error);
                 }
             });
 
-            // 注册功能（真实保存）
+            // ========== 注册功能（完全不变） ==========
             document.getElementById('register-btn').addEventListener('click', async () => {
                 const username = document.getElementById('reg-username').value.trim();
                 const email = document.getElementById('reg-email').value.trim();
                 const password = document.getElementById('reg-password').value.trim();
 
-                // 空值校验
                 if (!username || !email || !password) {
                     showMessage('register-message', '请填写所有信息', false);
                     return;
                 }
 
                 try {
-                    // 1. 从JSONBin获取所有用户
-                    const users = await getAllUsers();
-                    
-                    // 2. 检查用户名是否已存在
-                    const userExists = users.some(user => user.username === username);
-                    if (userExists) {
-                        showMessage('register-message', '用户名已存在，请更换', false);
-                        return;
-                    }
-                    
-                    // 3. 检查邮箱是否已存在
-                    const emailExists = users.some(user => user.email === email);
-                    if (emailExists) {
-                        showMessage('register-message', '该邮箱已注册，请更换', false);
-                        return;
-                    }
-                    
-                    // 4. 创建新用户
-                    const newUser = {
-                        username: username,
-                        email: email,
-                        password: password,
-                        registerTime: new Date().toISOString()
-                    };
-                    
-                    // 5. 保存到JSONBin
-                    const saveSuccess = await saveUsersToBin([...users, newUser]);
-                    if (saveSuccess) {
-                        showMessage('register-message', '注册成功！请登录', true);
-                        // 切换到登录标签并填充用户名
+                    const response = await fetch(`${API_BASE_URL}/register`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ username, email, password })
+                    });
+
+                    const data = await response.json();
+
+                    if (data.ok) {
+                        showMessage('register-message', '注册成功！欢迎邮件已发送', true);
+                        // 注册成功后自动切换到登录标签
                         setTimeout(() => {
                             document.querySelectorAll('.tab')[0].click();
                             document.getElementById('login-username').value = username;
                         }, 1500);
                     } else {
-                        showMessage('register-message', '注册失败，请重试', false);
+                        showMessage('register-message', data.error || '注册失败', false);
                     }
                 } catch (error) {
-                    showMessage('register-message', '注册失败：' + error.message, false);
+                    showMessage('register-message', '网络错误，请检查连接或VPN', false);
                     console.error('注册错误:', error);
                 }
             });
