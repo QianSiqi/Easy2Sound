@@ -111,10 +111,15 @@
             cursor: pointer;
             color: #666;
             transition: color 0.3s;
+            background: none;
+            border: none;
+            width: auto;
+            padding: 0;
         }
 
         .close-modal:hover {
             color: #c62828;
+            background: none;
         }
 
         /* 登录/注册标签样式 */
@@ -262,7 +267,7 @@
     <!-- 登录/注册弹窗 -->
     <div class="login-modal" id="loginModal">
         <div class="modal-container">
-            <span class="close-modal" id="closeModal">&times;</span>
+            <button class="close-modal" id="closeModal">&times;</button>
             
             <div class="tabs">
                 <div class="tab active" data-tab="login">登录</div>
@@ -304,18 +309,19 @@
     </div>
 
     <script>
-        // ========== 配置项 ==========
-        const API_BASE_URL = 'https://api.easy2sound.xyz'; // 替换为你的实际API地址
+        // ========== 核心配置 - 对接你的真实API ==========
+        const API_BASE_URL = 'https://api.easy2sound.xyz';
         const USER_INFO_KEY = 'easy2sound_user_info'; // localStorage存储用户信息的key
 
-        // ========== 页面加载时初始化用户信息 ==========
+        // ========== 页面加载时初始化 ==========
         window.onload = function() {
-            initUserInfo();
-            initLoginModal();
-            initLoginRegisterForm();
+            initUserInfo();          // 初始化用户信息显示
+            initModalClose();        // 初始化弹窗关闭功能
+            initTabSwitch();         // 初始化标签切换
+            initLoginRegisterForm(); // 初始化登录/注册（真实API版）
         };
 
-        // ========== 初始化用户信息显示 ==========
+        // ========== 1. 初始化用户信息显示 ==========
         function initUserInfo() {
             const userInfo = JSON.parse(localStorage.getItem(USER_INFO_KEY));
             const userInfoContainer = document.getElementById('userInfo');
@@ -340,17 +346,16 @@
             }
         }
 
-        // ========== 退出登录功能 ==========
+        // ========== 2. 退出登录功能 ==========
         function logout() {
             localStorage.removeItem(USER_INFO_KEY);
             alert('退出登录成功！');
-            // 刷新用户信息显示
-            initUserInfo();
+            initUserInfo(); // 刷新用户信息显示
         }
 
-        // ========== 初始化登录弹窗 ==========
-        function initLoginModal() {
-            // 关闭弹窗
+        // ========== 3. 初始化弹窗关闭功能 ==========
+        function initModalClose() {
+            // 关闭按钮点击
             document.getElementById('closeModal').addEventListener('click', () => {
                 document.getElementById('loginModal').classList.remove('active');
             });
@@ -360,21 +365,28 @@
                     document.getElementById('loginModal').classList.remove('active');
                 }
             });
-            // 标签切换
+        }
+
+        // ========== 4. 标签切换逻辑 ==========
+        function initTabSwitch() {
             const tabs = document.querySelectorAll('.tab');
             const sections = document.querySelectorAll('.form-section');
 
             tabs.forEach(tab => {
                 tab.addEventListener('click', () => {
+                    // 移除所有激活状态
                     tabs.forEach(t => t.classList.remove('active'));
                     sections.forEach(s => s.classList.remove('active'));
+                    
+                    // 添加当前激活状态
                     tab.classList.add('active');
-                    document.getElementById(tab.dataset.tab).classList.add('active');
+                    const target = tab.dataset.tab;
+                    document.getElementById(target).classList.add('active');
                 });
             });
         }
 
-        // ========== 显示消息提示 ==========
+        // ========== 5. 显示消息提示 ==========
         function showMessage(elementId, text, isSuccess) {
             const message = document.getElementById(elementId);
             message.textContent = text;
@@ -385,9 +397,9 @@
             }, 3000);
         }
 
-        // ========== 初始化登录/注册表单 ==========
+        // ========== 6. 登录/注册功能（对接真实API） ==========
         function initLoginRegisterForm() {
-            // 登录功能
+            // ========== 登录功能（真实API调用） ==========
             document.getElementById('login-btn').addEventListener('click', async () => {
                 const username = document.getElementById('login-username').value.trim();
                 const password = document.getElementById('login-password').value.trim();
@@ -398,37 +410,35 @@
                 }
 
                 try {
-                    // 模拟登录（实际项目替换为真实API请求）
-                    // const response = await fetch(`${API_BASE_URL}/login`, {
-                    //     method: 'POST',
-                    //     headers: { 'Content-Type': 'application/json' },
-                    //     body: JSON.stringify({ username, password })
-                    // });
-                    // const data = await response.json();
+                    const response = await fetch(`${API_BASE_URL}/login`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ username, password })
+                    });
 
-                    // 模拟登录成功（测试用）
-                    const data = { ok: true, user: { username } };
+                    const data = await response.json();
 
                     if (data.ok) {
-                        // 存储用户信息到本地
+                        // 登录成功 - 保存用户信息到本地
                         localStorage.setItem(USER_INFO_KEY, JSON.stringify(data.user));
                         showMessage('login-message', `登录成功！欢迎你，${data.user.username}`, true);
-                        // 关闭弹窗
+                        // 关闭弹窗并刷新用户信息
                         setTimeout(() => {
                             document.getElementById('loginModal').classList.remove('active');
-                            // 刷新用户信息显示
                             initUserInfo();
                         }, 1500);
                     } else {
-                        showMessage('login-message', data.error || '登录失败，用户名或密码错误', false);
+                        showMessage('login-message', data.error || '登录失败', false);
                     }
                 } catch (error) {
-                    showMessage('login-message', '网络错误，请检查连接', false);
+                    showMessage('login-message', '网络错误，请检查连接或VPN', false);
                     console.error('登录错误:', error);
                 }
             });
 
-            // 注册功能
+            // ========== 注册功能（真实API调用） ==========
             document.getElementById('register-btn').addEventListener('click', async () => {
                 const username = document.getElementById('reg-username').value.trim();
                 const email = document.getElementById('reg-email').value.trim();
@@ -440,29 +450,28 @@
                 }
 
                 try {
-                    // 模拟注册（实际项目替换为真实API请求）
-                    // const response = await fetch(`${API_BASE_URL}/register`, {
-                    //     method: 'POST',
-                    //     headers: { 'Content-Type': 'application/json' },
-                    //     body: JSON.stringify({ username, email, password })
-                    // });
-                    // const data = await response.json();
+                    const response = await fetch(`${API_BASE_URL}/register`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ username, email, password })
+                    });
 
-                    // 模拟注册成功（测试用）
-                    const data = { ok: true };
+                    const data = await response.json();
 
                     if (data.ok) {
-                        showMessage('register-message', '注册成功！请登录', true);
-                        // 切换到登录标签
+                        showMessage('register-message', '注册成功！欢迎邮件已发送', true);
+                        // 注册成功后自动切换到登录标签
                         setTimeout(() => {
                             document.querySelectorAll('.tab')[0].click();
                             document.getElementById('login-username').value = username;
                         }, 1500);
                     } else {
-                        showMessage('register-message', data.error || '注册失败，用户名已存在', false);
+                        showMessage('register-message', data.error || '注册失败', false);
                     }
                 } catch (error) {
-                    showMessage('register-message', '网络错误，请检查连接', false);
+                    showMessage('register-message', '网络错误，请检查连接或VPN', false);
                     console.error('注册错误:', error);
                 }
             });
