@@ -157,11 +157,12 @@
         }
     }
 
-    // 加载历史反馈列表
+    // 加载历史反馈列表（修复变量名错误）
     async function loadFeedbackList() {
         const container = document.getElementById('feedbackListContainer');
         try {
-            const res = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}/latest`, {
+            // ✅ 修复：变量名从 res 改为 getRes（保持和后续代码一致）
+            const getRes = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}/latest`, {
                 method: 'GET',
                 headers: {
                     'X-Master-Key': JSONBIN_API_KEY
