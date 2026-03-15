@@ -177,7 +177,6 @@
     </div>
 
     <script>
-        // 格式化时间戳为文件名格式
         function formatDateTime() {
             const now = new Date();
             const year = now.getFullYear();
@@ -189,7 +188,6 @@
             return `${year}${month}${day}${hour}${minute}${second}`;
         }
 
-        // 提交反馈主函数
         async function submitFeedback() {
             const feedbackInput = document.querySelector('.feedback-input');
             const submitBtn = document.querySelector('.submit-btn');
@@ -201,39 +199,31 @@
                 return;
             }
 
-            // 加载状态
             submitBtn.classList.add('loading');
             submitBtn.disabled = true;
 
             try {
-                // ✅ 核心修改：改为HTTPS的域名转发地址（解决混合内容问题）
-                // 配合Cloudflare转发规则：https://easy2sound.xyz/api/feedback → http://39.96.215.72:60438/save-feedback
-                const response = await fetch('https://easy2sound.xyz/api/feedback', {
+                // ✅ 核心修改：请求Cloudflare Pages代理路径（HTTPS）
+                const response = await fetch('/api/feedback', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         content: feedbackText,
                         timestamp: formatDateTime()
-                    }),
-                    // 跨域配置优化
-                    mode: 'cors',
-                    credentials: 'include'
+                    })
                 });
 
                 const result = await response.json();
 
                 if (result.success) {
-                    alert(`反馈提交成功！\n文件已保存为：${result.filename}\n\n反馈内容：${feedbackText}`);
+                    alert(`反馈提交成功！\n文件已保存为：${result.filename}`);
                     feedbackInput.value = '';
                 } else {
-                    alert(`提交失败：${result.message || '服务器错误'}`);
+                    alert(`提交失败：${result.message || '服务器处理错误'}`);
                 }
             } catch (error) {
-                console.error('提交反馈出错:', error);
-                // 更精准的错误提示
-                alert(`提交失败！\n可能原因：\n1. Cloudflare转发规则未配置\n2. 服务器60438端口未开放\n3. 后端服务未启动`);
+                console.error('提交异常：', error);
+                alert('提交失败！请检查frp映射和后端服务是否正常');
             } finally {
                 submitBtn.classList.remove('loading');
                 submitBtn.disabled = false;
@@ -241,7 +231,6 @@
             }
         }
 
-        // 绑定事件
         document.querySelector('.submit-btn').addEventListener('click', submitFeedback);
         document.querySelector('.feedback-input').addEventListener('keypress', function(e) {
             if (e.key === 'Enter') submitFeedback();
