@@ -3,6 +3,8 @@
 <head>
 	<meta charset="utf-8" />
     <title>Easy2Sound-feedback</title>
+    <!-- 允许HTTPS页面跳转HTTP地址（解决混合内容） -->
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
     <style>
         * {
             margin: 0;
@@ -120,7 +122,7 @@
         const text = input.value.trim();
 
         if (!text) {
-            alert('请输入内容');
+            alert('请输入反馈内容！');
             return;
         }
 
@@ -128,7 +130,8 @@
         btn.disabled = true;
 
         try {
-            const res = await fetch('/api/feedback', {
+            // 核心：请求Cloudflare转发地址，浏览器自动跟随302重定向到后端
+            const res = await fetch('https://feedback.easy2sound.xyz/save-feedback', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -136,20 +139,26 @@
                 body: JSON.stringify({
                     content: text,
                     timestamp: formatDateTime()
-                })
+                }),
+                mode: 'cors',
+                credentials: 'omit',
+                redirect: 'follow' // 强制跟随重定向（浏览器默认已开启）
             });
 
-            const result = await res.json();
+            if (!res.ok) {
+                throw new Error(`请求失败 [${res.status}]：${res.statusText}`);
+            }
 
+            const result = await res.json();
             if (result.success) {
-                alert('提交成功！');
+                alert('反馈提交成功！');
                 input.value = '';
             } else {
-                alert('提交失败：' + result.message);
+                alert('提交失败：' + (result.message || '未知错误'));
             }
         } catch (e) {
-            alert('提交失败，请检查后端服务');
-            console.error(e);
+            alert('提交失败：' + e.message + '\n请检查后端服务是否正常');
+            console.error('详细错误：', e);
         } finally {
             btn.classList.remove('loading');
             btn.disabled = false;
