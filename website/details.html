@@ -18,7 +18,6 @@
             display: inline-block;
         }
 
-        /* 右上角用户信息样式（新增头像框） */
         .user-info {
             display: flex;
             align-items: center;
@@ -27,7 +26,6 @@
             padding: 12px 24px;
         }
 
-        /* 头像展示框样式 */
         .avatar-box {
             width: 40px;
             height: 40px;
@@ -36,20 +34,12 @@
             border: 2px solid #667eea;
             cursor: pointer;
             background: #f5f5f5;
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
 
         .avatar-img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-        }
-
-        .avatar-placeholder {
-            font-size: 18px;
-            color: #667eea;
         }
 
         .username-display {
@@ -64,13 +54,7 @@
             color: white;
             border: none;
             border-radius: 4px;
-            font-size: 14px;
             cursor: pointer;
-            transition: background 0.3s;
-        }
-
-        .logout-btn:hover {
-            background: #5a6edb;
         }
 
         .login-entrance {
@@ -80,26 +64,13 @@
             padding: 6px 12px;
             background: #667eea;
             border-radius: 4px;
-            transition: background 0.3s;
         }
 
-        .login-entrance:hover {
-            background: #5a6edb;
-        }
-
-        /* 登录弹窗样式 */
         .login-modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            display: none;
-            justify-content: center;
-            align-items: center;
+            position: fixed; top:0; left:0; width:100%; height:100%;
+            background: rgba(0,0,0,0.5);
+            display: none; justify-content: center; align-items: center;
             z-index: 999;
-            padding: 20px;
         }
 
         .login-modal.active {
@@ -107,586 +78,339 @@
         }
 
         .modal-container {
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.15);
-            width: 100%;
-            max-width: 450px;
-            padding: 40px;
-            position: relative;
+            background: white; border-radius: 12px;
+            width: 100%; max-width: 450px;
+            padding: 40px; position: relative;
         }
 
         .close-modal {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            font-size: 24px;
-            cursor: pointer;
-            color: #666;
-            transition: color 0.3s;
-            background: none;
-            border: none;
-            width: auto;
-            padding: 0;
+            position: absolute; top:20px; right:20px;
+            font-size:24px; cursor:pointer; border:none; background:none;
         }
 
-        .close-modal:hover {
-            color: #c62828;
-            background: none;
-        }
+        .tabs { display: flex; margin-bottom:30px; border-bottom:2px solid #eee; }
+        .tab { padding:10px 20px; cursor:pointer; font-weight:600; color:#666; }
+        .tab.active { color:#667eea; border-bottom:3px solid #667eea; }
+        .form-section { display: none; }
+        .form-section.active { display: block; }
+        .form-group { margin-bottom:20px; }
+        label { display:block; margin-bottom:8px; }
+        input { width:100%; padding:12px 15px; border:1px solid #ddd; border-radius:8px; font-size:16px; }
+        .form-btn { width:100%; padding:14px; background:#667eea; color:white; border:none; border-radius:8px; font-weight:600; cursor:pointer; }
+        .message { margin-top:20px; padding:12px; border-radius:8px; text-align:center; display:none; }
+        .success { background:#e8f5e9; color:#2e7d32; display:block; }
+        .error { background:#ffebee; color:#c62828; display:block; }
 
-        /* 登录/注册标签样式 */
-        .tabs {
-            display: flex;
-            margin-bottom: 30px;
-            border-bottom: 2px solid #eee;
-        }
-
-        .tab {
-            padding: 10px 20px;
-            cursor: pointer;
-            font-size: 18px;
-            font-weight: 600;
-            color: #666;
-            border-bottom: 3px solid transparent;
-            transition: all 0.3s;
-        }
-
-        .tab.active {
-            color: #667eea;
-            border-bottom-color: #667eea;
-        }
-
-        .form-section {
-            display: none;
-        }
-
-        .form-section.active {
-            display: block;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-            color: #333;
-        }
-
-        input {
-            width: 100%;
-            padding: 12px 15px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            font-size: 16px;
-            transition: border 0.3s;
-        }
-
-        input:focus {
-            outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-        }
-
-        .form-btn {
-            width: 100%;
-            padding: 14px;
-            background: #667eea;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-
-        .form-btn:hover {
-            background: #5a6edb;
-        }
-
-        .message {
-            margin-top: 20px;
-            padding: 12px;
-            border-radius: 8px;
-            text-align: center;
-            display: none;
-        }
-
-        .success {
-            background: #e8f5e9;
-            color: #2e7d32;
-            display: block;
-        }
-
-        .error {
-            background: #ffebee;
-            color: #c62828;
-            display: block;
-        }
-
-        /* 新增：头像设置弹窗样式 */
         .avatar-setting-modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            display: none;
-            justify-content: center;
-            align-items: center;
+            position: fixed; top:0; left:0; width:100%; height:100%;
+            background: rgba(0,0,0,0.5);
+            display: none; justify-content: center; align-items: center;
             z-index: 1000;
-            padding: 20px;
         }
-
-        .avatar-setting-modal.active {
-            display: flex;
-        }
-
+        .avatar-setting-modal.active { display:flex; }
         .avatar-setting-container {
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.15);
-            width: 100%;
-            max-width: 400px;
-            padding: 30px;
-            position: relative;
+            background:white; border-radius:12px;
+            max-width:400px; width:100%; padding:30px;
+            position:relative;
         }
-
         .avatar-preview {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            overflow: hidden;
-            margin: 0 auto 20px;
-            border: 3px solid #667eea;
+            width:120px; height:120px; border-radius:50%;
+            margin:0 auto 20px; border:3px solid #667eea; overflow:hidden;
         }
+        .avatar-preview-img { width:100%; height:100%; object-fit:cover; }
+        .avatar-tips { text-align:center; color:#666; margin-bottom:20px; }
 
-        .avatar-preview-img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .avatar-tips {
-            text-align: center;
-            color: #666;
-            font-size: 14px;
-            margin-bottom: 20px;
-        }
-
-        /* 原有样式保留 */
         .content-box {
-            background-color: rgba(0, 0, 0, 0.6);
-            border-radius: 12px;
-            padding: 25px;
-            margin: 30px 0;
-            color: white; /* 新增：文字改为白色，适配深色背景 */
+            background:rgba(0,0,0,0.6); border-radius:12px; padding:25px; margin:30px 0; color:white;
         }
-        .content-box h1 {
-            margin-top: 0;
-            font-size: 26px;
-            color: white;
-        }
-        .content-box p {
-            font-size: 16px;
-            line-height: 1.6;
-            margin: 10px 0;
-        }
+        .content-box h1 { margin-top:0; color:white; }
     </style>
 </head>
 <body>
-    <!-- 导航栏（新增容器，保留原有导航链接） -->
-    <div class="nav-container">
-        <div class="nav">
-            <a href="index.html">主页</a>
-            <a href="down.html">下载</a>
-            <a href="details.html">详细介绍</a>
-            <a href="feedback.html">反馈问题</a>
-            <a href="love.html">感 动 E 2 S 的 1 0 大 人 物</a>
-            <a href="donation.html">投喂</a>
-            <a href="yuandaima.html">源代码</a>
-        </div>
-        
-        <!-- 右上角用户信息区域（新增头像框） -->
-        <div class="user-info" id="userInfo">
-            <!-- 未登录状态 -->
-            <a href="javascript:void(0)" class="login-entrance" id="loginEntrance">登录/注册</a>
-        </div>
+
+<div class="nav-container">
+    <div class="nav">
+        <a href="index.html">主页</a>
+        <a href="down.html">下载</a>
+        <a href="details.html">详细介绍</a>
+        <a href="feedback.html">反馈问题</a>
+        <a href="love.html">感 动 E 2 S 的 1 0 大 人 物</a>
+        <a href="donation.html">投喂</a>
+        <a href="yuandaima.html">源代码</a>
     </div>
+    <div class="user-info" id="userInfo"></div>
+</div>
 
-    <!-- 原有内容保留 -->
-    <div class="content-box">
-        <h1>Easy2Sound 详细介绍</h1>
+<div class="content-box">
+    <h1>Easy2Sound 详细介绍</h1>
+    <p>Easy2Sound 是一款简单易用的虚拟歌姬合成工具(暂时只支持UTAU，Open UTAU)软件离线状态保持本地运作，除下载插件外，无需用网。</p>
+    <p>软件支持本地导入导出,无需复杂设置,适合新手使用。</p>
+</div>
 
-        <p>Easy2Sound 是一款简单易用的虚拟歌姬合成工具(暂时只支持UTAU，Open UTAU)软件离线状态保持本地运作，除下载插件外，无需用网。</p>
-        <p>软件支持本地导入导出,无需复杂设置,适合新手使用。</p>
-        <p>如果你在使用过程中遇到问题，可以前往“反馈问题”页面提交你的建议和BUG。</p>
-    </div>
-
-    <!-- 登录/注册弹窗 -->
-    <div class="login-modal" id="loginModal">
-        <div class="modal-container">
-            <button class="close-modal" id="closeModal">&times;</button>
-            
-            <div class="tabs">
-                <div class="tab active" data-tab="login">登录</div>
-                <div class="tab" data-tab="register">注册</div>
-            </div>
-
-            <!-- 登录表单 -->
-            <div class="form-section active" id="login">
-                <div class="form-group">
-                    <label for="login-username">用户名</label>
-                    <input type="text" id="login-username" placeholder="请输入用户名" required>
-                </div>
-                <div class="form-group">
-                    <label for="login-password">密码</label>
-                    <input type="password" id="login-password" placeholder="请输入密码" required>
-                </div>
-                <button class="form-btn" id="login-btn">登录</button>
-                <div class="message" id="login-message"></div>
-            </div>
-
-            <!-- 注册表单（新增QQ号输入框） -->
-            <div class="form-section" id="register">
-                <div class="form-group">
-                    <label for="reg-username">用户名</label>
-                    <input type="text" id="reg-username" placeholder="请设置用户名" required>
-                </div>
-                <div class="form-group">
-                    <label for="reg-email">邮箱</label>
-                    <input type="email" id="reg-email" placeholder="请输入邮箱" required>
-                </div>
-                <div class="form-group">
-                    <label for="reg-qq">QQ号（选填，自动生成头像）</label>
-                    <input type="number" id="reg-qq" placeholder="请输入QQ号">
-                </div>
-                <div class="form-group">
-                    <label for="reg-password">密码</label>
-                    <input type="password" id="reg-password" placeholder="请设置密码" required>
-                </div>
-                <button class="form-btn" id="register-btn">注册</button>
-                <div class="message" id="register-message"></div>
-            </div>
+<!-- 登录弹窗 -->
+<div class="login-modal" id="loginModal">
+    <div class="modal-container">
+        <button class="close-modal" id="closeModal">&times;</button>
+        <div class="tabs">
+            <div class="tab active" data-tab="login">登录</div>
+            <div class="tab" data-tab="register">注册</div>
         </div>
-    </div>
 
-    <!-- 新增：头像设置弹窗 -->
-    <div class="avatar-setting-modal" id="avatarSettingModal">
-        <div class="avatar-setting-container">
-            <button class="close-modal" id="closeAvatarModal">&times;</button>
-            <h3 style="text-align:center; color:#333; margin-bottom:20px;">设置头像</h3>
-            
-            <div class="avatar-preview">
-                <img src="" alt="头像预览" class="avatar-preview-img" id="avatarPreviewImg">
-            </div>
-            
-            <p class="avatar-tips">填写QQ号自动生成头像，或输入自定义头像URL</p>
-            
+        <div class="form-section active" id="login">
             <div class="form-group">
-                <label for="setting-qq">QQ号</label>
-                <input type="number" id="setting-qq" placeholder="输入QQ号自动生成头像">
+                <label>用户名</label>
+                <input type="text" id="login-username">
             </div>
-            
             <div class="form-group">
-                <label for="setting-avatar-url">自定义头像URL</label>
-                <input type="text" id="setting-avatar-url" placeholder="输入头像图片链接">
+                <label>密码</label>
+                <input type="password" id="login-password">
             </div>
-            
-            <button class="form-btn" id="saveAvatarBtn">保存头像</button>
-            <div class="message" id="avatar-message"></div>
+            <button class="form-btn" id="login-btn">登录</button>
+            <div class="message" id="login-message"></div>
+        </div>
+
+        <div class="form-section" id="register">
+            <div class="form-group">
+                <label>用户名</label>
+                <input type="text" id="reg-username">
+            </div>
+            <div class="form-group">
+                <label>邮箱</label>
+                <input type="email" id="reg-email">
+            </div>
+            <div class="form-group">
+                <label>QQ号（自动生成头像）</label>
+                <input type="number" id="reg-qq">
+            </div>
+            <div class="form-group">
+                <label>密码</label>
+                <input type="password" id="reg-password">
+            </div>
+            <button class="form-btn" id="register-btn">注册</button>
+            <div class="message" id="register-message"></div>
         </div>
     </div>
+</div>
 
-    <script>
-        // ========== 核心配置 - 对接你的真实API ==========
-        const API_BASE_URL = 'https://api.easy2sound.xyz';
-        const USER_INFO_KEY = 'easy2sound_user_info'; // localStorage存储用户信息的key
-        const DEFAULT_AVATAR = 'https://q1.qlogo.cn/g?b=qq&nk=0&s=160'; // 默认头像
+<!-- 头像设置弹窗 -->
+<div class="avatar-setting-modal" id="avatarSettingModal">
+    <div class="avatar-setting-container">
+        <button class="close-modal" id="closeAvatarModal">&times;</button>
+        <h3 style="text-align:center;">设置头像</h3>
+        <div class="avatar-preview">
+            <img class="avatar-preview-img" id="avatarPreviewImg">
+        </div>
+        <p class="avatar-tips">填写QQ号自动获取头像，或填写URL</p>
+        <div class="form-group">
+            <label>QQ号</label>
+            <input type="number" id="setting-qq">
+        </div>
+        <div class="form-group">
+            <label>自定义头像URL</label>
+            <input type="text" id="setting-avatar-url">
+        </div>
+        <button class="form-btn" id="saveAvatarBtn">保存</button>
+        <div class="message" id="avatar-message"></div>
+    </div>
+</div>
 
-        // ========== 页面加载时初始化 ==========
-        window.onload = function() {
-            initUserInfo();          // 初始化用户信息显示
-            initModalClose();        // 初始化弹窗关闭功能
-            initTabSwitch();         // 初始化标签切换
-            initLoginRegisterForm(); // 初始化登录/注册（真实API版）
-            initAvatarSetting();     // 初始化头像设置功能
+<script>
+const API_BASE = 'https://api.easy2sound.xyz';
+const USER_KEY = 'easy2sound_user_info';
+const DEFAULT_AVATAR = 'https://q1.qlogo.cn/g?b=qq&nk=0&s=160';
+
+window.onload = () => {
+    renderUserBar();
+    bindModalEvents();
+    bindTabSwitch();
+    bindLoginRegister();
+    bindAvatarBoxClick(); // 👉 修复点头像没反应
+};
+
+// ======================================
+// 渲染用户栏（登录/头像/退出）
+// ======================================
+function renderUserBar() {
+    const user = JSON.parse(localStorage.getItem(USER_KEY) || 'null');
+    const el = document.getElementById('userInfo');
+    if (!user) {
+        el.innerHTML = `<a href="javascript:" class="login-entrance" id="goLogin">登录/注册</a>`;
+        document.getElementById('goLogin').onclick = () => {
+            document.getElementById('loginModal').classList.add('active');
         };
+        return;
+    }
+    const avatar = user.avatar || DEFAULT_AVATAR;
+    el.innerHTML = `
+        <div class="avatar-box" id="avatarBox">
+            <img src="${avatar}" class="avatar-img">
+        </div>
+        <span class="username-display">欢迎，${user.username}</span>
+        <button class="logout-btn" id="logoutBtn">退出</button>
+    `;
+    document.getElementById('logoutBtn').onclick = () => {
+        localStorage.removeItem(USER_KEY);
+        alert('已退出');
+        renderUserBar();
+    };
+}
 
-        // ========== 1. 初始化用户信息显示（新增头像框） ==========
-        function initUserInfo() {
-            const userInfo = JSON.parse(localStorage.getItem(USER_INFO_KEY));
-            const userInfoContainer = document.getElementById('userInfo');
-            
-            if (userInfo && userInfo.username) {
-                // 已登录状态：显示头像 + 用户名 + 退出按钮
-                const avatarUrl = userInfo.avatar || DEFAULT_AVATAR;
-                userInfoContainer.innerHTML = `
-                    <div class="avatar-box" id="avatarBox">
-                        <img src="${avatarUrl}" alt="用户头像" class="avatar-img" id="userAvatarImg">
-                    </div>
-                    <span class="username-display">欢迎，${userInfo.username}</span>
-                    <button class="logout-btn" id="logoutBtn">退出登录</button>
-                `;
-                // 绑定头像框点击事件（打开头像设置）
-                document.getElementById('avatarBox').addEventListener('click', () => {
-                    openAvatarSettingModal(userInfo);
-                });
-                // 绑定退出登录事件
-                document.getElementById('logoutBtn').addEventListener('click', logout);
-            } else {
-                // 未登录状态：显示登录/注册入口
-                userInfoContainer.innerHTML = `
-                    <a href="javascript:void(0)" class="login-entrance" id="loginEntrance">登录/注册</a>
-                `;
-                // 绑定登录入口点击事件
-                document.getElementById('loginEntrance').addEventListener('click', () => {
-                    document.getElementById('loginModal').classList.add('active');
-                });
-            }
+// ======================================
+// 👉 头像点击（修复核心：用事件委托）
+// ======================================
+function bindAvatarBoxClick() {
+    document.body.addEventListener('click', (e) => {
+        if (e.target.closest('#avatarBox')) {
+            openAvatarSetting();
         }
+    });
+}
 
-        // ========== 2. 退出登录功能 ==========
-        function logout() {
-            localStorage.removeItem(USER_INFO_KEY);
-            alert('退出登录成功！');
-            initUserInfo(); // 刷新用户信息显示
+// ======================================
+// 打开头像设置
+// ======================================
+function openAvatarSetting() {
+    const user = JSON.parse(localStorage.getItem(USER_KEY));
+    if (!user) return;
+    const m = document.getElementById('avatarSettingModal');
+    const prev = document.getElementById('avatarPreviewImg');
+    const qq = document.getElementById('setting-qq');
+    const url = document.getElementById('setting-avatar-url');
+
+    prev.src = user.avatar || DEFAULT_AVATAR;
+    qq.value = user.qq || '';
+    url.value = user.avatar || '';
+
+    // 实时预览
+    qq.oninput = () => {
+        const v = qq.value.trim();
+        if (v) {
+            const qavatar = `https://q1.qlogo.cn/g?b=qq&nk=${v}&s=160`;
+            prev.src = qavatar;
+            url.value = qavatar;
         }
+    };
+    url.oninput = () => {
+        if (url.value) prev.src = url.value;
+    };
 
-        // ========== 3. 初始化弹窗关闭功能（新增头像弹窗关闭） ==========
-        function initModalClose() {
-            // 登录弹窗关闭
-            document.getElementById('closeModal').addEventListener('click', () => {
-                document.getElementById('loginModal').classList.remove('active');
+    m.classList.add('active');
+}
+
+// ======================================
+// 弹窗关闭
+// ======================================
+function bindModalEvents() {
+    document.getElementById('closeModal').onclick = () => {
+        document.getElementById('loginModal').classList.remove('active');
+    };
+    document.getElementById('closeAvatarModal').onclick = () => {
+        document.getElementById('avatarSettingModal').classList.remove('active');
+    };
+}
+
+// ======================================
+// 登录/注册标签切换
+// ======================================
+function bindTabSwitch() {
+    const tabs = document.querySelectorAll('.tab');
+    tabs.forEach(t => {
+        t.onclick = () => {
+            tabs.forEach(x => x.classList.remove('active'));
+            document.querySelectorAll('.form-section').forEach(s => s.classList.remove('active'));
+            t.classList.add('active');
+            document.getElementById(t.dataset.tab).classList.add('active');
+        };
+    });
+}
+
+// ======================================
+// 登录 & 注册
+// ======================================
+function bindLoginRegister() {
+    // 登录
+    document.getElementById('login-btn').onclick = async () => {
+        const u = document.getElementById('login-username').value.trim();
+        const p = document.getElementById('login-password').value.trim();
+        if (!u || !p) return showMsg('login-message', '请输入账号密码', false);
+        try {
+            const r = await fetch(API_BASE + '/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username: u, password: p })
             });
-            document.getElementById('loginModal').addEventListener('click', (e) => {
-                if (e.target === document.getElementById('loginModal')) {
+            const d = await r.json();
+            if (d.ok) {
+                localStorage.setItem(USER_KEY, JSON.stringify(d.user));
+                showMsg('login-message', '登录成功', true);
+                setTimeout(() => {
                     document.getElementById('loginModal').classList.remove('active');
-                }
-            });
-
-            // 头像设置弹窗关闭
-            document.getElementById('closeAvatarModal').addEventListener('click', () => {
-                document.getElementById('avatarSettingModal').classList.remove('active');
-            });
-            document.getElementById('avatarSettingModal').addEventListener('click', (e) => {
-                if (e.target === document.getElementById('avatarSettingModal')) {
-                    document.getElementById('avatarSettingModal').classList.remove('active');
-                }
-            });
-        }
-
-        // ========== 4. 标签切换逻辑 ==========
-        function initTabSwitch() {
-            const tabs = document.querySelectorAll('.tab');
-            const sections = document.querySelectorAll('.form-section');
-
-            tabs.forEach(tab => {
-                tab.addEventListener('click', () => {
-                    // 移除所有激活状态
-                    tabs.forEach(t => t.classList.remove('active'));
-                    sections.forEach(s => s.classList.remove('active'));
-                    
-                    // 添加当前激活状态
-                    tab.classList.add('active');
-                    const target = tab.dataset.tab;
-                    document.getElementById(target).classList.add('active');
-                });
-            });
-        }
-
-        // ========== 5. 显示消息提示 ==========
-        function showMessage(elementId, text, isSuccess) {
-            const message = document.getElementById(elementId);
-            message.textContent = text;
-            message.className = 'message ' + (isSuccess ? 'success' : 'error');
-            // 3秒后隐藏
-            setTimeout(() => {
-                message.className = 'message';
-            }, 3000);
-        }
-
-        // ========== 6. 生成QQ头像URL ==========
-        function getQQAvatarUrl(qqNumber) {
-            if (!qqNumber || isNaN(qqNumber)) return DEFAULT_AVATAR;
-            return `https://q1.qlogo.cn/g?b=qq&nk=${qqNumber}&s=160`;
-        }
-
-        // ========== 7. 登录/注册功能（新增QQ号参数） ==========
-        function initLoginRegisterForm() {
-            // ========== 登录功能（真实API调用） ==========
-            document.getElementById('login-btn').addEventListener('click', async () => {
-                const username = document.getElementById('login-username').value.trim();
-                const password = document.getElementById('login-password').value.trim();
-
-                if (!username || !password) {
-                    showMessage('login-message', '请输入用户名和密码', false);
-                    return;
-                }
-
-                try {
-                    const response = await fetch(`${API_BASE_URL}/login`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({ username, password })
-                    });
-
-                    const data = await response.json();
-
-                    if (data.ok) {
-                        // 登录成功 - 保存用户信息到本地（包含头像）
-                        localStorage.setItem(USER_INFO_KEY, JSON.stringify(data.user));
-                        showMessage('login-message', `登录成功！欢迎你，${data.user.username}`, true);
-                        // 关闭弹窗并刷新用户信息
-                        setTimeout(() => {
-                            document.getElementById('loginModal').classList.remove('active');
-                            initUserInfo();
-                        }, 1500);
-                    } else {
-                        showMessage('login-message', data.error || '登录失败', false);
-                    }
-                } catch (error) {
-                    showMessage('login-message', '网络错误，请检查连接', false);
-                    console.error('登录错误:', error);
-                }
-            });
-
-            // ========== 注册功能（新增QQ号参数） ==========
-            document.getElementById('register-btn').addEventListener('click', async () => {
-                const username = document.getElementById('reg-username').value.trim();
-                const email = document.getElementById('reg-email').value.trim();
-                const qq = document.getElementById('reg-qq').value.trim();
-                const password = document.getElementById('reg-password').value.trim();
-
-                if (!username || !email || !password) {
-                    showMessage('register-message', '请填写所有必填信息', false);
-                    return;
-                }
-
-                try {
-                    const response = await fetch(`${API_BASE_URL}/register`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({ 
-                            username, 
-                            email, 
-                            password,
-                            qq: qq || '' // 新增QQ号参数
-                        })
-                    });
-
-                    const data = await response.json();
-
-                    if (data.ok) {
-                        showMessage('register-message', '注册成功！自动生成QQ头像（如有）', true);
-                        // 注册成功后自动切换到登录标签
-                        setTimeout(() => {
-                            document.querySelectorAll('.tab')[0].click();
-                            document.getElementById('login-username').value = username;
-                        }, 1500);
-                    } else {
-                        showMessage('register-message', data.error || '注册失败', false);
-                    }
-                } catch (error) {
-                    showMessage('register-message', '网络错误，请检查连接', false);
-                    console.error('注册错误:', error);
-                }
-            });
-        }
-
-        // ========== 8. 头像设置功能 ==========
-        function initAvatarSetting() {
-            // 打开头像设置弹窗
-            function openAvatarSettingModal(userInfo) {
-                const avatarSettingModal = document.getElementById('avatarSettingModal');
-                const avatarPreviewImg = document.getElementById('avatarPreviewImg');
-                const settingQq = document.getElementById('setting-qq');
-                const settingAvatarUrl = document.getElementById('setting-avatar-url');
-
-                // 初始化弹窗内容
-                avatarPreviewImg.src = userInfo.avatar || DEFAULT_AVATAR;
-                settingQq.value = userInfo.qq || '';
-                settingAvatarUrl.value = userInfo.avatar || '';
-
-                // 显示弹窗
-                avatarSettingModal.classList.add('active');
-
-                // QQ号输入实时预览头像
-                settingQq.addEventListener('input', () => {
-                    const qq = settingQq.value.trim();
-                    const avatarUrl = getQQAvatarUrl(qq);
-                    avatarPreviewImg.src = avatarUrl;
-                    settingAvatarUrl.value = avatarUrl;
-                });
-
-                // 自定义头像URL输入实时预览
-                settingAvatarUrl.addEventListener('input', () => {
-                    const url = settingAvatarUrl.value.trim();
-                    if (url) {
-                        avatarPreviewImg.src = url;
-                    } else {
-                        avatarPreviewImg.src = DEFAULT_AVATAR;
-                    }
-                });
-
-                // 保存头像按钮点击事件
-                document.getElementById('saveAvatarBtn').onclick = async () => {
-                    const qq = settingQq.value.trim();
-                    const avatarUrl = settingAvatarUrl.value.trim();
-                    const userInfo = JSON.parse(localStorage.getItem(USER_INFO_KEY));
-
-                    if (!userInfo || !userInfo.id) {
-                        showMessage('avatar-message', '用户信息异常，请重新登录', false);
-                        return;
-                    }
-
-                    try {
-                        // 调用更新用户信息API
-                        const response = await fetch(`${API_BASE_URL}/update-user-info`, {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify({
-                                userId: userInfo.id,
-                                qq: qq,
-                                avatar: avatarUrl
-                            })
-                        });
-
-                        const data = await response.json();
-
-                        if (data.ok) {
-                            // 更新本地存储的用户信息
-                            userInfo.qq = data.user.qq;
-                            userInfo.avatar = data.user.avatar;
-                            localStorage.setItem(USER_INFO_KEY, JSON.stringify(userInfo));
-
-                            showMessage('avatar-message', '头像设置成功！', true);
-                            // 关闭弹窗并刷新用户信息
-                            setTimeout(() => {
-                                avatarSettingModal.classList.remove('active');
-                                initUserInfo();
-                            }, 1500);
-                        } else {
-                            showMessage('avatar-message', data.error || '头像设置失败', false);
-                        }
-                    } catch (error) {
-                        showMessage('avatar-message', '网络错误，请检查连接', false);
-                        console.error('更新头像错误:', error);
-                    }
-                };
+                    renderUserBar();
+                }, 1000);
+            } else {
+                showMsg('login-message', d.error, false);
             }
-        }
-    </script>
+        } catch (e) { showMsg('login-message', '网络错误', false); }
+    };
+
+    // 注册
+    document.getElementById('register-btn').onclick = async () => {
+        const u = document.getElementById('reg-username').value.trim();
+        const e = document.getElementById('reg-email').value.trim();
+        const q = document.getElementById('reg-qq').value.trim();
+        const p = document.getElementById('reg-password').value.trim();
+        if (!u || !e || !p) return showMsg('register-message', '请填完', false);
+        try {
+            const res = await fetch(API_BASE + '/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username: u, email: e, password: p, qq: q })
+            });
+            const d = await res.json();
+            if (d.ok) {
+                showMsg('register-message', '注册成功！', true);
+                setTimeout(() => document.querySelectorAll('.tab')[0].click(), 1000);
+            } else {
+                showMsg('register-message', d.error, false);
+            }
+        } catch (err) { showMsg('register-message', '网络错误', false); }
+    };
+
+    // 保存头像
+    document.getElementById('saveAvatarBtn').onclick = async () => {
+        const user = JSON.parse(localStorage.getItem(USER_KEY));
+        if (!user) return;
+        const qq = document.getElementById('setting-qq').value.trim();
+        const avatar = document.getElementById('setting-avatar-url').value.trim();
+        try {
+            const r = await fetch(API_BASE + '/update-user-info', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ userId: user.id, qq, avatar })
+            });
+            const d = await r.json();
+            if (d.ok) {
+                user.qq = d.user.qq;
+                user.avatar = d.user.avatar;
+                localStorage.setItem(USER_KEY, JSON.stringify(user));
+                showMsg('avatar-message', '保存成功', true);
+                setTimeout(() => {
+                    document.getElementById('avatarSettingModal').classList.remove('active');
+                    renderUserBar();
+                }, 1000);
+            } else {
+                showMsg('avatar-message', d.error || '失败', false);
+            }
+        } catch (e) { showMsg('avatar-message', '网络错误', false); }
+    };
+}
+
+function showMsg(id, text, ok) {
+    const el = document.getElementById(id);
+    el.textContent = text;
+    el.className = 'message ' + (ok ? 'success' : 'error');
+    setTimeout(() => el.className = 'message', 3000);
+}
+</script>
 </body>
 </html>
