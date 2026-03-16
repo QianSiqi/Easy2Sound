@@ -5,8 +5,18 @@
     <title>Easy2Sound-details</title>
     <link rel="stylesheet" href="导航栏.css">
     <style>
+        /* 核心：导航栏容器 - 让文字居中 + 登录入口靠右 */
+        .nav-container {
+            display: flex;
+            justify-content: center;  /* 导航链接居中 */
+            align-items: center;
+            position: relative;       /* 为右上角登录入口做定位父级 */
+            padding: 0 20px;
+        }
+
         .nav {
             display: flex;
+            gap: 10px;  /* 链接之间的间距 */
         }
 
         .nav a {
@@ -18,14 +28,19 @@
             display: inline-block;
         }
 
+        /* 右上角用户信息区域 - 固定在最右侧 */
         .user-info {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
             display: flex;
             align-items: center;
             color: white;
             gap: 15px;
-            padding: 12px 24px;
         }
 
+        /* 头像框 */
         .avatar-box {
             width: 40px;
             height: 40px;
@@ -35,7 +50,6 @@
             cursor: pointer;
             background: #f5f5f5;
         }
-
         .avatar-img {
             width: 100%;
             height: 100%;
@@ -66,19 +80,20 @@
             border-radius: 4px;
         }
 
+        /* 登录弹窗（文字清晰版） */
         .login-modal {
             position: fixed; top:0; left:0; width:100%; height:100%;
             background: rgba(0,0,0,0.5);
             display: none; justify-content: center; align-items: center;
             z-index: 999;
         }
-
         .login-modal.active {
             display: flex;
         }
 
         .modal-container {
-            background: white; border-radius: 12px;
+            background: white;
+            border-radius: 12px;
             width: 100%; max-width: 450px;
             padding: 40px; position: relative;
         }
@@ -86,21 +101,48 @@
         .close-modal {
             position: absolute; top:20px; right:20px;
             font-size:24px; cursor:pointer; border:none; background:none;
+            color: #333;
         }
 
+        /* 标签切换 */
         .tabs { display: flex; margin-bottom:30px; border-bottom:2px solid #eee; }
-        .tab { padding:10px 20px; cursor:pointer; font-weight:600; color:#666; }
+        .tab { 
+            padding:10px 20px; cursor:pointer; font-weight:600; 
+            color:#333;
+        }
         .tab.active { color:#667eea; border-bottom:3px solid #667eea; }
+        
         .form-section { display: none; }
         .form-section.active { display: block; }
+
+        /* 表单样式（文字清晰） */
         .form-group { margin-bottom:20px; }
-        label { display:block; margin-bottom:8px; }
-        input { width:100%; padding:12px 15px; border:1px solid #ddd; border-radius:8px; font-size:16px; }
-        .form-btn { width:100%; padding:14px; background:#667eea; color:white; border:none; border-radius:8px; font-weight:600; cursor:pointer; }
+        label { 
+            display:block; margin-bottom:8px; 
+            color: #333;
+            font-weight: 600;
+            font-size: 15px;
+        }
+        input { 
+            width:100%; padding:12px 15px; 
+            border:1px solid #ddd; border-radius:8px; font-size:16px;
+            color: #333;
+        }
+        input::placeholder {
+            color: #999;
+        }
+
+        .form-btn { 
+            width:100%; padding:14px; 
+            background:#667eea; color:white;
+            border:none; border-radius:8px; font-weight:600; cursor:pointer;
+        }
+
         .message { margin-top:20px; padding:12px; border-radius:8px; text-align:center; display:none; }
         .success { background:#e8f5e9; color:#2e7d32; display:block; }
         .error { background:#ffebee; color:#c62828; display:block; }
 
+        /* 头像设置弹窗 */
         .avatar-setting-modal {
             position: fixed; top:0; left:0; width:100%; height:100%;
             background: rgba(0,0,0,0.5);
@@ -118,8 +160,12 @@
             margin:0 auto 20px; border:3px solid #667eea; overflow:hidden;
         }
         .avatar-preview-img { width:100%; height:100%; object-fit:cover; }
-        .avatar-tips { text-align:center; color:#666; margin-bottom:20px; }
+        .avatar-tips { 
+            text-align:center; color:#666;
+            margin-bottom:20px;
+        }
 
+        /* 内容区 */
         .content-box {
             background:rgba(0,0,0,0.6); border-radius:12px; padding:25px; margin:30px 0; color:white;
         }
@@ -159,11 +205,11 @@
         <div class="form-section active" id="login">
             <div class="form-group">
                 <label>用户名</label>
-                <input type="text" id="login-username">
+                <input type="text" id="login-username" placeholder="请输入用户名">
             </div>
             <div class="form-group">
                 <label>密码</label>
-                <input type="password" id="login-password">
+                <input type="password" id="login-password" placeholder="请输入密码">
             </div>
             <button class="form-btn" id="login-btn">登录</button>
             <div class="message" id="login-message"></div>
@@ -172,19 +218,19 @@
         <div class="form-section" id="register">
             <div class="form-group">
                 <label>用户名</label>
-                <input type="text" id="reg-username">
+                <input type="text" id="reg-username" placeholder="请设置用户名">
             </div>
             <div class="form-group">
                 <label>邮箱</label>
-                <input type="email" id="reg-email">
+                <input type="email" id="reg-email" placeholder="请输入邮箱">
             </div>
             <div class="form-group">
                 <label>QQ号（自动生成头像）</label>
-                <input type="number" id="reg-qq">
+                <input type="number" id="reg-qq" placeholder="选填，输入后自动获取QQ头像">
             </div>
             <div class="form-group">
                 <label>密码</label>
-                <input type="password" id="reg-password">
+                <input type="password" id="reg-password" placeholder="请设置密码">
             </div>
             <button class="form-btn" id="register-btn">注册</button>
             <div class="message" id="register-message"></div>
@@ -196,18 +242,18 @@
 <div class="avatar-setting-modal" id="avatarSettingModal">
     <div class="avatar-setting-container">
         <button class="close-modal" id="closeAvatarModal">&times;</button>
-        <h3 style="text-align:center;">设置头像</h3>
+        <h3 style="text-align:center; color:#333;">设置头像</h3>
         <div class="avatar-preview">
             <img class="avatar-preview-img" id="avatarPreviewImg">
         </div>
-        <p class="avatar-tips">填写QQ号自动获取头像，或填写URL</p>
+        <p class="avatar-tips">填写QQ号自动获取头像，或填写自定义头像URL</p>
         <div class="form-group">
             <label>QQ号</label>
-            <input type="number" id="setting-qq">
+            <input type="number" id="setting-qq" placeholder="输入QQ号自动生成头像">
         </div>
         <div class="form-group">
             <label>自定义头像URL</label>
-            <input type="text" id="setting-avatar-url">
+            <input type="text" id="setting-avatar-url" placeholder="输入头像图片链接">
         </div>
         <button class="form-btn" id="saveAvatarBtn">保存</button>
         <div class="message" id="avatar-message"></div>
@@ -224,12 +270,10 @@ window.onload = () => {
     bindModalEvents();
     bindTabSwitch();
     bindLoginRegister();
-    bindAvatarBoxClick(); // 👉 修复点头像没反应
+    bindAvatarBoxClick();
 };
 
-// ======================================
-// 渲染用户栏（登录/头像/退出）
-// ======================================
+// 渲染用户栏
 function renderUserBar() {
     const user = JSON.parse(localStorage.getItem(USER_KEY) || 'null');
     const el = document.getElementById('userInfo');
@@ -250,14 +294,12 @@ function renderUserBar() {
     `;
     document.getElementById('logoutBtn').onclick = () => {
         localStorage.removeItem(USER_KEY);
-        alert('已退出');
+        alert('已退出登录');
         renderUserBar();
     };
 }
 
-// ======================================
-// 👉 头像点击（修复核心：用事件委托）
-// ======================================
+// 头像点击事件
 function bindAvatarBoxClick() {
     document.body.addEventListener('click', (e) => {
         if (e.target.closest('#avatarBox')) {
@@ -266,9 +308,7 @@ function bindAvatarBoxClick() {
     });
 }
 
-// ======================================
-// 打开头像设置
-// ======================================
+// 打开头像设置弹窗
 function openAvatarSetting() {
     const user = JSON.parse(localStorage.getItem(USER_KEY));
     if (!user) return;
@@ -281,7 +321,6 @@ function openAvatarSetting() {
     qq.value = user.qq || '';
     url.value = user.avatar || '';
 
-    // 实时预览
     qq.oninput = () => {
         const v = qq.value.trim();
         if (v) {
@@ -297,9 +336,7 @@ function openAvatarSetting() {
     m.classList.add('active');
 }
 
-// ======================================
-// 弹窗关闭
-// ======================================
+// 弹窗关闭事件
 function bindModalEvents() {
     document.getElementById('closeModal').onclick = () => {
         document.getElementById('loginModal').classList.remove('active');
@@ -307,11 +344,19 @@ function bindModalEvents() {
     document.getElementById('closeAvatarModal').onclick = () => {
         document.getElementById('avatarSettingModal').classList.remove('active');
     };
+    document.getElementById('loginModal').onclick = (e) => {
+        if (e.target === document.getElementById('loginModal')) {
+            document.getElementById('loginModal').classList.remove('active');
+        }
+    };
+    document.getElementById('avatarSettingModal').onclick = (e) => {
+        if (e.target === document.getElementById('avatarSettingModal')) {
+            document.getElementById('avatarSettingModal').classList.remove('active');
+        }
+    };
 }
 
-// ======================================
-// 登录/注册标签切换
-// ======================================
+// 标签切换
 function bindTabSwitch() {
     const tabs = document.querySelectorAll('.tab');
     tabs.forEach(t => {
@@ -324,15 +369,13 @@ function bindTabSwitch() {
     });
 }
 
-// ======================================
-// 登录 & 注册
-// ======================================
+// 登录/注册/保存头像
 function bindLoginRegister() {
     // 登录
     document.getElementById('login-btn').onclick = async () => {
         const u = document.getElementById('login-username').value.trim();
         const p = document.getElementById('login-password').value.trim();
-        if (!u || !p) return showMsg('login-message', '请输入账号密码', false);
+        if (!u || !p) return showMsg('login-message', '请输入用户名和密码', false);
         try {
             const r = await fetch(API_BASE + '/login', {
                 method: 'POST',
@@ -342,15 +385,17 @@ function bindLoginRegister() {
             const d = await r.json();
             if (d.ok) {
                 localStorage.setItem(USER_KEY, JSON.stringify(d.user));
-                showMsg('login-message', '登录成功', true);
+                showMsg('login-message', '登录成功！', true);
                 setTimeout(() => {
                     document.getElementById('loginModal').classList.remove('active');
                     renderUserBar();
                 }, 1000);
             } else {
-                showMsg('login-message', d.error, false);
+                showMsg('login-message', d.error || '登录失败', false);
             }
-        } catch (e) { showMsg('login-message', '网络错误', false); }
+        } catch (e) { 
+            showMsg('login-message', '网络错误，请检查连接', false); 
+        }
     };
 
     // 注册
@@ -359,7 +404,7 @@ function bindLoginRegister() {
         const e = document.getElementById('reg-email').value.trim();
         const q = document.getElementById('reg-qq').value.trim();
         const p = document.getElementById('reg-password').value.trim();
-        if (!u || !e || !p) return showMsg('register-message', '请填完', false);
+        if (!u || !e || !p) return showMsg('register-message', '请填写用户名、邮箱和密码', false);
         try {
             const res = await fetch(API_BASE + '/register', {
                 method: 'POST',
@@ -371,17 +416,20 @@ function bindLoginRegister() {
                 showMsg('register-message', '注册成功！', true);
                 setTimeout(() => document.querySelectorAll('.tab')[0].click(), 1000);
             } else {
-                showMsg('register-message', d.error, false);
+                showMsg('register-message', d.error || '注册失败', false);
             }
-        } catch (err) { showMsg('register-message', '网络错误', false); }
+        } catch (err) { 
+            showMsg('register-message', '网络错误，请检查连接', false); 
+        }
     };
 
     // 保存头像
     document.getElementById('saveAvatarBtn').onclick = async () => {
         const user = JSON.parse(localStorage.getItem(USER_KEY));
-        if (!user) return;
+        if (!user) return showMsg('avatar-message', '请先登录', false);
         const qq = document.getElementById('setting-qq').value.trim();
         const avatar = document.getElementById('setting-avatar-url').value.trim();
+        if (!qq && !avatar) return showMsg('avatar-message', '请输入QQ号或自定义头像URL', false);
         try {
             const r = await fetch(API_BASE + '/update-user-info', {
                 method: 'POST',
@@ -393,18 +441,21 @@ function bindLoginRegister() {
                 user.qq = d.user.qq;
                 user.avatar = d.user.avatar;
                 localStorage.setItem(USER_KEY, JSON.stringify(user));
-                showMsg('avatar-message', '保存成功', true);
+                showMsg('avatar-message', '头像保存成功！', true);
                 setTimeout(() => {
                     document.getElementById('avatarSettingModal').classList.remove('active');
                     renderUserBar();
                 }, 1000);
             } else {
-                showMsg('avatar-message', d.error || '失败', false);
+                showMsg('avatar-message', d.error || '头像保存失败', false);
             }
-        } catch (e) { showMsg('avatar-message', '网络错误', false); }
+        } catch (e) { 
+            showMsg('avatar-message', '网络错误，请检查连接', false); 
+        }
     };
 }
 
+// 提示消息
 function showMsg(id, text, ok) {
     const el = document.getElementById(id);
     el.textContent = text;
