@@ -6,7 +6,31 @@
     <!-- 引入和主页相同的导航栏样式文件 -->
     <link rel="stylesheet" href="导航栏.css">
     <style>
-        
+        /* 全局重置 + 页面基础样式 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #f8f9fa;
+            font-family: "Microsoft Yahei", sans-serif;
+        }
+
+        /* 核心：导航栏容器 - 延伸两侧+圆角+居中+右上角登录 */
+        .nav-container {
+            display: flex;
+            justify-content: center; /* 导航链接居中 */
+            align-items: center;
+            position: relative;      /* 右上角登录入口定位父级 */
+            background: #222;        /* 导航栏背景（视觉更完整） */
+            border-radius: 0 0 12px 12px; /* 底部圆角，顶部延伸无圆角 */
+            width: 100%;             /* 延伸至页面两侧 */
+            padding: 0 20px;
+            margin: 0;               /* 移除默认边距 */
+        }
+
         .nav {
             display: flex;
             justify-content: center;
@@ -20,15 +44,25 @@
             font-size: 18px;
             padding: 12px 24px;
             display: inline-block;
+            transition: background 0.3s;
         }
 
-        /* 新增：右上角用户信息样式 */
+        .nav a:hover {
+            background: rgba(255,255,255,0.1);
+            border-radius: 5px;
+        }
+
+        /* 右上角用户信息 - 固定在最右侧 */
         .user-info {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
             display: flex;
             align-items: center;
             color: white;
             gap: 15px;
-            padding: 12px 24px;
+            padding: 0; /* 移除多余padding，避免错位 */
         }
 
         .username-display {
@@ -66,7 +100,7 @@
             background: #5a6edb;
         }
 
-        /* 新增：登录弹窗样式 */
+        /* 登录弹窗样式 */
         .login-modal {
             position: fixed;
             top: 0;
@@ -226,6 +260,7 @@
             padding: 40px;
             border-radius: 15px;
             margin-top: 30px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
         }
         .input-container {
             display: flex;
@@ -245,6 +280,10 @@
             font-size: 18px;
             border-radius: 0 8px 8px 0;
             cursor: pointer;
+            transition: background 0.3s;
+        }
+        .submit-btn:hover {
+            background: #3a80d2;
         }
         .notice {
             margin-top: 20px;
@@ -262,6 +301,7 @@
             padding: 40px;
             border-radius: 15px;
             margin-top: 30px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
         }
         .feedback-list h2 {
             color: #4a90e2;
@@ -275,6 +315,10 @@
             border: 1px solid #eee;
             border-radius: 8px;
             margin-bottom: 15px;
+            transition: box-shadow 0.3s;
+        }
+        .feedback-item:hover {
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
         }
         .feedback-item .time {
             color: #999;
@@ -294,11 +338,54 @@
             padding: 20px;
             font-size: 16px;
         }
+
+        /* 响应式适配（小屏幕优化） */
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+                padding: 10px;
+                border-radius: 0 0 8px 8px;
+            }
+            .nav {
+                flex-wrap: wrap;
+                width: 100%;
+            }
+            .nav a {
+                margin: 5px 10px;
+                padding: 8px 15px;
+                font-size: 16px;
+            }
+            .user-info {
+                position: static;
+                transform: none;
+                margin-top: 10px;
+                padding: 8px 0;
+                justify-content: center;
+                width: 100%;
+            }
+            h1 {
+                font-size: 32px;
+            }
+            .feedback-form, .feedback-list {
+                padding: 20px;
+            }
+            .input-container {
+                flex-direction: column;
+            }
+            .feedback-input {
+                border-radius: 8px 8px 0 0;
+            }
+            .submit-btn {
+                width: 100%;
+                border-radius: 0 0 8px 8px;
+                padding: 18px;
+            }
+        }
     </style>
 </head>
 <body>
 
-<!-- 导航栏（新增容器，保留原有导航链接） -->
+<!-- 导航栏（延伸两侧+圆角+右上角登录） -->
 <div class="nav-container">
     <div class="nav">
         <a href="index.html">主页</a>

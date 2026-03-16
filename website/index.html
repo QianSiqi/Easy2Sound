@@ -14,8 +14,27 @@
             font-family: 'Arial', sans-serif;
         }
 
+        body {
+            background: #f8f9fa;
+        }
+
+        /* 核心：导航栏容器 - 延伸两侧+圆角+居中+右上角登录 */
+        .nav-container {
+            display: flex;
+            justify-content: center; /* 导航链接居中 */
+            align-items: center;
+            position: relative;      /* 右上角登录入口定位父级 */
+            background: #222;        /* 导航栏背景（视觉更完整） */
+            border-radius: 0 0 12px 12px; /* 底部圆角，顶部延伸无圆角 */
+            width: 100%;             /* 延伸至页面两侧 */
+            padding: 0 20px;
+            margin: 0;               /* 移除默认边距 */
+        }
+
         .nav {
             display: flex;
+            justify-content: center;
+            flex: 1;
         }
 
         .nav a {
@@ -25,15 +44,25 @@
             font-size: 18px;
             padding: 12px 24px;
             display: inline-block;
+            transition: background 0.3s;
         }
 
-        /* 右上角用户信息样式 */
+        .nav a:hover {
+            background: rgba(255,255,255,0.1);
+            border-radius: 5px;
+        }
+
+        /* 右上角用户信息 - 固定在最右侧 */
         .user-info {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
             display: flex;
             align-items: center;
             color: white;
             gap: 15px;
-            padding: 12px 24px;
+            padding: 0; /* 移除多余padding，避免错位 */
         }
 
         .username-display {
@@ -71,7 +100,7 @@
             background: #5a6edb;
         }
 
-        /* 登录弹窗样式 - 完全复用你原本的样式 */
+        /* 登录弹窗样式 - 完全复用原有样式 */
         .login-modal {
             position: fixed;
             top: 0;
@@ -97,6 +126,7 @@
             width: 100%;
             max-width: 450px;
             padding: 40px;
+            position: relative;
         }
 
         .tabs {
@@ -224,10 +254,39 @@
             color: #4a90e2;
             margin-bottom: 30px;
         }
+
+        /* 响应式适配（小屏幕优化） */
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+                padding: 10px;
+                border-radius: 0 0 8px 8px;
+            }
+            .nav {
+                flex-wrap: wrap;
+                width: 100%;
+            }
+            .nav a {
+                margin: 5px 10px;
+                padding: 8px 15px;
+                font-size: 16px;
+            }
+            .user-info {
+                position: static;
+                transform: none;
+                margin-top: 10px;
+                padding: 8px 0;
+                justify-content: center;
+                width: 100%;
+            }
+            .content h1 {
+                font-size: 32px;
+            }
+        }
     </style>
 </head>
 <body>
-    <!-- 导航栏（包含右上角用户信息） -->
+    <!-- 导航栏（延伸两侧+圆角+右上角登录） -->
     <div class="nav-container">
         <div class="nav">
             <a href="index.html">主页</a>
@@ -251,7 +310,7 @@
         <h1>欢迎来到Easy2Sound官网</h1>
     </div>
 
-    <!-- 登录/注册弹窗 - 完全复用你原本的结构 -->
+    <!-- 登录/注册弹窗 - 完全复用原有结构 -->
     <div class="login-modal" id="loginModal">
         <div class="modal-container">
             <!-- 新增关闭按钮 -->
@@ -297,7 +356,7 @@
     </div>
 
     <script>
-        // ========== 核心配置 - 完全复用你原本的API地址 ==========
+        // ========== 核心配置 - 完全复用原有API地址 ==========
         const API_BASE_URL = 'https://api.easy2sound.xyz';
         const USER_INFO_KEY = 'easy2sound_user_info'; // localStorage存储用户信息的key
 
@@ -305,8 +364,8 @@
         window.onload = function() {
             initUserInfo();          // 初始化用户信息显示
             initModalClose();        // 初始化弹窗关闭功能
-            initTabSwitch();         // 初始化标签切换（复用你的逻辑）
-            initLoginRegisterForm(); // 初始化登录/注册（完全复用你的逻辑）
+            initTabSwitch();         // 初始化标签切换
+            initLoginRegisterForm(); // 初始化登录/注册
         };
 
         // ========== 1. 初始化用户信息显示 ==========
@@ -355,7 +414,7 @@
             });
         }
 
-        // ========== 4. 标签切换逻辑 - 完全复用你的代码 ==========
+        // ========== 4. 标签切换逻辑 ==========
         function initTabSwitch() {
             const tabs = document.querySelectorAll('.tab');
             const sections = document.querySelectorAll('.form-section');
@@ -374,7 +433,7 @@
             });
         }
 
-        // ========== 5. 显示消息提示 - 完全复用你的函数 ==========
+        // ========== 5. 显示消息提示 ==========
         function showMessage(elementId, text, isSuccess) {
             const message = document.getElementById(elementId);
             message.textContent = text;
@@ -385,9 +444,9 @@
             }, 3000);
         }
 
-        // ========== 6. 登录/注册功能 - 100% 复用你的原始代码 ==========
+        // ========== 6. 登录/注册功能 ==========
         function initLoginRegisterForm() {
-            // ========== 登录功能（完全不变） ==========
+            // ========== 登录功能 ==========
             document.getElementById('login-btn').addEventListener('click', async () => {
                 const username = document.getElementById('login-username').value.trim();
                 const password = document.getElementById('login-password').value.trim();
@@ -426,7 +485,7 @@
                 }
             });
 
-            // ========== 注册功能（完全不变） ==========
+            // ========== 注册功能 ==========
             document.getElementById('register-btn').addEventListener('click', async () => {
                 const username = document.getElementById('reg-username').value.trim();
                 const email = document.getElementById('reg-email').value.trim();

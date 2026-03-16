@@ -11,6 +11,19 @@
             box-sizing: border-box;
         }
 
+        /* 核心：导航栏容器 - 延伸两侧+圆角+居中+右上角登录 */
+        .nav-container {
+            display: flex;
+            justify-content: center; /* 导航链接居中 */
+            align-items: center;
+            position: relative;      /* 右上角登录入口定位 */
+            background: #222;        /* 导航栏背景（建议保留，视觉更完整） */
+            border-radius: 0 0 12px 12px; /* 底部圆角，顶部延伸无圆角 */
+            width: 100%;             /* 延伸至页面两侧 */
+            padding: 0 20px;
+            margin: 0;               /* 移除默认边距 */
+        }
+
         .nav {
             display: flex;
             justify-content: center;
@@ -32,13 +45,17 @@
             border-radius: 5px;
         }
 
-        /* 新增：右上角用户信息样式 */
+        /* 右上角用户信息 - 固定在最右侧 */
         .user-info {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
             display: flex;
             align-items: center;
             color: white;
             gap: 15px;
-            padding: 12px 24px;
+            padding: 0; /* 移除多余padding，避免错位 */
         }
 
         .username-display {
@@ -76,7 +93,7 @@
             background: #5a6edb;
         }
 
-        /* 新增：登录弹窗样式 */
+        /* 登录弹窗样式 */
         .login-modal {
             position: fixed;
             top: 0;
@@ -217,7 +234,7 @@
             display: block;
         }
         
-        /* 原有样式完全保留 */
+        /* 原有下载页面样式完全保留 */
         .download-container {
             max-width: 1000px;
             margin: 0 auto;
@@ -225,7 +242,7 @@
             border-radius: 10px;
             padding: 30px;
             margin-top: 20px;
-            color: white; /* 新增：文字白色，适配深色背景 */
+            color: white;
         }
         
         h1 {
@@ -279,7 +296,6 @@
             transition: transform 0.3s, opacity 0.3s;
         }
         
-        /*  已修复：不拉伸、不超出、大小合适 */
         .custom-btn img {
             display: block;
             width: 100%;
@@ -301,6 +317,7 @@
             font-size: 14px;
         }
         
+        /* 响应式适配优化（导航栏+下载区） */
         @media (max-width: 768px) {
             .software-showcase {
                 flex-direction: column;
@@ -316,14 +333,16 @@
                 margin-right: 10px;
             }
             
-            /* 响应式适配导航栏 */
+            /* 响应式导航栏 */
             .nav-container {
                 flex-direction: column;
                 padding: 10px;
+                border-radius: 0 0 8px 8px; /* 小屏幕圆角适配 */
             }
             .nav {
                 flex-wrap: wrap;
                 padding: 10px 0;
+                width: 100%;
             }
             .nav a {
                 margin: 5px 10px;
@@ -331,14 +350,24 @@
                 font-size: 16px;
             }
             .user-info {
+                position: static; /* 小屏幕取消绝对定位 */
+                transform: none;
                 margin-top: 10px;
                 padding: 8px 0;
+                justify-content: center; /* 小屏幕登录入口居中 */
+                width: 100%;
             }
+        }
+
+        /* 页面全局背景（可选，优化视觉） */
+        body {
+            background: #f8f9fa;
+            font-family: "Microsoft Yahei", sans-serif;
         }
     </style>
 </head>
 <body>
-    <!-- 导航栏（新增容器，保留原有导航链接） -->
+    <!-- 导航栏（延伸两侧+圆角+右上角登录） -->
     <div class="nav-container">
         <div class="nav">
             <a href="index.html">主页</a>

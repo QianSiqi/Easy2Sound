@@ -5,6 +5,31 @@
     <title>Easy2Sound-WTF</title>
     <link rel="stylesheet" href="导航栏.css">
     <style>
+        /* 全局重置 + 基础样式 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background: #f8f9fa;
+        }
+
+        /* 核心：导航栏容器 - 统一样式（延伸两侧+圆角+右上角登录） */
+        .nav-container {
+            display: flex;
+            justify-content: center; /* 导航链接居中 */
+            align-items: center;
+            position: relative;      /* 右上角登录入口定位父级 */
+            background: #222;        /* 统一背景色 */
+            border-radius: 0 0 12px 12px; /* 底部圆角，顶部延伸无圆角 */
+            width: 100%;             /* 延伸至页面两侧 */
+            padding: 0 20px;
+            margin: 0;               /* 移除默认边距 */
+        }
+
         .nav {
             display: flex;
             justify-content: center;
@@ -18,6 +43,7 @@
             font-size: 18px;
             padding: 12px 24px;
             display: inline-block;
+            transition: background 0.3s;
         }
 
         .nav a:hover {
@@ -25,13 +51,17 @@
             border-radius: 5px;
         }
 
-        /* 右上角用户信息样式（和其他页面保持一致） */
+        /* 右上角用户信息样式（统一定位） */
         .user-info {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
             display: flex;
             align-items: center;
             color: white;
             gap: 15px;
-            padding: 12px 24px;
+            padding: 0; /* 移除多余padding，避免错位 */
         }
 
         .username-display {
@@ -69,7 +99,7 @@
             background: #5a6edb;
         }
 
-        /* 登录弹窗样式（和其他页面保持一致） */
+        /* 登录弹窗样式（统一） */
         .login-modal {
             position: fixed;
             top: 0;
@@ -210,39 +240,42 @@
             display: block;
         }
 
-        /* 原有页面内容样式优化（保留原有文字内容） */
+        /* 页面内容样式优化（保留原有文字，提升视觉效果） */
         .content {
-            padding: 50px;
+            padding: 60px 40px;
             text-align: center;
-            max-width: 1000px;
-            margin: 0 auto;
-            background-color: rgba(255, 255, 255, 0.9);
-            border-radius: 10px;
-            margin-top: 30px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            max-width: 800px;
+            margin: 40px auto;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.08);
         }
         
         .content h1 {
-            color: #333;
-            font-size: 36px;
-            margin-bottom: 20px;
+            color: #2c3e50;
+            font-size: 38px;
+            margin-bottom: 30px;
+            font-weight: 700;
         }
         
         .content h2 {
-            color: #666;
-            font-size: 24px;
-            margin: 15px 0;
-            line-height: 1.6;
+            color: #34495e;
+            font-size: 22px;
+            margin: 18px 0;
+            line-height: 1.8;
+            font-weight: 500;
         }
 
-        /* 响应式适配 */
+        /* 响应式适配（统一规范） */
         @media (max-width: 768px) {
             .nav-container {
                 flex-direction: column;
                 padding: 10px;
+                border-radius: 0 0 8px 8px;
             }
             .nav {
                 flex-wrap: wrap;
+                width: 100%;
                 padding: 10px 0;
             }
             .nav a {
@@ -251,23 +284,28 @@
                 font-size: 16px;
             }
             .user-info {
+                position: static;
+                transform: none;
                 margin-top: 10px;
                 padding: 8px 0;
+                justify-content: center;
+                width: 100%;
             }
             .content {
                 padding: 30px 20px;
+                margin: 20px auto;
             }
             .content h1 {
                 font-size: 28px;
             }
             .content h2 {
-                font-size: 20px;
+                font-size: 18px;
             }
         }
     </style>
 </head>
 <body>
-    <!-- 统一的导航栏容器（包含用户信息区域） -->
+    <!-- 统一导航栏（延伸两侧+圆角+右上角登录） -->
     <div class="nav-container">
         <div class="nav">
             <a href="index.html">主页</a>
@@ -286,7 +324,7 @@
         </div>
     </div>
 
-    <!-- 原有页面内容（优化样式，保留文字） -->
+    <!-- 原有页面内容（保留文字，优化样式） -->
     <div class="content">
         <h1>创始人 テト普照大地</h1>
         <h2>创始人的朋友小猫你可以吃芝士汉堡是个底层开发</h2>
@@ -296,7 +334,7 @@
         <h2>还有好多采样组...</h2>
     </div>
 
-    <!-- 登录/注册弹窗（和其他页面保持一致） -->
+    <!-- 登录/注册弹窗（统一功能） -->
     <div class="login-modal" id="loginModal">
         <div class="modal-container">
             <button class="close-modal" id="closeModal">&times;</button>

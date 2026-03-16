@@ -5,26 +5,49 @@
     <title>Easy2Sound-Donation</title>
     <link rel="stylesheet" href="导航栏.css">
     <style>
+        /* 核心：标题栏延伸至两侧 + 圆角 + 居中+右上角布局 */
+        .nav-container {
+            display: flex;
+            justify-content: center; /* 导航链接居中 */
+            align-items: center;
+            position: relative;      /* 右上角登录入口定位父级 */
+            background: #222;        /* 导航栏背景（可选，建议添加） */
+            border-radius: 0 0 12px 12px; /* 底部圆角，顶部延伸到边无圆角 */
+            padding: 0 20px;
+            width: 100%;             /* 延伸至页面两侧 */
+            box-sizing: border-box;  /* 防止padding撑出页面 */
+            margin: 0;               /* 移除默认边距 */
+        }
+
         .nav {
             display: flex;
+            gap: 8px; /* 链接间距优化 */
         }
 
         .nav a {
             color: white;
             text-decoration: none;
-            margin: 0 15px;
+            margin: 0 12px;
             font-size: 18px;
-            padding: 12px 24px;
+            padding: 15px 20px; /* 增加上下内边距，标题栏更饱满 */
             display: inline-block;
+            transition: color 0.3s;
         }
 
-        /* 右上角用户信息样式 */
+        .nav a:hover {
+            color: #667eea;
+        }
+
+        /* 右上角用户信息 - 固定在最右侧 */
         .user-info {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
             display: flex;
             align-items: center;
             color: white;
             gap: 15px;
-            padding: 12px 24px;
         }
 
         .username-display {
@@ -203,14 +226,16 @@
             display: block;
         }
 
-        /* 原有内容样式优化（可选） */
+        /* 原有内容样式优化 */
         .donation-content {
             padding: 50px;
             text-align: center;
+            margin-top: 20px; /* 与导航栏拉开间距 */
         }
         .donation-content h1 {
-            color: black;
+            color: #333;
             margin-bottom: 20px;
+            font-size: 28px;
         }
         .donation-content img {
             max-width: 300px;
@@ -218,10 +243,18 @@
             border-radius: 8px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
+
+        /* 页面全局样式重置（防止滚动/边距问题） */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: "Microsoft Yahei", sans-serif;
+            background: #f8f9fa;
+        }
     </style>
 </head>
 <body>
-    <!-- 导航栏（新增容器，保留原有导航链接） -->
+    <!-- 导航栏（延伸至两侧+圆角+右上角登录） -->
     <div class="nav-container">
         <div class="nav">
             <a href="index.html">主页</a>
@@ -240,7 +273,7 @@
         </div>
     </div>
 
-    <!-- 原有内容保留（优化样式结构） -->
+    <!-- 原有内容保留 -->
     <div class="donation-content">
         <h1>孩子是真的没钱了！！！</h1>
         <img src="shoukuan.jpg" alt="wechat">
