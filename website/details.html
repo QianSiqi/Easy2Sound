@@ -142,7 +142,7 @@
         .success { background:#e8f5e9; color:#2e7d32; display:block; }
         .error { background:#ffebee; color:#c62828; display:block; }
 
-        /* 头像设置弹窗 */
+        /* 头像设置弹窗 - 新增上传样式 */
         .avatar-setting-modal {
             position: fixed; top:0; left:0; width:100%; height:100%;
             background: rgba(0,0,0,0.5);
@@ -163,6 +163,27 @@
         .avatar-tips { 
             text-align:center; color:#666;
             margin-bottom:20px;
+        }
+        /* 新增：文件上传样式 */
+        .upload-box {
+            margin: 15px 0;
+            padding: 15px;
+            border: 2px dashed #667eea;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .upload-box:hover {
+            background: #f8f9ff;
+        }
+        .upload-text {
+            color: #667eea;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+        #avatarFile {
+            display: none;
         }
 
         /* 内容区 */
@@ -238,7 +259,7 @@
     </div>
 </div>
 
-<!-- 头像设置弹窗 -->
+<!-- 头像设置弹窗 - 新增上传区域 -->
 <div class="avatar-setting-modal" id="avatarSettingModal">
     <div class="avatar-setting-container">
         <button class="close-modal" id="closeAvatarModal">&times;</button>
@@ -246,14 +267,21 @@
         <div class="avatar-preview">
             <img class="avatar-preview-img" id="avatarPreviewImg">
         </div>
-        <p class="avatar-tips">填写QQ号自动获取头像，或填写自定义头像URL</p>
+        <p class="avatar-tips">选择以下方式设置头像（优先使用上传的头像）</p>
+        
+        <!-- 新增：文件上传区域 -->
+        <div class="upload-box" id="uploadBox">
+            <p class="upload-text">点击上传本地头像（支持jpg/png格式）</p>
+            <input type="file" id="avatarFile" accept="image/jpeg,image/png">
+        </div>
+
         <div class="form-group">
-            <label>QQ号</label>
+            <label>QQ号（自动生成头像）</label>
             <input type="number" id="setting-qq" placeholder="输入QQ号自动生成头像">
         </div>
         <div class="form-group">
             <label>自定义头像URL</label>
-            <input type="text" id="setting-avatar-url" placeholder="输入头像图片链接">
+            <input type="text" id="setting-avatar-url" placeholder="输入头像图片链接（上传后自动填充）">
         </div>
         <button class="form-btn" id="saveAvatarBtn">保存</button>
         <div class="message" id="avatar-message"></div>
@@ -262,6 +290,7 @@
 
 <script>
 const API_BASE = 'https://api.easy2sound.xyz';
+const AVATAR_UPLOAD_API = 'https://avater.easy2sound.xyz'; // 头像上传API
 const USER_KEY = 'easy2sound_user_info';
 const DEFAULT_AVATAR = 'https://q1.qlogo.cn/g?b=qq&nk=0&s=160';
 
@@ -271,6 +300,7 @@ window.onload = () => {
     bindTabSwitch();
     bindLoginRegister();
     bindAvatarBoxClick();
+    bindAvatarUpload(); // 新增：绑定头像上传事件
 };
 
 // 渲染用户栏
@@ -304,6 +334,89 @@ function bindAvatarBoxClick() {
     document.body.addEventListener('click', (e) => {
         if (e.target.closest('#avatarBox')) {
             openAvatarSetting();
+        }
+    });
+}
+
+// 【核心修改】适配 GitHub 范例的头像上传逻辑
+function bindAvatarUpload() {
+    const uploadBox = document.getElementById('uploadBox');
+    const avatarFile = document.getElementById('avatarFile');
+    const avatarPreviewImg = document.getElementById('avatarPreviewImg');
+    const settingAvatarUrl = document.getElementById('setting-avatar-url');
+    
+    // 点击上传区域触发文件选择
+    uploadBox.addEventListener('click', () => {
+        avatarFile.click();
+    });
+
+    // 文件选择后处理（完全适配范例的 FormData 格式）
+    avatarFile.addEventListener('change', async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        // 1. 前置校验（和范例保持一致）
+        const validTypes = ['image/jpeg', 'image/png'];
+        if (!validTypes.includes(file.type)) {
+            showMsg('avatar-message', '仅支持jpg/png格式的图片', false);
+            return;
+        }
+        if (file.size > 2 * 1024 * 1024) { // 限制2MB以内
+            showMsg('avatar-message', '图片大小不能超过2MB', false);
+            return;
+        }
+
+        // 2. 构建 FormData（完全和范例一致：avatar + user_id）
+        const formData = new FormData();
+        formData.append('avatar', file); // 核心字段：头像文件
+        // 获取当前登录用户ID（如果未登录则用测试ID，和范例一致）
+        const user = JSON.parse(localStorage.getItem(USER_KEY) || 'null');
+        const userId = user ? user.id : 'test_user_001';
+        formData.append('user_id', userId); // 新增：添加user_id字段
+
+        try {
+            // 显示上传中状态
+            showMsg('avatar-message', '正在上传头像，请稍候...', true);
+
+            // 3. 发送上传请求（和范例一致的请求配置）
+            const response = await fetch(AVATAR_UPLOAD_API, {
+                method: 'POST',
+                body: formData,
+                cache: 'no-cache', // 禁用缓存，避免请求被拦截
+                mode: 'cors'       // 支持跨域（Cloudflare Workers 必备）
+            });
+
+            // 4. 兼容响应解析（处理 500 错误的非JSON响应）
+            let data;
+            try {
+                data = await response.json();
+            } catch (parseErr) {
+                // 服务器返回 500 错误（非JSON格式）
+                showMsg('avatar-message', `上传失败：服务器错误(${response.status})`, false);
+                console.error('响应解析失败：', parseErr);
+                return;
+            }
+
+            // 5. 处理响应结果（适配范例的 success/url 字段）
+            if (response.ok) {
+                if (data.success) {
+                    // 上传成功：更新预览和URL输入框
+                    avatarPreviewImg.src = data.url;
+                    settingAvatarUrl.value = data.url;
+                    showMsg('avatar-message', '头像上传成功！', true);
+                } else {
+                    // 业务逻辑失败（比如文件验证不通过）
+                    showMsg('avatar-message', `上传失败：${data.message || '未知错误'}`, false);
+                }
+            } else {
+                // 服务器返回 4xx/5xx 错误
+                showMsg('avatar-message', `上传失败：${response.status} - ${data.message || '服务器内部错误'}`, false);
+            }
+
+        } catch (networkErr) {
+            // 网络错误（比如API地址无法访问）
+            showMsg('avatar-message', `上传失败：${networkErr.message}`, false);
+            console.error('上传网络错误：', networkErr);
         }
     });
 }

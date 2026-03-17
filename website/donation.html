@@ -4,41 +4,31 @@
     <meta charset="UTF-8">
     <title>Easy2Sound-Donation</title>
     <link rel="stylesheet" href="导航栏.css">
-    <style>
-        /* 核心：标题栏延伸至两侧 + 圆角 + 居中+右上角布局 */
+   <style>
+        /* 核心：导航栏容器 - 让文字居中 + 登录入口靠右 */
         .nav-container {
             display: flex;
-            justify-content: center; /* 导航链接居中 */
+            justify-content: center;  /* 导航链接居中 */
             align-items: center;
-            position: relative;      /* 右上角登录入口定位父级 */
-            background: #222;        /* 导航栏背景（可选，建议添加） */
-            border-radius: 0 0 12px 12px; /* 底部圆角，顶部延伸到边无圆角 */
+            position: relative;       /* 为右上角登录入口做定位父级 */
             padding: 0 20px;
-            width: 100%;             /* 延伸至页面两侧 */
-            box-sizing: border-box;  /* 防止padding撑出页面 */
-            margin: 0;               /* 移除默认边距 */
         }
 
         .nav {
             display: flex;
-            gap: 8px; /* 链接间距优化 */
+            gap: 10px;  /* 链接之间的间距 */
         }
 
         .nav a {
             color: white;
             text-decoration: none;
-            margin: 0 12px;
+            margin: 0 15px;
             font-size: 18px;
-            padding: 15px 20px; /* 增加上下内边距，标题栏更饱满 */
+            padding: 12px 24px;
             display: inline-block;
-            transition: color 0.3s;
         }
 
-        .nav a:hover {
-            color: #667eea;
-        }
-
-        /* 右上角用户信息 - 固定在最右侧 */
+        /* 右上角用户信息区域 - 固定在最右侧 */
         .user-info {
             position: absolute;
             right: 20px;
@@ -48,6 +38,22 @@
             align-items: center;
             color: white;
             gap: 15px;
+        }
+
+        /* 头像框 */
+        .avatar-box {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 2px solid #667eea;
+            cursor: pointer;
+            background: #f5f5f5;
+        }
+        .avatar-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         .username-display {
@@ -62,13 +68,7 @@
             color: white;
             border: none;
             border-radius: 4px;
-            font-size: 14px;
             cursor: pointer;
-            transition: background 0.3s;
-        }
-
-        .logout-btn:hover {
-            background: #5a6edb;
         }
 
         .login-entrance {
@@ -78,28 +78,15 @@
             padding: 6px 12px;
             background: #667eea;
             border-radius: 4px;
-            transition: background 0.3s;
         }
 
-        .login-entrance:hover {
-            background: #5a6edb;
-        }
-
-        /* 登录弹窗样式 */
+        /* 登录弹窗（文字清晰版） */
         .login-modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            display: none;
-            justify-content: center;
-            align-items: center;
+            position: fixed; top:0; left:0; width:100%; height:100%;
+            background: rgba(0,0,0,0.5);
+            display: none; justify-content: center; align-items: center;
             z-index: 999;
-            padding: 20px;
         }
-
         .login-modal.active {
             display: flex;
         }
@@ -107,130 +94,114 @@
         .modal-container {
             background: white;
             border-radius: 12px;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.15);
-            width: 100%;
-            max-width: 450px;
-            padding: 40px;
-            position: relative;
+            width: 100%; max-width: 450px;
+            padding: 40px; position: relative;
         }
 
         .close-modal {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            font-size: 24px;
-            cursor: pointer;
-            color: #666;
-            transition: color 0.3s;
-            background: none;
-            border: none;
-            width: auto;
-            padding: 0;
-        }
-
-        .close-modal:hover {
-            color: #c62828;
-            background: none;
-        }
-
-        /* 登录/注册标签样式 */
-        .tabs {
-            display: flex;
-            margin-bottom: 30px;
-            border-bottom: 2px solid #eee;
-        }
-
-        .tab {
-            padding: 10px 20px;
-            cursor: pointer;
-            font-size: 18px;
-            font-weight: 600;
-            color: #666;
-            border-bottom: 3px solid transparent;
-            transition: all 0.3s;
-        }
-
-        .tab.active {
-            color: #667eea;
-            border-bottom-color: #667eea;
-        }
-
-        .form-section {
-            display: none;
-        }
-
-        .form-section.active {
-            display: block;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
+            position: absolute; top:20px; right:20px;
+            font-size:24px; cursor:pointer; border:none; background:none;
             color: #333;
         }
 
-        input {
-            width: 100%;
-            padding: 12px 15px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            font-size: 16px;
-            transition: border 0.3s;
+        /* 标签切换 */
+        .tabs { display: flex; margin-bottom:30px; border-bottom:2px solid #eee; }
+        .tab { 
+            padding:10px 20px; cursor:pointer; font-weight:600; 
+            color:#333;
         }
+        .tab.active { color:#667eea; border-bottom:3px solid #667eea; }
+        
+        .form-section { display: none; }
+        .form-section.active { display: block; }
 
-        input:focus {
-            outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-        }
-
-        .form-btn {
-            width: 100%;
-            padding: 14px;
-            background: #667eea;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 16px;
+        /* 表单样式（文字清晰） */
+        .form-group { margin-bottom:20px; }
+        label { 
+            display:block; margin-bottom:8px; 
+            color: #333;
             font-weight: 600;
+            font-size: 15px;
+        }
+        input { 
+            width:100%; padding:12px 15px; 
+            border:1px solid #ddd; border-radius:8px; font-size:16px;
+            color: #333;
+        }
+        input::placeholder {
+            color: #999;
+        }
+
+        .form-btn { 
+            width:100%; padding:14px; 
+            background:#667eea; color:white;
+            border:none; border-radius:8px; font-weight:600; cursor:pointer;
+        }
+
+        .message { margin-top:20px; padding:12px; border-radius:8px; text-align:center; display:none; }
+        .success { background:#e8f5e9; color:#2e7d32; display:block; }
+        .error { background:#ffebee; color:#c62828; display:block; }
+
+        /* 头像设置弹窗 - 新增上传样式 */
+        .avatar-setting-modal {
+            position: fixed; top:0; left:0; width:100%; height:100%;
+            background: rgba(0,0,0,0.5);
+            display: none; justify-content: center; align-items: center;
+            z-index: 1000;
+        }
+        .avatar-setting-modal.active { display:flex; }
+        .avatar-setting-container {
+            background:white; border-radius:12px;
+            max-width:400px; width:100%; padding:30px;
+            position:relative;
+        }
+        .avatar-preview {
+            width:120px; height:120px; border-radius:50%;
+            margin:0 auto 20px; border:3px solid #667eea; overflow:hidden;
+        }
+        .avatar-preview-img { width:100%; height:100%; object-fit:cover; }
+        .avatar-tips { 
+            text-align:center; color:#666;
+            margin-bottom:20px;
+        }
+        /* 新增：文件上传样式 */
+        .upload-box {
+            margin: 15px 0;
+            padding: 15px;
+            border: 2px dashed #667eea;
+            border-radius: 8px;
+            text-align: center;
             cursor: pointer;
             transition: background 0.3s;
         }
-
-        .form-btn:hover {
-            background: #5a6edb;
+        .upload-box:hover {
+            background: #f8f9ff;
         }
-
-        .message {
-            margin-top: 20px;
-            padding: 12px;
-            border-radius: 8px;
-            text-align: center;
+        .upload-text {
+            color: #667eea;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+        #avatarFile {
             display: none;
         }
 
-        .success {
-            background: #e8f5e9;
-            color: #2e7d32;
-            display: block;
+        /* 内容区 */
+        .content-box {
+            background:rgba(0,0,0,0.6); border-radius:12px; padding:25px; margin:30px 0; color:white;
         }
+        .content-box h1 { margin-top:0; color:white; }
 
-        .error {
-            background: #ffebee;
-            color: #c62828;
-            display: block;
-        }
-
-        /* 原有内容样式优化 */
+        /* ========== 关键修改：让收款码图片居中 ========== */
         .donation-content {
-            padding: 50px;
+            /* 1. 让容器内所有内容水平居中 */
             text-align: center;
-            margin-top: 20px; /* 与导航栏拉开间距 */
+            /* 2. 给容器加内边距，避免内容贴边 */
+            padding: 50px 20px;
+            /* 3. 可选：限制容器最大宽度，避免大屏下内容太散 */
+            max-width: 800px;
+            /* 4. 让容器本身水平居中（配合max-width） */
+            margin: 0 auto;
         }
         .donation-content h1 {
             color: #333;
@@ -238,18 +209,15 @@
             font-size: 28px;
         }
         .donation-content img {
+            /* 保持图片原有最大宽度，不拉伸 */
             max-width: 300px;
             height: auto;
+            /* 可选：给图片加圆角和阴影，更美观 */
             border-radius: 8px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        }
-
-        /* 页面全局样式重置（防止滚动/边距问题） */
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: "Microsoft Yahei", sans-serif;
-            background: #f8f9fa;
+            /* 可选：给图片加上下外边距，和文字分开 */
+            margin: 0 auto;
+            display: block; /* 确保margin:0 auto生效 */
         }
     </style>
 </head>
@@ -323,10 +291,41 @@
         </div>
     </div>
 
+    <!-- 新增：头像设置弹窗 -->
+    <div class="avatar-setting-modal" id="avatarSettingModal">
+        <div class="avatar-setting-container">
+            <button class="close-modal" id="closeAvatarModal">&times;</button>
+            <h3 style="text-align:center; color:#333;">设置头像</h3>
+            <div class="avatar-preview">
+                <img class="avatar-preview-img" id="avatarPreviewImg">
+            </div>
+            <p class="avatar-tips">选择以下方式设置头像（优先使用上传的头像）</p>
+            
+            <!-- 新增：文件上传区域 -->
+            <div class="upload-box" id="uploadBox">
+                <p class="upload-text">点击上传本地头像（支持jpg/png格式）</p>
+                <input type="file" id="avatarFile" accept="image/jpeg,image/png">
+            </div>
+
+            <div class="form-group">
+                <label>QQ号（自动生成头像）</label>
+                <input type="number" id="setting-qq" placeholder="输入QQ号自动生成头像">
+            </div>
+            <div class="form-group">
+                <label>自定义头像URL</label>
+                <input type="text" id="setting-avatar-url" placeholder="输入头像图片链接（上传后自动填充）">
+            </div>
+            <button class="form-btn" id="saveAvatarBtn">保存</button>
+            <div class="message" id="avatar-message"></div>
+        </div>
+    </div>
+
     <script>
         // ========== 核心配置 - 对接你的真实API ==========
         const API_BASE_URL = 'https://api.easy2sound.xyz';
+        const AVATAR_UPLOAD_API = 'https://avater.easy2sound.xyz'; // 新增：头像上传API
         const USER_INFO_KEY = 'easy2sound_user_info'; // localStorage存储用户信息的key
+        const DEFAULT_AVATAR = 'https://q1.qlogo.cn/g?b=qq&nk=0&s=160'; // 新增：默认头像
 
         // ========== 页面加载时初始化 ==========
         window.onload = function() {
@@ -334,16 +333,22 @@
             initModalClose();        // 初始化弹窗关闭功能
             initTabSwitch();         // 初始化标签切换
             initLoginRegisterForm(); // 初始化登录/注册（真实API版）
+            bindAvatarBoxClick();    // 新增：绑定头像点击事件
+            bindAvatarUpload();      // 新增：绑定头像上传事件
         };
 
-        // ========== 1. 初始化用户信息显示 ==========
+        // ========== 1. 初始化用户信息显示（新增头像） ==========
         function initUserInfo() {
             const userInfo = JSON.parse(localStorage.getItem(USER_INFO_KEY));
             const userInfoContainer = document.getElementById('userInfo');
             
             if (userInfo && userInfo.username) {
-                // 已登录状态：显示用户名 + 退出按钮
+                // 已登录状态：显示头像 + 用户名 + 退出按钮
+                const avatar = userInfo.avatar || DEFAULT_AVATAR;
                 userInfoContainer.innerHTML = `
+                    <div class="avatar-box" id="avatarBox">
+                        <img src="${avatar}" class="avatar-img">
+                    </div>
                     <span class="username-display">欢迎，${userInfo.username}</span>
                     <button class="logout-btn" id="logoutBtn">退出登录</button>
                 `;
@@ -368,16 +373,25 @@
             initUserInfo(); // 刷新用户信息显示
         }
 
-        // ========== 3. 初始化弹窗关闭功能 ==========
+        // ========== 3. 初始化弹窗关闭功能（新增头像弹窗） ==========
         function initModalClose() {
-            // 关闭按钮点击
+            // 登录弹窗关闭
             document.getElementById('closeModal').addEventListener('click', () => {
                 document.getElementById('loginModal').classList.remove('active');
             });
-            // 点击弹窗外区域关闭
             document.getElementById('loginModal').addEventListener('click', (e) => {
                 if (e.target === document.getElementById('loginModal')) {
                     document.getElementById('loginModal').classList.remove('active');
+                }
+            });
+
+            // 新增：头像弹窗关闭
+            document.getElementById('closeAvatarModal').addEventListener('click', () => {
+                document.getElementById('avatarSettingModal').classList.remove('active');
+            });
+            document.getElementById('avatarSettingModal').addEventListener('click', (e) => {
+                if (e.target === document.getElementById('avatarSettingModal')) {
+                    document.getElementById('avatarSettingModal').classList.remove('active');
                 }
             });
         }
@@ -488,6 +502,182 @@
                 } catch (error) {
                     showMessage('register-message', '网络错误，请检查连接或VPN', false);
                     console.error('注册错误:', error);
+                }
+            });
+        }
+
+        // ========== 新增：7. 头像点击事件 - 打开头像设置弹窗 ==========
+        function bindAvatarBoxClick() {
+            document.body.addEventListener('click', (e) => {
+                if (e.target.closest('#avatarBox')) {
+                    openAvatarSetting();
+                }
+            });
+        }
+
+        // ========== 新增：8. 打开头像设置弹窗 ==========
+        function openAvatarSetting() {
+            const userInfo = JSON.parse(localStorage.getItem(USER_INFO_KEY));
+            if (!userInfo) return; // 未登录不打开
+            
+            const modal = document.getElementById('avatarSettingModal');
+            const previewImg = document.getElementById('avatarPreviewImg');
+            const settingQq = document.getElementById('setting-qq');
+            const settingAvatarUrl = document.getElementById('setting-avatar-url');
+
+            // 初始化弹窗内容
+            previewImg.src = userInfo.avatar || DEFAULT_AVATAR;
+            settingQq.value = userInfo.qq || '';
+            settingAvatarUrl.value = userInfo.avatar || '';
+
+            // QQ号输入联动头像预览
+            settingQq.oninput = () => {
+                const qq = settingQq.value.trim();
+                if (qq) {
+                    const qqAvatar = `https://q1.qlogo.cn/g?b=qq&nk=${qq}&s=160`;
+                    previewImg.src = qqAvatar;
+                    settingAvatarUrl.value = qqAvatar;
+                }
+            };
+
+            // 自定义URL输入联动预览
+            settingAvatarUrl.oninput = () => {
+                if (settingAvatarUrl.value) {
+                    previewImg.src = settingAvatarUrl.value;
+                }
+            };
+
+            // 显示弹窗
+            modal.classList.add('active');
+        }
+
+        // ========== 新增：9. 头像上传功能（适配avater.easy2sound.xyz） ==========
+        function bindAvatarUpload() {
+            const uploadBox = document.getElementById('uploadBox');
+            const avatarFile = document.getElementById('avatarFile');
+            const previewImg = document.getElementById('avatarPreviewImg');
+            const settingAvatarUrl = document.getElementById('setting-avatar-url');
+            
+            // 点击上传区域触发文件选择
+            uploadBox.addEventListener('click', () => {
+                avatarFile.click();
+            });
+
+            // 文件选择后处理（适配范例的 FormData 格式）
+            avatarFile.addEventListener('change', async (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+
+                // 1. 前置校验
+                const validTypes = ['image/jpeg', 'image/png'];
+                if (!validTypes.includes(file.type)) {
+                    showMessage('avatar-message', '仅支持jpg/png格式的图片', false);
+                    return;
+                }
+                if (file.size > 2 * 1024 * 1024) { // 限制2MB以内
+                    showMessage('avatar-message', '图片大小不能超过2MB', false);
+                    return;
+                }
+
+                // 2. 构建 FormData（和范例一致：avatar + user_id）
+                const formData = new FormData();
+                formData.append('avatar', file); // 核心字段：头像文件
+                // 获取当前登录用户ID
+                const userInfo = JSON.parse(localStorage.getItem(USER_INFO_KEY) || 'null');
+                const userId = userInfo ? userInfo.id : 'test_user_001';
+                formData.append('user_id', userId); // 新增：添加user_id字段
+
+                try {
+                    // 显示上传中状态
+                    showMessage('avatar-message', '正在上传头像，请稍候...', true);
+
+                    // 3. 发送上传请求（适配Cloudflare Workers）
+                    const response = await fetch(AVATAR_UPLOAD_API, {
+                        method: 'POST',
+                        body: formData,
+                        cache: 'no-cache', // 禁用缓存
+                        mode: 'cors'       // 支持跨域
+                    });
+
+                    // 4. 兼容响应解析（处理500错误）
+                    let data;
+                    try {
+                        data = await response.json();
+                    } catch (parseErr) {
+                        showMessage('avatar-message', `上传失败：服务器错误(${response.status})`, false);
+                        console.error('响应解析失败：', parseErr);
+                        return;
+                    }
+
+                    // 5. 处理响应结果（适配范例的 success/url 字段）
+                    if (response.ok) {
+                        if (data.success) {
+                            // 上传成功：更新预览和URL输入框
+                            previewImg.src = data.url;
+                            settingAvatarUrl.value = data.url;
+                            showMessage('avatar-message', '头像上传成功！', true);
+                        } else {
+                            showMessage('avatar-message', `上传失败：${data.message || '未知错误'}`, false);
+                        }
+                    } else {
+                        showMessage('avatar-message', `上传失败：${response.status} - ${data.message || '服务器内部错误'}`, false);
+                    }
+
+                } catch (networkErr) {
+                    showMessage('avatar-message', `上传失败：${networkErr.message}`, false);
+                    console.error('上传网络错误：', networkErr);
+                }
+            });
+
+            // 绑定保存头像按钮事件
+            document.getElementById('saveAvatarBtn').addEventListener('click', async () => {
+                const userInfo = JSON.parse(localStorage.getItem(USER_INFO_KEY));
+                if (!userInfo) {
+                    showMessage('avatar-message', '请先登录', false);
+                    return;
+                }
+
+                const qq = document.getElementById('setting-qq').value.trim();
+                const avatarUrl = document.getElementById('setting-avatar-url').value.trim();
+                
+                if (!qq && !avatarUrl) {
+                    showMessage('avatar-message', '请输入QQ号或自定义头像URL', false);
+                    return;
+                }
+
+                try {
+                    // 调用更新用户信息API
+                    const response = await fetch(`${API_BASE_URL}/update-user-info`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ 
+                            userId: userInfo.id, 
+                            qq: qq, 
+                            avatar: avatarUrl 
+                        })
+                    });
+
+                    const data = await response.json();
+                    if (data.ok) {
+                        // 更新本地存储的用户信息
+                        userInfo.qq = qq;
+                        userInfo.avatar = avatarUrl;
+                        localStorage.setItem(USER_INFO_KEY, JSON.stringify(userInfo));
+                        
+                        showMessage('avatar-message', '头像保存成功！', true);
+                        // 关闭弹窗并刷新用户信息
+                        setTimeout(() => {
+                            document.getElementById('avatarSettingModal').classList.remove('active');
+                            initUserInfo();
+                        }, 1000);
+                    } else {
+                        showMessage('avatar-message', data.error || '头像保存失败', false);
+                    }
+                } catch (error) {
+                    showMessage('avatar-message', '网络错误，请检查连接', false);
+                    console.error('保存头像错误：', error);
                 }
             });
         }
