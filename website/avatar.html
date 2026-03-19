@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>头像上传测试</title>
+</head>
+<body background="background_board.jpg">
+    <h3>上传头像到 GitHub</h3>
+    <input type="file" id="avatarInput" accept="image/png, image/jpeg">
+    <button onclick="uploadAvatar()">开始上传</button>
+    <div id="result" style="margin-top: 20px; color: blue;"></div>
+
+    <script>
+        // 替换成你 Cloudflare Workers 的访问 URL
+        const WORKER_URL = 'https://avater.easy2sound.xyz';
+
+        async function uploadAvatar() {
+            const fileInput = document.getElementById('avatarInput');
+            if (!fileInput.files.length) {
+                alert('请先选择图片');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('avatar', fileInput.files[0]);
+            formData.append('user_id', 'test_user_001'); // 这里填你的用户ID，比如 123456
+
+            try {
+                const response = await fetch(WORKER_URL, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+                
+                if (data.success) {
+                    document.getElementById('result').innerHTML = 
+                        `上传成功！<br>头像URL: <a href="${data.url}" target="_blank">${data.url}</a>`;
+                    console.log('头像URL:', data.url);
+                    // 现在把 data.url 存入你的数据库即可
+                } else {
+                    document.getElementById('result').innerHTML = `上传失败: ${data.message}`;
+                }
+            } catch (error) {
+                document.getElementById('result').innerHTML = `网络错误: ${error.message}`;
+            }
+        }
+    </script>
+</body>
+</html>
