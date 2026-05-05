@@ -198,14 +198,53 @@ def batch_split_CV(wavs_dir, out_dir, textgrid_dir):
     print(f"找不到匹配TextGrid: {no_match_count} 个文件")
     print(f"处理失败: {error_count} 个文件")
     
+def compute_overlap_ms(wav_path: str) -> int:
+    """
+    Compute overlap (ms) from audio by detecting vowel onset.
+    
+    Overlap 是重叠音的时长，用于 UTAU 合成中前后音符的平滑过渡。
+    通过检测音频中 RMS 能量首次显著上升的位置（辅音→元音转换点）来确定。
+    """
+    try:
+        y, sr = librosa.load(wav_path, sr=None)
+        duration = librosa.get_duration(y=y, sr=sr)
+        
+        # 短音频直接用小 overlap
+        if duration < 0.02:
+            return 5
+        
+        hop_length = 512
+        rms = librosa.feature.rms(y=y, hop_length=hop_length)[0]
+        frames_time = librosa.frames_to_time(range(len(rms)), sr=sr, hop_length=hop_length)
+        
+        # 找到 RMS 首次超过 15% 峰值的位置（辅音→元音过渡点）
+        threshold = np.max(rms) * 0.15
+        onset_idx = np.argmax(rms > threshold)
+        
+        if onset_idx > 0:
+            onset_time = frames_time[onset_idx]
+        else:
+            onset_time = duration * 0.2  # 回退：20% 位置
+        
+        # Overlap ≈ 从开头到元音起点的时长 (ms)
+        overlap = int(onset_time * 1000)
+        
+        # 限制到合理范围 5~150ms
+        return max(5, min(150, overlap))
+    except Exception:
+        return 50  # 出错时回退到默认值
+
+
 def make_meta_CV(wavs_dir):
-    wavs=os.listdir(wavs_dir)
-    f=open(f"{wavs_dir}/meta.txt",'w',encoding='utf-8')
+    wavs = os.listdir(wavs_dir)
+    f = open(f"{wavs_dir}/meta.txt", 'w', encoding='utf-8')
     for wav in wavs:
         if not wav.endswith('.wav'):
             continue
         wavpath = os.path.join(wavs_dir, wav)
-        f.write(f"{wav},{wav.split('.')[0]},0,50\n")
+        name = wav.rsplit('.', 1)[0]
+        overlap = compute_overlap_ms(wavpath)
+        f.write(f"{wav},{name},{overlap}\n")
     f.close()
         
         # 使用示例
