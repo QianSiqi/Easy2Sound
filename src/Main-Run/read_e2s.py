@@ -32,10 +32,12 @@ def create_silence(duration_s: float, sr=44100):
 
 # ── E2S 解析（dict 方式） ──────────────────────────────────────────────
 
-def read_e2s(path: str) -> list[dict]:
+def read_e2s(path: str, execute_phonemer: bool = True) -> list[dict]:
     """
     解析 e2s 文件。
     每个音符返回一个 dict，字段名为 key。
+    execute_phonemer=True 时（默认，命令行模式），解析到 phonemer 字段会自动执行；
+    execute_phonemer=False 时（web UI 调用），仅解析不执行。
     """
     global resampler, wavtool, singer, phonemer, tempo
     resampler = wavtool = singer = phonemer = ""
@@ -68,8 +70,9 @@ def read_e2s(path: str) -> list[dict]:
                 singer = os.path.abspath(v) if not os.path.isabs(v) else v
             elif k == 'phonemer':
                 phonemer = v
-                print(f'{phonemer} {path}')
-                os.system(f'{phonemer} {path}')
+                if execute_phonemer:
+                    print(f'{phonemer} {path}')
+                    os.system(f'{phonemer} {path}')
             elif k == 'tempo':
                 tempo = v
             continue
@@ -93,7 +96,7 @@ def call_resampler(notes: list[dict]):
     cnt = 0
     for note in notes:
         phoneme = note.get('phoneme', note.get('lyric', ''))
-        is_sil = phoneme.lower() in ('r', 'sil', 'pau')
+        is_sil = phoneme.lower() in ('sil')
 
         if is_sil:
             length_ticks = int(float(note.get('length', '480')))

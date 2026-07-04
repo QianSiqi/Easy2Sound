@@ -1082,6 +1082,7 @@ dependencies = [
 name = "ipa-ysq"
 version = "0.1.0"
 dependencies = [
+ "cc",
  "tokio",
  "voirs-g2p",
 ]

@@ -53,8 +53,8 @@ class UstToE2sConverter:
         # pitchbend调整系数（限制在0.1~5.0之间，避免极端值）
         self.pitchbend_coeff = max(0.1, min(pitchbend_coeff, 5.0))
         
-        # 休止符标记（保留并正确处理）
-        self.rest_markers = {'R', '休', 'r', '', ' ', '-', '_'}
+        # 休止符标记（UST中R/sil都视为休止符）
+        self.rest_markers = {'R', 'sil', 'r'}
 
     def parse_ust(self, ust_content: str, encoding: str = 'shift_jis') -> dict:
         """
@@ -267,7 +267,7 @@ class UstToE2sConverter:
         try:
             # 1. 读取UST文件（增强编码兼容性）
             ust_path = Path(ust_path)
-            encodings = ['shift_jis', 'utf-8', 'gbk', 'gb2312']
+            encodings = ['shift_jis']
             ust_content = None
             
             for enc in encodings:
@@ -302,11 +302,10 @@ class UstToE2sConverter:
                 # 精准计算音符长度（传入UST实际BPM，返回整数毫秒）
                 length = self.convert_note_length(note.get("Length", "480"), tempo)
                 
-                # 处理歌词（保留休止符标记）
+                # 处理歌词（UST的R/sil统一转为sil）
                 lyric = note.get("Lyric", "").strip()
-                # 统一休止符标记为R
-                if lyric in self.rest_markers:
-                    lyric = "R"
+                if lyric.upper() == 'R' or lyric in self.rest_markers:
+                    lyric = "sil"
                 
                 # 处理音量（Velocity：0~200，默认100）
                 volume = self._safe_int(note.get("Velocity", "100"), 100)
@@ -316,7 +315,7 @@ class UstToE2sConverter:
                 note_num = self._safe_int(note.get("NoteNum", 60), 60)
                 note_num = max(24, min(note_num, 107))  # 限制音符编号范围
                 
-                if lyric == "R":
+                if lyric == "sil":
                     pitch = "C4"  # 休止符音高无意义，默认C4
                 elif adjust_base_pitch:
                     _, pitch = self.adjust_base_pitch(note_num)
@@ -324,7 +323,7 @@ class UstToE2sConverter:
                     pitch = self.NOTE_NUM_TO_PITCH.get(note_num, "C4")
 
                 # 处理音高弯曲和颤音（休止符跳过）
-                if lyric == "R":
+                if lyric == "sil":
                     pitchbend = ""
                     vib_start = vib_end = vib_rate = vib_depth = 0
                 else:
@@ -355,7 +354,7 @@ class UstToE2sConverter:
             with open(e2s_path, 'w', encoding='utf-8', newline='\n') as f:
                 f.write(e2s_content)
             
-            print(f"✅ 转换成功！")
+            print(f"转换成功！")
             print(f"  输入文件: {ust_path}")
             print(f"  输出文件: {e2s_path}")
             print(f"  适配UST BPM: {tempo} | Pitchbend系数: {self.pitchbend_coeff}")
@@ -363,10 +362,10 @@ class UstToE2sConverter:
             return True
             
         except FileNotFoundError:
-            print(f"❌ 错误：找不到输入文件 {ust_path}")
+            print(f"错误：找不到输入文件 {ust_path}")
             return False
         except Exception as e:
-            print(f"❌ 转换失败：{str(e)}")
+            print(f"转换失败：{str(e)}")
             import traceback
             traceback.print_exc()
             return False

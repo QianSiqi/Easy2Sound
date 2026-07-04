@@ -62,7 +62,7 @@ resampy==0.4.3
 ruamel.yaml==0.19.1
 scikit-learn==1.7.2
 scipy==1.15.3
-simpleaudio==1.0.4
+
 six==1.17.0
 sounddevice==0.5.3
 soundfile==0.13.1
@@ -71,9 +71,6 @@ sympy==1.14.0
 TextGrid==1.6.1
 threadpoolctl==3.6.0
 tomli==2.4.0
-torch==2.7.1+cu118
-torchaudio==2.7.1+cu118
-torchvision==0.22.1+cu118
 tqdm==4.67.1
 typing_extensions==4.15.0
 tzdata==2025.3

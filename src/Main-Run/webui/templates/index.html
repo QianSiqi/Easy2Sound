@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Easy2Sound</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <!-- ═══ 顶部菜单栏 ═══ -->
+    <div id="menubar">
+        <div class="menu-item" data-menu="file">文件(F)</div>
+        <div class="menu-item" data-menu="edit">编辑(E)</div>
+        <div class="menu-item" data-menu="playback">播放(P)</div>
+        <div class="menu-item" data-menu="view">视图(V)</div>
+        <div class="menu-item" data-menu="options">设置(O)</div>
+        <div class="menu-item" data-menu="help">帮助(H)</div>
+    </div>
+
+    <!-- ═══ 下拉菜单 ═══ -->
+    <div id="dropdown-menu" class="dropdown hidden">
+        <div class="dropdown-content" id="dropdown-content"></div>
+    </div>
+
+    <!-- ═══ 工具栏 ═══ -->
+    <div id="toolbar">
+        <div class="toolbar-group">
+            <button id="btn-new" class="tool-btn" title="新建项目">
+                <svg width="16" height="16" viewBox="0 0 16 16"><path d="M3 1h6l4 4v9a1 1 0 01-1 1H3a1 1 0 01-1-1V2a1 1 0 011-1z" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M9 1v4h4" fill="none" stroke="currentColor" stroke-width="1.2"/></svg>
+            </button>
+            <button id="btn-open" class="tool-btn" title="打开文件">
+                <svg width="16" height="16" viewBox="0 0 16 16"><path d="M2 4h5l2 2h5v7H2z" fill="none" stroke="currentColor" stroke-width="1.2"/></svg>
+            </button>
+            <button id="btn-save" class="tool-btn" title="保存项目">
+                <svg width="16" height="16" viewBox="0 0 16 16"><path d="M3 1h7l3 3v9a1 1 0 01-1 1H3a1 1 0 01-1-1V2a1 1 0 011-1z" fill="none" stroke="currentColor" stroke-width="1.2"/><rect x="4" y="1" width="7" height="4" fill="none" stroke="currentColor" stroke-width="1"/><rect x="4" y="9" width="8" height="4" rx="1" fill="none" stroke="currentColor" stroke-width="1"/></svg>
+            </button>
+        </div>
+
+        <div class="toolbar-separator"></div>
+
+        <!-- 运输控制 -->
+        <div class="toolbar-group">
+            <button id="btn-rewind" class="tool-btn transport-btn" title="回到开头">
+                <svg width="16" height="16" viewBox="0 0 16 16"><path d="M3 3v10M6 8l6-5v10z" fill="currentColor"/></svg>
+            </button>
+            <button id="btn-play" class="tool-btn transport-btn play-btn" title="播放">
+                <svg width="16" height="16" viewBox="0 0 16 16"><path d="M4 2l10 6-10 6z" fill="currentColor"/></svg>
+            </button>
+            <button id="btn-stop" class="tool-btn transport-btn" title="停止">
+                <svg width="16" height="16" viewBox="0 0 16 16"><rect x="3" y="3" width="10" height="10" rx="1" fill="currentColor"/></svg>
+            </button>
+        </div>
+
+        <div class="toolbar-separator"></div>
+
+        <!-- 编辑工具 -->
+        <div class="toolbar-group">
+            <button id="btn-undo" class="tool-btn" title="撤销">
+                <svg width="16" height="16" viewBox="0 0 16 16"><path d="M4 7h7a3 3 0 010 6H8" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M7 4L4 7l3 3" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+            </button>
+            <button id="btn-redo" class="tool-btn" title="重做">
+                <svg width="16" height="16" viewBox="0 0 16 16"><path d="M12 7H5a3 3 0 000 6h3" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M9 4l3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+            </button>
+        </div>
+
+        <div class="toolbar-separator"></div>
+
+        <!-- 编辑工具组 -->
+        <div class="toolbar-group">
+            <button id="btn-pencil" class="tool-btn active" title="铅笔工具 (P)">
+                <svg width="16" height="16" viewBox="0 0 16 16"><path d="M11.5 1.5l3 3L5 14H2v-3z" fill="none" stroke="currentColor" stroke-width="1.2"/></svg>
+            </button>
+            <button id="btn-select" class="tool-btn" title="选择工具 (S)">
+                <svg width="16" height="16" viewBox="0 0 16 16"><path d="M2 1l4 14 2-5 5-2z" fill="none" stroke="currentColor" stroke-width="1.2"/></svg>
+            </button>
+            <button id="btn-erase" class="tool-btn" title="橡皮擦 (E)">
+                <svg width="16" height="16" viewBox="0 0 16 16"><path d="M6 14h7M3 10l4 4 7-10-4-4z" fill="none" stroke="currentColor" stroke-width="1.2"/></svg>
+            </button>
+        </div>
+
+        <div class="toolbar-separator"></div>
+
+        <!-- 缩放 -->
+        <div class="toolbar-group">
+            <button id="btn-zoom-in" class="tool-btn" title="放大">+</button>
+            <span id="zoom-level" class="tool-label">100%</span>
+            <button id="btn-zoom-out" class="tool-btn" title="缩小">-</button>
+        </div>
+
+        <div class="toolbar-separator"></div>
+
+        <!-- 速度/BPM -->
+        <div class="toolbar-group">
+            <span class="tool-label">BPM</span>
+            <input id="input-bpm" type="number" class="tool-input" value="120" min="20" max="300" step="1">
+        </div>
+
+        <div class="toolbar-separator"></div>
+
+        <!-- 拍号 -->
+        <div class="toolbar-group">
+            <span class="tool-label">拍号</span>
+            <select id="select-time-sig" class="tool-select">
+                <option value="4/4">4/4</option>
+                <option value="3/4">3/4</option>
+                <option value="2/4">2/4</option>
+                <option value="6/8">6/8</option>
+                <option value="5/4">5/4</option>
+                <option value="7/8">7/8</option>
+            </select>
+        </div>
+
+        <div class="toolbar-separator"></div>
+
+        <div class="toolbar-group">
+            <button id="btn-import-midi" class="tool-btn" title="导入 MIDI">MIDI</button>
+            <button id="btn-export-midi" class="tool-btn" title="导出 MIDI">导出</button>
+        </div>
+    </div>
+
+    <!-- ═══ 主体区域 ═══ -->
+    <div id="main-container">
+        <!-- 左侧轨道面板 -->
+        <div id="track-panel">
+            <div id="track-panel-header">
+                <span>轨道</span>
+                <button id="btn-add-track" class="small-btn" title="添加轨道">+</button>
+            </div>
+            <div id="track-list"></div>
+        </div>
+
+        <!-- 钢琴卷帘区域 -->
+        <div id="pianoroll-container">
+            <!-- 时间标尺 -->
+            <canvas id="timeline-canvas"></canvas>
+
+            <div id="pianoroll-body">
+                <!-- 钢琴键 -->
+                <div id="piano-keys-container">
+                    <canvas id="piano-keys-canvas"></canvas>
+                </div>
+
+                <!-- 音符画布 -->
+                <div id="pianoroll-viewport">
+                    <canvas id="pianoroll-canvas"></canvas>
+                    <div id="pianoroll-spacer"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 右侧属性面板 -->
+        <div id="properties-panel">
+            <div id="properties-header">属性</div>
+            <div id="properties-content">
+                <div class="prop-group" id="note-properties" style="display:none;">
+                    <div class="prop-title">音符属性</div>
+                    <div class="prop-row">
+                        <label>歌词</label>
+                        <input id="prop-lyric" type="text" class="prop-input" placeholder="あ">
+                    </div>
+                    <div class="prop-row">
+                        <label>音素</label>
+                        <input id="prop-phoneme" type="text" class="prop-input" placeholder="a">
+                    </div>
+                    <div class="prop-row">
+                        <label>音高</label>
+                        <input id="prop-pitch" type="number" class="prop-input" value="60" min="0" max="127">
+                        <span id="prop-pitch-name" class="prop-value">C4</span>
+                    </div>
+                    <div class="prop-row">
+                        <label>长度</label>
+                        <input id="prop-length" type="number" class="prop-input" value="480" min="1">
+                        <span class="prop-unit">ticks</span>
+                    </div>
+                    <div class="prop-row">
+                        <label>力度</label>
+                        <input id="prop-velocity" type="range" class="prop-slider" min="0" max="200" value="100">
+                        <span id="prop-velocity-value" class="prop-value">100</span>
+                    </div>
+                    <div class="prop-row">
+                        <label>偏移</label>
+                        <input id="prop-offset" type="number" class="prop-input" value="0">
+                        <span class="prop-unit">ms</span>
+                    </div>
+                    <div class="prop-row">
+                        <label>辅音</label>
+                        <input id="prop-consonant" type="number" class="prop-input" value="0">
+                        <span class="prop-unit">ms</span>
+                    </div>
+                    <div class="prop-row">
+                        <label>截止</label>
+                        <input id="prop-cutoff" type="number" class="prop-input" value="0">
+                        <span class="prop-unit">ms</span>
+                    </div>
+                    <div class="prop-row">
+                        <label>调制</label>
+                        <input id="prop-modulation" type="number" class="prop-input" value="0" min="0" max="100">
+                        <span class="prop-unit">%</span>
+                    </div>
+                    <div class="prop-row">
+                        <label>Flags</label>
+                        <input id="prop-flags" type="text" class="prop-input" placeholder="">
+                    </div>
+                </div>
+                <div class="prop-group" id="track-properties" style="display:none;">
+                    <div class="prop-title">轨道属性</div>
+                    <div class="prop-row">
+                        <label>名称</label>
+                        <input id="prop-track-name" type="text" class="prop-input">
+                    </div>
+                    <div class="prop-row">
+                        <label>音源</label>
+                        <select id="prop-track-singer" class="prop-input"></select>
+                    </div>
+                    <div class="prop-row">
+                        <label>音量</label>
+                        <input id="prop-track-volume" type="range" class="prop-slider" min="-12" max="12" value="0" step="0.1">
+                        <span id="prop-track-volume-value" class="prop-value">0 dB</span>
+                    </div>
+                    <div class="prop-row">
+                        <label>声像</label>
+                        <input id="prop-track-pan" type="range" class="prop-slider" min="-100" max="100" value="0">
+                        <span id="prop-track-pan-value" class="prop-value">C</span>
+                    </div>
+                </div>
+                <div class="prop-group" id="no-selection-hint">
+                    <div class="hint-text">选择音符或轨道查看属性</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══ 表达式编辑器 ═══ -->
+    <div id="expression-editor">
+        <div id="expr-tabs">
+            <div class="expr-tab active" data-expr="velocity">VEL</div>
+            <div class="expr-tab" data-expr="accent">ACC</div>
+            <div class="expr-tab" data-expr="pitchbend">PIT</div>
+            <div class="expr-tab" data-expr="modulation">MOD</div>
+        </div>
+        <canvas id="expression-canvas"></canvas>
+    </div>
+
+    <!-- ═══ 状态栏 ═══ -->
+    <div id="statusbar">
+        <span id="status-left">Easy2Sound v0.1</span>
+        <span id="status-center"></span>
+        <span id="status-right">就绪</span>
+    </div>
+
+    <!-- ═══ 隐藏文件输入 ═══ -->
+    <input type="file" id="file-input" accept=".mid,.midi,.e2s,.ust,.json" style="display:none">
+
+    <!-- ═══ 上下文菜单 ═══ -->
+    <div id="context-menu" class="hidden">
+        <div class="ctx-item" data-action="cut">剪切</div>
+        <div class="ctx-item" data-action="copy">复制</div>
+        <div class="ctx-item" data-action="paste">粘贴</div>
+        <div class="ctx-separator"></div>
+        <div class="ctx-item" data-action="delete">删除</div>
+        <div class="ctx-item" data-action="selectAll">全选</div>
+        <div class="ctx-separator"></div>
+        <div class="ctx-item" data-action="pitch-up">升调</div>
+        <div class="ctx-item" data-action="pitch-down">降调</div>
+        <div class="ctx-separator"></div>
+        <div class="ctx-item" data-action="insert-note">插入音符</div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/pianoroll.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
