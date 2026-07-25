@@ -1,0 +1,7 @@
+[package]
+name = "jp-ddy-ysq"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+kakasi = "0.1.0"

@@ -1,0 +1,23 @@
+resampler=resampler.exe
+wavtool=python wavtool.py
+singer=test3
+phonemer=jp-ddy-ysq
+tempo=120
+
+1:
+lyric=い
+phoneme=i
+crossfade=50
+pitch=C4
+velocity=100
+flags=g0B0H0P86
+length=480
+volume=100
+modulation=0
+tempo=120
+vib_start=96
+vib_end=480
+vib_hz=20
+vib_hard=30
+pt_x=240
+pt_y=-200

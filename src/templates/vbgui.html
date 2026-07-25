@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VBGui Web — 音源制作工具</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, 'Segoe UI', sans-serif; background: #1a1a2e; color: #e0e0e0; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+
+/* ── Toolbar ── */
+.toolbar { display: flex; align-items: center; gap: 6px; padding: 6px 12px; background: #16213e; border-bottom: 1px solid #0f3460; flex-shrink: 0; }
+.toolbar button { background: #0f3460; color: #e0e0e0; border: 1px solid #1a1a5e; padding: 5px 12px; border-radius: 4px; cursor: pointer; font-size: 13px; }
+.toolbar button:hover { background: #1a4a8a; }
+.toolbar button.primary { background: #e94560; border-color: #e94560; }
+.toolbar button.primary:hover { background: #ff6b81; }
+.toolbar .sep { width: 1px; height: 24px; background: #0f3460; }
+.toolbar .status { margin-left: auto; font-size: 12px; color: #888; }
+
+/* ── Main layout ── */
+.main { display: flex; flex: 1; overflow: hidden; }
+
+/* ── Left panel ── */
+.left-panel { width: 260px; min-width: 200px; background: #16213e; border-right: 1px solid #0f3460; display: flex; flex-direction: column; overflow: hidden; }
+.left-panel .panel-header { padding: 8px 12px; font-weight: bold; font-size: 13px; background: #0f3460; border-bottom: 1px solid #1a1a5e; }
+.left-panel .panel-header button { float: right; background: none; border: none; color: #e94560; cursor: pointer; font-size: 12px; }
+.left-panel .panel-header button:hover { color: #ff6b81; }
+
+/* ── Directory browser ── */
+.dir-browser { flex: 1; overflow-y: auto; font-size: 12px; }
+.dir-browser .path-bar { display: flex; padding: 4px 8px; background: #111; gap: 4px; }
+.dir-browser .path-bar input { flex: 1; background: #1a1a2e; border: 1px solid #333; color: #e0e0e0; padding: 3px 6px; border-radius: 3px; font-size: 12px; }
+.dir-entry { padding: 3px 8px; cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.dir-entry:hover { background: #1a4a8a; }
+.dir-entry.dir { color: #ffd700; }
+.dir-entry.dir::before { content: '📁 '; }
+.dir-entry.file::before { content: '📄 '; }
+
+/* ── File tree ── */
+.file-tree { border-top: 1px solid #0f3460; max-height: 40%; overflow-y: auto; }
+.file-item { padding: 5px 12px; cursor: pointer; font-size: 13px; border-bottom: 1px solid #111; }
+.file-item:hover { background: #1a4a8a; }
+.file-item.active { background: #e94560; }
+.file-item .tier { padding-left: 16px; font-size: 12px; color: #aaa; }
+.file-item .tier.active { color: #fff; background: rgba(233,69,96,0.3); }
+
+/* ── Right panel (editor) ── */
+.right-panel { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+.editor-container { flex: 1; position: relative; overflow: hidden; }
+#waveformCanvas { display: block; width: 100%; height: 100%; }
+
+/* ── Hidden audio element ── */
+#audioPlayer { display: none; }
+
+/* ── Modal (directory picker) ── */
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; z-index: 1000; }
+.modal { background: #16213e; border: 1px solid #0f3460; border-radius: 8px; width: 500px; max-height: 70vh; display: flex; flex-direction: column; }
+.modal .modal-header { padding: 12px 16px; font-weight: bold; border-bottom: 1px solid #0f3460; display: flex; justify-content: space-between; align-items: center; }
+.modal .modal-header .close-btn { background: none; border: none; color: #e94560; font-size: 18px; cursor: pointer; }
+.modal .modal-body { flex: 1; overflow-y: auto; padding: 8px; }
+.modal .modal-footer { padding: 8px 16px; border-top: 1px solid #0f3460; text-align: right; }
+.modal .modal-footer button { margin-left: 8px; }
+
+/* ── Edit dialog ── */
+.edit-dialog { position: fixed; z-index: 999; background: #16213e; border: 1px solid #e94560; border-radius: 6px; padding: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.5); }
+.edit-dialog input { background: #1a1a2e; border: 1px solid #333; color: #e0e0e0; padding: 4px 8px; border-radius: 3px; width: 150px; }
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: #111; }
+::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<!-- Toolbar -->
+<div class="toolbar">
+  <button onclick="showDirBrowser()">📂 打开项目</button>
+  <div class="sep"></div>
+  <button onclick="saveCurrent()">💾 保存</button>
+  <button onclick="saveAll()">💾 全部保存</button>
+  <div class="sep"></div>
+  <button onclick="playCurrent()">▶ 播放</button>
+  <button onclick="stopPlayback()">⏹ 停止</button>
+  <div class="sep"></div>
+  <button onclick="zoomIn()">🔍+</button>
+  <button onclick="zoomOut()">🔍−</button>
+  <button onclick="zoomFit()">⊞ 适应</button>
+  <div class="sep"></div>
+  <button class="primary" onclick="runBuild()">🔨 构建音源</button>
+  <span class="status" id="statusText">未加载项目</span>
+</div>
+
+<!-- Main -->
+<div class="main">
+  <!-- Left panel -->
+  <div class="left-panel">
+    <div class="panel-header">文件列表 <button onclick="showDirBrowser()">打开</button></div>
+    <div id="fileTree" class="file-tree"></div>
+  </div>
+
+  <!-- Right panel -->
+  <div class="right-panel">
+    <div class="editor-container">
+      <canvas id="waveformCanvas"></canvas>
+    </div>
+  </div>
+</div>
+
+<!-- Audio player -->
+<audio id="audioPlayer"></audio>
+
+<!-- Directory browser modal -->
+<div class="modal-overlay" id="dirModal" style="display:none" onclick="if(event.target===this)closeDirBrowser()">
+  <div class="modal">
+    <div class="modal-header">
+      <span>选择项目目录</span>
+      <button class="close-btn" onclick="closeDirBrowser()">✕</button>
+    </div>
+    <div style="padding:6px 8px;background:#111;">
+      <input id="dirPathInput" style="width:100%;background:#1a1a2e;border:1px solid #333;color:#e0e0e0;padding:4px 8px;border-radius:3px;" placeholder="输入路径并回车">
+    </div>
+    <div class="modal-body" id="dirBrowserList"></div>
+    <div class="modal-footer">
+      <button onclick="closeDirBrowser()">取消</button>
+      <button class="primary" onclick="openSelectedDir()">打开此目录</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════════
+//  State
+// ═══════════════════════════════════════════════════════════════════
+
+const state = {
+  projectDir: '',
+  wavDir: '',
+  tgDir: '',
+  files: {},           // base → {textgrid, has_audio, tg_path}
+  currentBase: null,
+  currentTG: null,     // parsed TextGrid dict
+  activeTierIdx: 0,
+
+  // Audio
+  audioBuffer: null,   // decoded AudioBuffer
+  audioDuration: 0,
+  audioPlaying: false,
+
+  // View
+  viewStart: 0,
+  viewEnd: 1,
+  cursorTime: -1,
+
+  // Drag
+  dragging: null,      // {tierIdx, intervalIdx, side, startX, origTime}
+  snapDist: 0.003,
+  boundaryHit: 10,
+
+  // Dir browser
+  browseDir: '',
+};
+
+const canvas = document.getElementById('waveformCanvas');
+const ctx = canvas.getContext('2d');
+const audioEl = document.getElementById('audioPlayer');
+
+// ═══════════════════════════════════════════════════════════════════
+//  Directory Browser
+// ═══════════════════════════════════════════════════════════════════
+
+async function showDirBrowser() {
+  document.getElementById('dirModal').style.display = 'flex';
+  if (!state.browseDir) {
+    state.browseDir = state.projectDir || 'C:/';
+  }
+  document.getElementById('dirPathInput').value = state.browseDir;
+  await browseTo(state.browseDir);
+}
+
+function closeDirBrowser() {
+  document.getElementById('dirModal').style.display = 'none';
+}
+
+async function browseTo(dir) {
+  const resp = await fetch('/api/browse', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({dir})
+  });
+  const data = await resp.json();
+  if (data.error) { alert(data.error); return; }
+
+  state.browseDir = data.path;
+  document.getElementById('dirPathInput').value = data.path;
+
+  const list = document.getElementById('dirBrowserList');
+  list.innerHTML = '';
+
+  // Parent directory
+  if (data.parent && data.parent !== data.path) {
+    const item = document.createElement('div');
+    item.className = 'dir-entry dir';
+    item.textContent = '..';
+    item.onclick = () => browseTo(data.parent);
+    list.appendChild(item);
+  }
+
+  for (const e of data.entries) {
+    const item = document.createElement('div');
+    item.className = 'dir-entry ' + (e.is_dir ? 'dir' : 'file');
+    item.textContent = e.name;
+    if (e.is_dir) {
+      item.onclick = () => browseTo(e.path);
+    }
+    list.appendChild(item);
+  }
+}
+
+document.getElementById('dirPathInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') browseTo(e.target.value);
+});
+
+async function openSelectedDir() {
+  await loadProject(state.browseDir);
+  closeDirBrowser();
+}
+
+// ═══════════════════════════════════════════════════════════════════
+//  Project Loading
+// ═══════════════════════════════════════════════════════════════════
+
+async function loadProject(dir) {
+  const resp = await fetch('/api/project', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({dir})
+  });
+  const data = await resp.json();
+  if (data.error) { alert(data.error); return; }
+
+  state.projectDir = data.project_dir;
+  state.wavDir = data.wav_dir;
+  state.tgDir = data.tg_dir;
+  state.files = data.files;
+  state.currentBase = null;
+  state.currentTG = null;
+
+  updateFileTree();
+  document.getElementById('statusText').textContent = `已加载: ${dir}`;
+}
+
+function updateFileTree() {
+  const tree = document.getElementById('fileTree');
+  tree.innerHTML = '';
+
+  const bases = Object.keys(state.files).sort();
+  for (const base of bases) {
+    const info = state.files[base];
+    const item = document.createElement('div');
+    item.className = 'file-item' + (state.currentBase === base ? ' active' : '');
+    item.textContent = base + (info.has_audio ? '' : ' (无音频)');
+    item.onclick = () => selectFile(base);
+    tree.appendChild(item);
+
+    // Show tiers
+    if (info.textgrid && info.textgrid.tiers) {
+      for (let ti = 0; ti < info.textgrid.tiers.length; ti++) {
+        const tier = info.textgrid.tiers[ti];
+        const tierEl = document.createElement('div');
+        tierEl.className = 'tier' + (state.currentBase === base && state.activeTierIdx === ti ? ' active' : '');
+        tierEl.textContent = `  ${tier.name} (${tier.intervals.length})`;
+        tierEl.onclick = (e) => { e.stopPropagation(); selectFile(base, ti); };
+        tree.appendChild(tierEl);
+      }
+    }
+  }
+}
+
+async function selectFile(base, tierIdx) {
+  state.currentBase = base;
+  state.activeTierIdx = tierIdx || 0;
+
+  const info = state.files[base];
+  if (info.textgrid) {
+    state.currentTG = info.textgrid;
+  } else {
+    // Load from server
+    const resp = await fetch(`/api/textgrid/${base}?project_dir=${encodeURIComponent(state.projectDir)}`);
+    if (resp.ok) {
+      state.currentTG = await resp.json();
+      info.textgrid = state.currentTG;
+    }
+  }
+
+  // Load audio
+  if (info.has_audio) {
+    await loadAudio(base);
+  } else {
+    state.audioBuffer = null;
+    state.audioDuration = 0;
+  }
+
+  // Set view
+  if (state.currentTG && state.currentTG.xmax > 0) {
+    state.viewStart = 0;
+    state.viewEnd = Math.min(state.currentTG.xmax, state.audioDuration || state.currentTG.xmax, 5);
+  } else {
+    state.viewStart = 0;
+    state.viewEnd = state.audioDuration || 1;
+  }
+  state.cursorTime = -1;
+
+  updateFileTree();
+  draw();
+}
+
+async function loadAudio(base) {
+  try {
+    const resp = await fetch(`/api/audio/${base}?project_dir=${encodeURIComponent(state.projectDir)}`);
+    if (!resp.ok) { state.audioBuffer = null; return; }
+
+    const blob = await resp.blob();
+    const url = URL.createObjectURL(blob);
+
+    // Also set <audio> src for playback
+    audioEl.src = url;
+
+    // Decode for waveform display
+    const arrayBuf = await blob.arrayBuffer();
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    state.audioBuffer = await audioCtx.decodeAudioData(arrayBuf);
+    state.audioDuration = state.audioBuffer.duration;
+    audioCtx.close();
+  } catch (e) {
+    console.error('Failed to load audio:', e);
+    state.audioBuffer = null;
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════════
+//  Canvas Drawing
+// ═══════════════════════════════════════════════════════════════════
+
+const MARGIN_LEFT = 60;
+const MARGIN_RIGHT = 20;
+const MARGIN_TOP = 30;
+const TIER_HEIGHT = 40;
+const WAVEFORM_HEIGHT = 100;
+const RULER_HEIGHT = 25;
+
+function resizeCanvas() {
+  const rect = canvas.parentElement.getBoundingClientRect();
+  canvas.width = rect.width * window.devicePixelRatio;
+  canvas.height = rect.height * window.devicePixelRatio;
+  canvas.style.width = rect.width + 'px';
+  canvas.style.height = rect.height + 'px';
+  ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+  draw();
+}
+
+function timeToX(t) {
+  const w = canvas.width / window.devicePixelRatio - MARGIN_LEFT - MARGIN_RIGHT;
+  return MARGIN_LEFT + (t - state.viewStart) / (state.viewEnd - state.viewStart) * w;
+}
+
+function xToTime(x) {
+  const w = canvas.width / window.devicePixelRatio - MARGIN_LEFT - MARGIN_RIGHT;
+  return state.viewStart + (x - MARGIN_LEFT) / w * (state.viewEnd - state.viewStart);
+}
+
+function tierY(idx) {
+  return MARGIN_TOP + WAVEFORM_HEIGHT + 10 + idx * (TIER_HEIGHT + 4);
+}
+
+function draw() {
+  const W = canvas.width / window.devicePixelRatio;
+  const H = canvas.height / window.devicePixelRatio;
+  ctx.clearRect(0, 0, W, H);
+
+  // Background
+  ctx.fillStyle = '#1a1a2e';
+  ctx.fillRect(0, 0, W, H);
+
+  if (!state.currentTG) {
+    ctx.fillStyle = '#666';
+    ctx.font = '14px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('点击「打开项目」加载文件', W / 2, H / 2);
+    return;
+  }
+
+  const viewSpan = state.viewEnd - state.viewStart;
+  if (viewSpan <= 0) return;
+
+  // ── Ruler ──
+  const rulerY = MARGIN_TOP - RULER_HEIGHT;
+  ctx.fillStyle = '#282830';
+  ctx.fillRect(MARGIN_LEFT, rulerY, W - MARGIN_LEFT - MARGIN_RIGHT, RULER_HEIGHT);
+  ctx.strokeStyle = '#666';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(MARGIN_LEFT, rulerY + RULER_HEIGHT);
+  ctx.lineTo(W - MARGIN_RIGHT, rulerY + RULER_HEIGHT);
+  ctx.stroke();
+
+  const step = niceTimeStep(viewSpan);
+  let t0 = Math.ceil(state.viewStart / step) * step;
+  ctx.fillStyle = '#aaa';
+  ctx.font = '10px sans-serif';
+  ctx.textAlign = 'center';
+  for (let t = t0; t <= state.viewEnd; t += step) {
+    const x = timeToX(t);
+    ctx.beginPath();
+    ctx.moveTo(x, rulerY + 16);
+    ctx.lineTo(x, rulerY + RULER_HEIGHT);
+    ctx.stroke();
+    ctx.fillText(t.toFixed(2) + 's', x, rulerY + 13);
+  }
+
+  // ── Waveform ──
+  const waveTop = MARGIN_TOP;
+  const waveBottom = waveTop + WAVEFORM_HEIGHT;
+  ctx.fillStyle = '#14141a';
+  ctx.fillRect(MARGIN_LEFT, waveTop, W - MARGIN_LEFT - MARGIN_RIGHT, WAVEFORM_HEIGHT);
+
+  if (state.audioBuffer) {
+    const data = state.audioBuffer.getChannelData(0);
+    const sr = state.audioBuffer.sampleRate;
+    const startSample = Math.max(0, Math.floor(state.viewStart * sr));
+    const endSample = Math.min(data.length, Math.floor(state.viewEnd * sr));
+    const nSamples = endSample - startSample;
+
+    if (nSamples > 1) {
+      const maxPixels = (W - MARGIN_LEFT - MARGIN_RIGHT) * 2;
+      const stepS = Math.max(1, Math.floor(nSamples / maxPixels));
+      const midY = (waveTop + waveBottom) / 2;
+      const amp = (waveBottom - waveTop) / 2 * 0.85;
+
+      // Find max for normalization
+      let maxVal = 1e-9;
+      for (let i = startSample; i < endSample; i += stepS) {
+        const v = Math.abs(data[i]);
+        if (v > maxVal) maxVal = v;
+      }
+
+      ctx.strokeStyle = '#64b4ff';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      let first = true;
+      for (let i = startSample; i < endSample; i += stepS) {
+        const x = MARGIN_LEFT + (i - startSample) / nSamples * (W - MARGIN_LEFT - MARGIN_RIGHT);
+        const y = midY - (data[i] / maxVal) * amp;
+        if (first) { ctx.moveTo(x, y); first = false; }
+        else ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+    }
+  }
+
+  // ── Cursor ──
+  if (state.cursorTime >= 0) {
+    const cx = timeToX(state.cursorTime);
+    ctx.strokeStyle = '#ff5050';
+    ctx.lineWidth = 1;
+    ctx.setLineDash([4, 4]);
+    ctx.beginPath();
+    ctx.moveTo(cx, MARGIN_TOP);
+    ctx.lineTo(cx, tierBottomY());
+    ctx.stroke();
+    ctx.setLineDash([]);
+  }
+
+  // ── Tiers ──
+  for (let ti = 0; ti < state.currentTG.tiers.length; ti++) {
+    const tier = state.currentTG.tiers[ti];
+    const ty = tierY(ti);
+    const plotLeft = MARGIN_LEFT;
+    const plotRight = W - MARGIN_RIGHT;
+
+    // Tier background
+    ctx.fillStyle = '#2d2d37';
+    ctx.fillRect(plotLeft, ty, plotRight - plotLeft, TIER_HEIGHT);
+
+    // Tier label
+    ctx.fillStyle = '#ccc';
+    ctx.font = '12px sans-serif';
+    ctx.textAlign = 'right';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(tier.name, MARGIN_LEFT - 6, ty + TIER_HEIGHT / 2);
+
+    // Intervals
+    for (let ii = 0; ii < tier.intervals.length; ii++) {
+      const iv = tier.intervals[ii];
+      const xl = timeToX(Math.max(iv.xmin, state.viewStart));
+      const xr = timeToX(Math.min(iv.xmax, state.viewEnd));
+
+      if (xr <= plotLeft || xl >= plotRight) continue;
+
+      // Background
+      ctx.fillStyle = ii % 2 === 0 ? '#373746' : '#414150';
+      ctx.fillRect(xl, ty, xr - xl, TIER_HEIGHT);
+
+      // Text
+      ctx.fillStyle = '#ddd';
+      ctx.font = '12px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      const clipLeft = Math.max(xl, plotLeft);
+      const clipRight = Math.min(xr, plotRight);
+      ctx.save();
+      ctx.beginPath();
+      ctx.rect(clipLeft, ty, clipRight - clipLeft, TIER_HEIGHT);
+      ctx.clip();
+      ctx.fillText(iv.text, (xl + xr) / 2, ty + TIER_HEIGHT / 2);
+      ctx.restore();
+
+      // Right boundary
+      const isLast = (ii === tier.intervals.length - 1);
+      const isDrag = state.dragging && state.dragging.tierIdx === ti && state.dragging.intervalIdx === ii;
+      const bxTime = isLast ? Math.min(iv.xmax, state.audioDuration || iv.xmax) : iv.xmax;
+      const bx = timeToX(bxTime);
+
+      ctx.strokeStyle = isDrag ? '#ff6432' : (isLast ? '#aa8820' : '#ffc832');
+      ctx.lineWidth = isLast ? 1 : 2;
+      if (isLast) ctx.setLineDash([4, 3]);
+      ctx.beginPath();
+      ctx.moveTo(bx, ty);
+      ctx.lineTo(bx, ty + TIER_HEIGHT);
+      ctx.stroke();
+      ctx.setLineDash([]);
+    }
+
+    // First interval left boundary
+    if (tier.intervals.length > 0) {
+      const bx0 = timeToX(tier.intervals[0].xmin);
+      const isDragLeft = state.dragging && state.dragging.tierIdx === ti && state.dragging.side === 0;
+      ctx.strokeStyle = isDragLeft ? '#ff6432' : '#aa8820';
+      ctx.lineWidth = 2;
+      ctx.setLineDash([4, 3]);
+      ctx.beginPath();
+      ctx.moveTo(bx0, ty);
+      ctx.lineTo(bx0, ty + TIER_HEIGHT);
+      ctx.stroke();
+      ctx.setLineDash([]);
+    }
+  }
+
+  // Bottom line
+  if (state.currentTG.tiers.length > 0) {
+    const lastY = tierY(state.currentTG.tiers.length - 1) + TIER_HEIGHT;
+    ctx.strokeStyle = '#333';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(MARGIN_LEFT, lastY);
+    ctx.lineTo(W - MARGIN_RIGHT, lastY);
+    ctx.stroke();
+  }
+}
+
+function tierBottomY() {
+  if (state.currentTG && state.currentTG.tiers.length > 0) {
+    return tierY(state.currentTG.tiers.length - 1) + TIER_HEIGHT;
+  }
+  return MARGIN_TOP + WAVEFORM_HEIGHT + 10;
+}
+
+function niceTimeStep(span) {
+  for (const s of [0.005, 0.01, 0.02, 0.05, 0.1, 0.2, 0.5, 1.0, 2.0, 5.0]) {
+    if (span / s <= 20) return s;
+  }
+  return 10.0;
+}
+
+// ═══════════════════════════════════════════════════════════════════
+//  Mouse Events
+// ═══════════════════════════════════════════════════════════════════
+
+canvas.addEventListener('mousedown', e => {
+  const rect = canvas.getBoundingClientRect();
+  const x = e.clientX - rect.left;
+  const y = e.clientY - rect.top;
+  const t = xToTime(x);
+
+  if (e.button === 0) {
+    // Check boundary hit
+    const boundary = findBoundary(x, y);
+    if (boundary) {
+      state.dragging = { ...boundary, startX: x, origTime: t };
+      canvas.style.cursor = 'col-resize';
+      return;
+    }
+
+    // Check tier click
+    if (state.currentTG) {
+      for (let ti = 0; ti < state.currentTG.tiers.length; ti++) {
+        const ty = tierY(ti);
+        if (y >= ty && y <= ty + TIER_HEIGHT) {
+          state.cursorTime = t;
+          playPreview(t, 0.5);
+          draw();
+          return;
+        }
+      }
+    }
+
+    // Waveform click
+    if (y >= MARGIN_TOP && y <= MARGIN_TOP + WAVEFORM_HEIGHT) {
+      state.cursorTime = t;
+      playPreview(t, 0.5);
+      draw();
+    }
+  } else if (e.button === 2) {
+    // Right click → play from here
+    playPreview(t, null);
+  }
+});
+
+canvas.addEventListener('mousemove', e => {
+  const rect = canvas.getBoundingClientRect();
+  const x = e.clientX - rect.left;
+  const y = e.clientY - rect.top;
+  const t = xToTime(x);
+
+  if (state.dragging) {
+    const d = state.dragging;
+    const tier = state.currentTG.tiers[d.tierIdx];
+
+    if (d.side === 1) {
+      // Drag right boundary (xmax)
+      const iv = tier.intervals[d.intervalIdx];
+      const isLast = d.intervalIdx === tier.intervals.length - 1;
+      const prevXmax = d.intervalIdx > 0 ? tier.intervals[d.intervalIdx - 1].xmax : tier.xmin;
+      const maxAllowed = isLast ? (state.audioDuration || iv.xmax) : tier.xmax;
+      const minAllowed = prevXmax + 0.001;
+      let newTime = Math.max(minAllowed, Math.min(maxAllowed, t));
+
+      // Snap
+      if (state.currentTG) {
+        for (let ti2 = 0; ti2 < state.currentTG.tiers.length; ti2++) {
+          if (ti2 === d.tierIdx) continue;
+          for (const iv2 of state.currentTG.tiers[ti2].intervals) {
+            for (const bd of [iv2.xmin, iv2.xmax]) {
+              if (Math.abs(t - bd) < state.snapDist) {
+                newTime = Math.max(minAllowed, Math.min(maxAllowed, bd));
+              }
+            }
+          }
+        }
+      }
+
+      if (Math.abs(newTime - iv.xmax) > 0.0005) {
+        iv.xmax = newTime;
+        if (!isLast && d.intervalIdx + 1 < tier.intervals.length) {
+          tier.intervals[d.intervalIdx + 1].xmin = newTime;
+        } else {
+          tier.xmax = newTime;
+        }
+        state.cursorTime = newTime;
+        draw();
+      }
+    } else {
+      // Drag left boundary (xmin of first interval)
+      const iv0 = tier.intervals[0];
+      const maxAllowed = iv0.xmax - 0.001;
+      let newTime = Math.max(0, Math.min(maxAllowed, t));
+
+      // Snap
+      if (state.currentTG) {
+        for (let ti2 = 0; ti2 < state.currentTG.tiers.length; ti2++) {
+          if (ti2 === d.tierIdx) continue;
+          for (const iv2 of state.currentTG.tiers[ti2].intervals) {
+            for (const bd of [iv2.xmin, iv2.xmax]) {
+              if (Math.abs(t - bd) < state.snapDist) {
+                newTime = Math.max(0, Math.min(maxAllowed, bd));
+              }
+            }
+          }
+        }
+      }
+
+      if (Math.abs(newTime - iv0.xmin) > 0.0005) {
+        iv0.xmin = newTime;
+        tier.xmin = newTime;
+        state.cursorTime = newTime;
+        draw();
+      }
+    }
+  } else {
+    // Hover cursor
+    const b = findBoundary(x, y);
+    canvas.style.cursor = b ? 'col-resize' : 'default';
+  }
+});
+
+canvas.addEventListener('mouseup', () => {
+  if (state.dragging) {
+    state.dragging = null;
+    canvas.style.cursor = 'default';
+    draw();
+  }
+});
+
+canvas.addEventListener('mouseleave', () => {
+  if (state.dragging) {
+    state.dragging = null;
+    canvas.style.cursor = 'default';
+    draw();
+  }
+});
+
+canvas.addEventListener('wheel', e => {
+  e.preventDefault();
+  const rect = canvas.getBoundingClientRect();
+  const mouseX = e.clientX - rect.left;
+  const mouseT = xToTime(mouseX);
+
+  if (e.ctrlKey) {
+    // Zoom
+    const factor = e.deltaY > 0 ? 1.15 : 1 / 1.15;
+    const span = (state.viewEnd - state.viewStart) * factor;
+    const ratio = (mouseT - state.viewStart) / (state.viewEnd - state.viewStart);
+    state.viewStart = mouseT - span * ratio;
+    state.viewEnd = mouseT + span * (1 - ratio);
+  } else {
+    // Scroll
+    const shift = (state.viewEnd - state.viewStart) * 0.1;
+    if (e.deltaY < 0) { state.viewStart -= shift; state.viewEnd -= shift; }
+    else { state.viewStart += shift; state.viewEnd += shift; }
+  }
+  clampView();
+  draw();
+});
+
+canvas.addEventListener('dblclick', e => {
+  const rect = canvas.getBoundingClientRect();
+  const x = e.clientX - rect.left;
+  const y = e.clientY - rect.top;
+  const t = xToTime(x);
+
+  if (!state.currentTG) return;
+
+  for (let ti = 0; ti < state.currentTG.tiers.length; ti++) {
+    const ty = tierY(ti);
+    if (y >= ty && y <= ty + TIER_HEIGHT) {
+      const ii = getIntervalAt(ti, t);
+      if (ii !== null) {
+        const oldText = state.currentTG.tiers[ti].intervals[ii].text;
+        const newText = prompt('编辑音素:', oldText);
+        if (newText !== null && newText !== '') {
+          state.currentTG.tiers[ti].intervals[ii].text = newText;
+          draw();
+        }
+      }
+      return;
+    }
+  }
+});
+
+// ═══════════════════════════════════════════════════════════════════
+//  Boundary Detection
+// ═══════════════════════════════════════════════════════════════════
+
+function findBoundary(x, y) {
+  if (!state.currentTG) return null;
+  for (let ti = 0; ti < state.currentTG.tiers.length; ti++) {
+    const ty = tierY(ti);
+    if (y < ty || y > ty + TIER_HEIGHT) continue;
+    const tier = state.currentTG.tiers[ti];
+
+    // Right boundaries
+    for (let ii = 0; ii < tier.intervals.length; ii++) {
+      const isLast = ii === tier.intervals.length - 1;
+      const bxTime = isLast ? Math.min(tier.intervals[ii].xmax, state.audioDuration || tier.intervals[ii].xmax) : tier.intervals[ii].xmax;
+      const bx = timeToX(bxTime);
+      if (Math.abs(x - bx) < state.boundaryHit) {
+        return { tierIdx: ti, intervalIdx: ii, side: 1 };
+      }
+    }
+
+    // Left boundary of first interval
+    if (tier.intervals.length > 0) {
+      const bx0 = timeToX(tier.intervals[0].xmin);
+      if (Math.abs(x - bx0) < state.boundaryHit) {
+        return { tierIdx: ti, intervalIdx: 0, side: 0 };
+      }
+    }
+  }
+  return null;
+}
+
+function getIntervalAt(tierIdx, time) {
+  const tier = state.currentTG.tiers[tierIdx];
+  for (let i = 0; i < tier.intervals.length; i++) {
+    if (tier.intervals[i].xmin <= time && time < tier.intervals[i].xmax) return i;
+  }
+  return null;
+}
+
+function clampView() {
+  let span = state.viewEnd - state.viewStart;
+  const minSpan = 0.01;
+  if (span < minSpan) {
+    const mid = (state.viewStart + state.viewEnd) / 2;
+    state.viewStart = mid - minSpan / 2;
+    state.viewEnd = mid + minSpan / 2;
+    span = minSpan;
+  }
+  const maxEnd = Math.max(state.audioDuration || 0.01, 0.01);
+  if (state.viewStart < 0) { state.viewEnd -= state.viewStart; state.viewStart = 0; }
+  if (state.viewEnd > maxEnd) { state.viewStart -= (state.viewEnd - maxEnd); state.viewEnd = maxEnd; }
+  state.viewStart = Math.max(0, state.viewStart);
+}
+
+// ═══════════════════════════════════════════════════════════════════
+//  Audio Playback
+// ═══════════════════════════════════════════════════════════════════
+
+function playPreview(startSec, duration) {
+  if (!audioEl.src) return;
+  audioEl.currentTime = startSec;
+  audioEl.play();
+  if (duration) {
+    setTimeout(() => { audioEl.pause(); }, duration * 1000);
+  }
+}
+
+function playCurrent() {
+  if (state.cursorTime >= 0) {
+    playPreview(state.cursorTime, 1.0);
+  } else if (audioEl.src) {
+    audioEl.currentTime = state.viewStart;
+    audioEl.play();
+    const dur = state.viewEnd - state.viewStart;
+    setTimeout(() => { audioEl.pause(); }, dur * 1000);
+  }
+}
+
+function stopPlayback() {
+  audioEl.pause();
+  audioEl.currentTime = 0;
+}
+
+// ═══════════════════════════════════════════════════════════════════
+//  Zoom
+// ═══════════════════════════════════════════════════════════════════
+
+function zoomIn() {
+  const mid = (state.viewStart + state.viewEnd) / 2;
+  const span = (state.viewEnd - state.viewStart) * 0.6;
+  state.viewStart = mid - span / 2;
+  state.viewEnd = mid + span / 2;
+  clampView(); draw();
+}
+
+function zoomOut() {
+  const mid = (state.viewStart + state.viewEnd) / 2;
+  const span = (state.viewEnd - state.viewStart) / 0.6;
+  state.viewStart = mid - span / 2;
+  state.viewEnd = mid + span / 2;
+  clampView(); draw();
+}
+
+function zoomFit() {
+  state.viewStart = 0;
+  state.viewEnd = state.audioDuration || (state.currentTG ? state.currentTG.xmax : 1);
+  draw();
+}
+
+// ═══════════════════════════════════════════════════════════════════
+//  Save / Build
+// ═══════════════════════════════════════════════════════════════════
+
+async function saveCurrent() {
+  if (!state.currentBase || !state.currentTG) return;
+  const resp = await fetch(`/api/textgrid/${state.currentBase}`, {
+    method: 'PUT',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({ project_dir: state.projectDir, textgrid: state.currentTG })
+  });
+  const data = await resp.json();
+  if (data.ok) {
+    document.getElementById('statusText').textContent = `已保存: ${data.path}`;
+  } else {
+    alert('保存失败: ' + (data.error || ''));
+  }
+}
+
+async function saveAll() {
+  if (!state.projectDir) return;
+  let count = 0;
+  for (const base of Object.keys(state.files)) {
+    const tg = state.files[base].textgrid;
+    if (!tg) continue;
+    const resp = await fetch(`/api/textgrid/${base}`, {
+      method: 'PUT',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ project_dir: state.projectDir, textgrid: tg })
+    });
+    if (resp.ok) count++;
+  }
+  document.getElementById('statusText').textContent = `已保存 ${count} 个文件`;
+}
+
+async function runBuild() {
+  if (!state.projectDir) { alert('请先加载项目'); return; }
+  await saveAll();
+  const outDir = prompt('输出目录:', state.projectDir + '/output');
+  if (!outDir) return;
+
+  document.getElementById('statusText').textContent = '构建中...';
+  const resp = await fetch('/api/build', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({ project_dir: state.projectDir, out_dir: outDir, tg_dir: state.tgDir })
+  });
+  const data = await resp.json();
+  if (data.ok) {
+    document.getElementById('statusText').textContent = '构建完成!';
+    alert('构建成功!\n' + (data.stdout || ''));
+  } else {
+    document.getElementById('statusText').textContent = '构建失败';
+    alert('构建失败:\n' + (data.stderr || data.error || ''));
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════════
+//  Init
+// ═══════════════════════════════════════════════════════════════════
+
+window.addEventListener('resize', resizeCanvas);
+resizeCanvas();
+draw();
+</script>
+</body>
+</html>
