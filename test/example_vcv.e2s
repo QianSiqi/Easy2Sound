@@ -1,0 +1,64 @@
+resampler=resampler.exe
+wavtool=python wavtool.py
+singer=vcvtest3
+tempo=120
+1:
+lyric=- あ
+phoneme=- a
+pitch=C4
+velocity=100
+flags=B0Y60C30
+length=480
+volume=100
+modulation=0
+tempo=120
+crossfade=50
+
+2:
+lyric=
+phoneme=a ka
+pitch=C4
+velocity=100
+flags=B0Y60C30
+length=480
+volume=100
+modulation=0
+tempo=120
+crossfade=50
+
+3:
+lyric=さ
+phoneme=a sa
+pitch=E4
+velocity=100
+flags=B0Y60C30
+length=480
+volume=100
+modulation=0
+tempo=120
+crossfade=50
+
+4:
+lyric=た
+phoneme=a ta
+pitch=G4
+velocity=100
+flags=B0Y60C30
+length=480
+volume=100
+modulation=0
+tempo=120
+crossfade=50
+
+5:
+lyric=な
+phoneme=a na
+pitch=E4
+velocity=100
+flags=B0Y60C30
+length=960
+volume=100
+modulation=0
+tempo=120
+crossfade=50
+

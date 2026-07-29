@@ -2,216 +2,85 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Easy2Sound-details</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Easy2Sound - 详细介绍</title>
     <link rel="stylesheet" href="导航栏.css">
-    <style>
-        /* 核心：导航栏容器 - 让文字居中 + 登录入口靠右 */
-        .nav-container {
-            display: flex;
-            justify-content: center;  /* 导航链接居中 */
-            align-items: center;
-            position: relative;       /* 为右上角登录入口做定位父级 */
-            padding: 0 20px;
-        }
-
-        .nav {
-            display: flex;
-            gap: 10px;  /* 链接之间的间距 */
-        }
-
-        .nav a {
-            color: white;
-            text-decoration: none;
-            margin: 0 15px;
-            font-size: 18px;
-            padding: 12px 24px;
-            display: inline-block;
-        }
-
-        /* 右上角用户信息区域 - 固定在最右侧 */
-        .user-info {
-            position: absolute;
-            right: 20px;
-            top: 50%;
-            transform: translateY(-50%);
-            display: flex;
-            align-items: center;
-            color: white;
-            gap: 15px;
-        }
-
-        /* 头像框 */
-        .avatar-box {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            overflow: hidden;
-            border: 2px solid #667eea;
-            cursor: pointer;
-            background: #f5f5f5;
-        }
-        .avatar-img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .username-display {
-            font-size: 16px;
-            color: #667eea;
-            font-weight: 600;
-        }
-
-        .logout-btn {
-            padding: 6px 12px;
-            background: #667eea;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-
-        .login-entrance {
-            color: white;
-            text-decoration: none;
-            font-size: 16px;
-            padding: 6px 12px;
-            background: #667eea;
-            border-radius: 4px;
-        }
-
-        /* 登录弹窗（文字清晰版） */
-        .login-modal {
-            position: fixed; top:0; left:0; width:100%; height:100%;
-            background: rgba(0,0,0,0.5);
-            display: none; justify-content: center; align-items: center;
-            z-index: 999;
-        }
-        .login-modal.active {
-            display: flex;
-        }
-
-        .modal-container {
-            background: white;
-            border-radius: 12px;
-            width: 100%; max-width: 450px;
-            padding: 40px; position: relative;
-        }
-
-        .close-modal {
-            position: absolute; top:20px; right:20px;
-            font-size:24px; cursor:pointer; border:none; background:none;
-            color: #333;
-        }
-
-        /* 标签切换 */
-        .tabs { display: flex; margin-bottom:30px; border-bottom:2px solid #eee; }
-        .tab { 
-            padding:10px 20px; cursor:pointer; font-weight:600; 
-            color:#333;
-        }
-        .tab.active { color:#667eea; border-bottom:3px solid #667eea; }
-        
-        .form-section { display: none; }
-        .form-section.active { display: block; }
-
-        /* 表单样式（文字清晰） */
-        .form-group { margin-bottom:20px; }
-        label { 
-            display:block; margin-bottom:8px; 
-            color: #333;
-            font-weight: 600;
-            font-size: 15px;
-        }
-        input { 
-            width:100%; padding:12px 15px; 
-            border:1px solid #ddd; border-radius:8px; font-size:16px;
-            color: #333;
-        }
-        input::placeholder {
-            color: #999;
-        }
-
-        .form-btn { 
-            width:100%; padding:14px; 
-            background:#667eea; color:white;
-            border:none; border-radius:8px; font-weight:600; cursor:pointer;
-        }
-
-        .message { margin-top:20px; padding:12px; border-radius:8px; text-align:center; display:none; }
-        .success { background:#e8f5e9; color:#2e7d32; display:block; }
-        .error { background:#ffebee; color:#c62828; display:block; }
-
-        /* 头像设置弹窗 - 新增上传样式 */
-        .avatar-setting-modal {
-            position: fixed; top:0; left:0; width:100%; height:100%;
-            background: rgba(0,0,0,0.5);
-            display: none; justify-content: center; align-items: center;
-            z-index: 1000;
-        }
-        .avatar-setting-modal.active { display:flex; }
-        .avatar-setting-container {
-            background:white; border-radius:12px;
-            max-width:400px; width:100%; padding:30px;
-            position:relative;
-        }
-        .avatar-preview {
-            width:120px; height:120px; border-radius:50%;
-            margin:0 auto 20px; border:3px solid #667eea; overflow:hidden;
-        }
-        .avatar-preview-img { width:100%; height:100%; object-fit:cover; }
-        .avatar-tips { 
-            text-align:center; color:#666;
-            margin-bottom:20px;
-        }
-        /* 新增：文件上传样式 */
-        .upload-box {
-            margin: 15px 0;
-            padding: 15px;
-            border: 2px dashed #667eea;
-            border-radius: 8px;
-            text-align: center;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-        .upload-box:hover {
-            background: #f8f9ff;
-        }
-        .upload-text {
-            color: #667eea;
-            font-size: 14px;
-            margin-bottom: 5px;
-        }
-        #avatarFile {
-            display: none;
-        }
-
-        /* 内容区 */
-        .content-box {
-            background:rgba(0,0,0,0.6); border-radius:12px; padding:25px; margin:30px 0; color:white;
-        }
-        .content-box h1 { margin-top:0; color:white; }
-    </style>
 </head>
 <body>
 
+<!-- 导航栏 -->
 <div class="nav-container">
     <div class="nav">
         <a href="index.html">主页</a>
         <a href="down.html">下载</a>
-        <a href="details.html">详细介绍</a>
+        <a href="details.html" class="active">详细介绍</a>
         <a href="feedback.html">反馈问题</a>
-        <a href="love.html">感 动 E 2 S 的 1 0 大 人 物</a>
+        <a href="love.html">感动人物</a>
         <a href="donation.html">投喂</a>
         <a href="yuandaima.html">源代码</a>
     </div>
     <div class="user-info" id="userInfo"></div>
 </div>
 
-<div class="content-box">
+<!-- 主内容 -->
+<div class="glass-card">
     <h1>Easy2Sound 详细介绍</h1>
-    <p>Easy2Sound 是一款简单易用的虚拟歌姬合成工具(暂时只支持UTAU，Open UTAU)软件离线状态保持本地运作，除下载插件外，无需用网。</p>
-    <p>软件支持本地导入导出,无需复杂设置,适合新手使用。</p>
+    <p>Easy2Sound 是一款简单易用的虚拟歌姬合成工具，暂时支持 UTAU 和 OpenUTAU 引擎。</p>
+    <p>软件完全本地运作，除下载插件外无需网络连接，支持本地导入导出，无需复杂设置，适合新手使用。</p>
+
+    <div class="feature-grid" style="margin-top:32px;">
+        <div class="feature-card">
+            <span class="icon">🎤</span>
+            <h3>UTAU 引擎</h3>
+            <p>支持经典 UTAU 合成引擎，兼容大量现有音源库</p>
+        </div>
+        <div class="feature-card">
+            <span class="icon">🎼</span>
+            <h3>OpenUTAU 引擎</h3>
+            <p>支持新一代 OpenUTAU 引擎，提供更高质量的合成效果</p>
+        </div>
+        <div class="feature-card">
+            <span class="icon">💻</span>
+            <h3>离线运行</h3>
+            <p>所有计算在本地完成，保护隐私，无需担心网络延迟</p>
+        </div>
+        <div class="feature-card">
+            <span class="icon">📦</span>
+            <h3>插件系统</h3>
+            <p>支持下载扩展插件，不断增强软件功能</p>
+        </div>
+    </div>
+</div>
+
+<div class="glass-card">
+    <h1>系统要求</h1>
+    <table>
+        <tr>
+            <th>项目</th>
+            <th>最低配置</th>
+            <th>推荐配置</th>
+        </tr>
+        <tr>
+            <td>操作系统</td>
+            <td>Windows 10</td>
+            <td>Windows 11</td>
+        </tr>
+        <tr>
+            <td>处理器</td>
+            <td>双核 1.5GHz</td>
+            <td>四核 2.0GHz 以上</td>
+        </tr>
+        <tr>
+            <td>内存</td>
+            <td>4GB</td>
+            <td>8GB 以上</td>
+        </tr>
+        <tr>
+            <td>硬盘空间</td>
+            <td>500MB</td>
+            <td>1GB 以上</td>
+        </tr>
+    </table>
 </div>
 
 <!-- 登录弹窗 -->
@@ -222,7 +91,6 @@
             <div class="tab active" data-tab="login">登录</div>
             <div class="tab" data-tab="register">注册</div>
         </div>
-
         <div class="form-section active" id="login">
             <div class="form-group">
                 <label>用户名</label>
@@ -235,7 +103,6 @@
             <button class="form-btn" id="login-btn">登录</button>
             <div class="message" id="login-message"></div>
         </div>
-
         <div class="form-section" id="register">
             <div class="form-group">
                 <label>用户名</label>
@@ -259,22 +126,19 @@
     </div>
 </div>
 
-<!-- 头像设置弹窗 - 新增上传区域 -->
+<!-- 头像设置弹窗 -->
 <div class="avatar-setting-modal" id="avatarSettingModal">
     <div class="avatar-setting-container">
         <button class="close-modal" id="closeAvatarModal">&times;</button>
-        <h3 style="text-align:center; color:#333;">设置头像</h3>
+        <h3 style="text-align:center; color:#fff; margin-bottom:20px; font-size:1.2rem;">设置头像</h3>
         <div class="avatar-preview">
             <img class="avatar-preview-img" id="avatarPreviewImg">
         </div>
         <p class="avatar-tips">选择以下方式设置头像（优先使用上传的头像）</p>
-        
-        <!-- 新增：文件上传区域 -->
         <div class="upload-box" id="uploadBox">
             <p class="upload-text">点击上传本地头像（支持jpg/png格式）</p>
             <input type="file" id="avatarFile" accept="image/jpeg,image/png">
         </div>
-
         <div class="form-group">
             <label>QQ号（自动生成头像）</label>
             <input type="number" id="setting-qq" placeholder="输入QQ号自动生成头像">
@@ -290,7 +154,7 @@
 
 <script>
 const API_BASE = 'https://api.easy2sound.xyz';
-const AVATAR_UPLOAD_API = 'https://avater.easy2sound.xyz'; // 头像上传API
+const AVATAR_UPLOAD_API = 'https://avater.easy2sound.xyz';
 const USER_KEY = 'easy2sound_user_info';
 const DEFAULT_AVATAR = 'https://q1.qlogo.cn/g?b=qq&nk=0&s=160';
 
@@ -300,15 +164,14 @@ window.onload = () => {
     bindTabSwitch();
     bindLoginRegister();
     bindAvatarBoxClick();
-    bindAvatarUpload(); // 新增：绑定头像上传事件
+    bindAvatarUpload();
 };
 
-// 渲染用户栏
 function renderUserBar() {
     const user = JSON.parse(localStorage.getItem(USER_KEY) || 'null');
     const el = document.getElementById('userInfo');
     if (!user) {
-        el.innerHTML = `<a href="javascript:" class="login-entrance" id="goLogin">登录/注册</a>`;
+        el.innerHTML = `<a href="javascript:" class="login-entrance" id="goLogin">登录 / 注册</a>`;
         document.getElementById('goLogin').onclick = () => {
             document.getElementById('loginModal').classList.add('active');
         };
@@ -319,157 +182,86 @@ function renderUserBar() {
         <div class="avatar-box" id="avatarBox">
             <img src="${avatar}" class="avatar-img">
         </div>
-        <span class="username-display">欢迎，${user.username}</span>
+        <span class="username-display">${user.username}</span>
         <button class="logout-btn" id="logoutBtn">退出</button>
     `;
     document.getElementById('logoutBtn').onclick = () => {
         localStorage.removeItem(USER_KEY);
-        alert('已退出登录');
         renderUserBar();
     };
 }
 
-// 头像点击事件
 function bindAvatarBoxClick() {
     document.body.addEventListener('click', (e) => {
-        if (e.target.closest('#avatarBox')) {
-            openAvatarSetting();
-        }
+        if (e.target.closest('#avatarBox')) openAvatarSetting();
     });
 }
 
-// 【核心修改】适配 GitHub 范例的头像上传逻辑
 function bindAvatarUpload() {
     const uploadBox = document.getElementById('uploadBox');
     const avatarFile = document.getElementById('avatarFile');
     const avatarPreviewImg = document.getElementById('avatarPreviewImg');
     const settingAvatarUrl = document.getElementById('setting-avatar-url');
-    
-    // 点击上传区域触发文件选择
-    uploadBox.addEventListener('click', () => {
-        avatarFile.click();
-    });
 
-    // 文件选择后处理（完全适配范例的 FormData 格式）
+    uploadBox.addEventListener('click', () => avatarFile.click());
+
     avatarFile.addEventListener('change', async (e) => {
         const file = e.target.files[0];
         if (!file) return;
-
-        // 1. 前置校验（和范例保持一致）
-        const validTypes = ['image/jpeg', 'image/png'];
-        if (!validTypes.includes(file.type)) {
+        if (!['image/jpeg', 'image/png'].includes(file.type)) {
             showMsg('avatar-message', '仅支持jpg/png格式的图片', false);
             return;
         }
-        if (file.size > 2 * 1024 * 1024) { // 限制2MB以内
+        if (file.size > 2 * 1024 * 1024) {
             showMsg('avatar-message', '图片大小不能超过2MB', false);
             return;
         }
-
-        // 2. 构建 FormData（完全和范例一致：avatar + user_id）
         const formData = new FormData();
-        formData.append('avatar', file); // 核心字段：头像文件
-        // 获取当前登录用户ID（如果未登录则用测试ID，和范例一致）
+        formData.append('avatar', file);
         const user = JSON.parse(localStorage.getItem(USER_KEY) || 'null');
-        const userId = user ? user.id : 'test_user_001';
-        formData.append('user_id', userId); // 新增：添加user_id字段
-
+        formData.append('user_id', user ? user.id : 'test_user_001');
         try {
-            // 显示上传中状态
             showMsg('avatar-message', '正在上传头像，请稍候...', true);
-
-            // 3. 发送上传请求（和范例一致的请求配置）
-            const response = await fetch(AVATAR_UPLOAD_API, {
-                method: 'POST',
-                body: formData,
-                cache: 'no-cache', // 禁用缓存，避免请求被拦截
-                mode: 'cors'       // 支持跨域（Cloudflare Workers 必备）
-            });
-
-            // 4. 兼容响应解析（处理 500 错误的非JSON响应）
+            const response = await fetch(AVATAR_UPLOAD_API, { method: 'POST', body: formData, cache: 'no-cache', mode: 'cors' });
             let data;
-            try {
-                data = await response.json();
-            } catch (parseErr) {
-                // 服务器返回 500 错误（非JSON格式）
+            try { data = await response.json(); } catch {
                 showMsg('avatar-message', `上传失败：服务器错误(${response.status})`, false);
-                console.error('响应解析失败：', parseErr);
                 return;
             }
-
-            // 5. 处理响应结果（适配范例的 success/url 字段）
-            if (response.ok) {
-                if (data.success) {
-                    // 上传成功：更新预览和URL输入框
-                    avatarPreviewImg.src = data.url;
-                    settingAvatarUrl.value = data.url;
-                    showMsg('avatar-message', '头像上传成功！', true);
-                } else {
-                    // 业务逻辑失败（比如文件验证不通过）
-                    showMsg('avatar-message', `上传失败：${data.message || '未知错误'}`, false);
-                }
+            if (response.ok && data.success) {
+                avatarPreviewImg.src = data.url;
+                settingAvatarUrl.value = data.url;
+                showMsg('avatar-message', '头像上传成功！', true);
             } else {
-                // 服务器返回 4xx/5xx 错误
-                showMsg('avatar-message', `上传失败：${response.status} - ${data.message || '服务器内部错误'}`, false);
+                showMsg('avatar-message', `上传失败：${data.message || response.status}`, false);
             }
-
-        } catch (networkErr) {
-            // 网络错误（比如API地址无法访问）
-            showMsg('avatar-message', `上传失败：${networkErr.message}`, false);
-            console.error('上传网络错误：', networkErr);
+        } catch (err) {
+            showMsg('avatar-message', `上传失败：${err.message}`, false);
         }
     });
 }
 
-// 打开头像设置弹窗
 function openAvatarSetting() {
     const user = JSON.parse(localStorage.getItem(USER_KEY));
     if (!user) return;
-    const m = document.getElementById('avatarSettingModal');
     const prev = document.getElementById('avatarPreviewImg');
     const qq = document.getElementById('setting-qq');
     const url = document.getElementById('setting-avatar-url');
-
     prev.src = user.avatar || DEFAULT_AVATAR;
     qq.value = user.qq || '';
     url.value = user.avatar || '';
-
-    qq.oninput = () => {
-        const v = qq.value.trim();
-        if (v) {
-            const qavatar = `https://q1.qlogo.cn/g?b=qq&nk=${v}&s=160`;
-            prev.src = qavatar;
-            url.value = qavatar;
-        }
-    };
-    url.oninput = () => {
-        if (url.value) prev.src = url.value;
-    };
-
-    m.classList.add('active');
+    qq.oninput = () => { if (qq.value.trim()) { const a = `https://q1.qlogo.cn/g?b=qq&nk=${qq.value.trim()}&s=160`; prev.src = a; url.value = a; } };
+    url.oninput = () => { if (url.value) prev.src = url.value; };
+    document.getElementById('avatarSettingModal').classList.add('active');
 }
 
-// 弹窗关闭事件
 function bindModalEvents() {
-    document.getElementById('closeModal').onclick = () => {
-        document.getElementById('loginModal').classList.remove('active');
-    };
-    document.getElementById('closeAvatarModal').onclick = () => {
-        document.getElementById('avatarSettingModal').classList.remove('active');
-    };
-    document.getElementById('loginModal').onclick = (e) => {
-        if (e.target === document.getElementById('loginModal')) {
-            document.getElementById('loginModal').classList.remove('active');
-        }
-    };
-    document.getElementById('avatarSettingModal').onclick = (e) => {
-        if (e.target === document.getElementById('avatarSettingModal')) {
-            document.getElementById('avatarSettingModal').classList.remove('active');
-        }
-    };
+    document.getElementById('closeModal').onclick = () => document.getElementById('loginModal').classList.remove('active');
+    document.getElementById('closeAvatarModal').onclick = () => document.getElementById('avatarSettingModal').classList.remove('active');
+    document.getElementById('loginModal').onclick = (e) => { if (e.target === document.getElementById('loginModal')) document.getElementById('loginModal').classList.remove('active'); };
+    document.getElementById('avatarSettingModal').onclick = (e) => { if (e.target === document.getElementById('avatarSettingModal')) document.getElementById('avatarSettingModal').classList.remove('active'); };
 }
 
-// 标签切换
 function bindTabSwitch() {
     const tabs = document.querySelectorAll('.tab');
     tabs.forEach(t => {
@@ -482,36 +274,19 @@ function bindTabSwitch() {
     });
 }
 
-// 登录/注册/保存头像
 function bindLoginRegister() {
-    // 登录
     document.getElementById('login-btn').onclick = async () => {
         const u = document.getElementById('login-username').value.trim();
         const p = document.getElementById('login-password').value.trim();
         if (!u || !p) return showMsg('login-message', '请输入用户名和密码', false);
         try {
-            const r = await fetch(API_BASE + '/login', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username: u, password: p })
-            });
+            const r = await fetch(API_BASE + '/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: u, password: p }) });
             const d = await r.json();
-            if (d.ok) {
-                localStorage.setItem(USER_KEY, JSON.stringify(d.user));
-                showMsg('login-message', '登录成功！', true);
-                setTimeout(() => {
-                    document.getElementById('loginModal').classList.remove('active');
-                    renderUserBar();
-                }, 1000);
-            } else {
-                showMsg('login-message', d.error || '登录失败', false);
-            }
-        } catch (e) { 
-            showMsg('login-message', '网络错误，请检查连接', false); 
-        }
+            if (d.ok) { localStorage.setItem(USER_KEY, JSON.stringify(d.user)); showMsg('login-message', '登录成功！', true); setTimeout(() => { document.getElementById('loginModal').classList.remove('active'); renderUserBar(); }, 1000); }
+            else showMsg('login-message', d.error || '登录失败', false);
+        } catch { showMsg('login-message', '网络错误，请检查连接', false); }
     };
 
-    // 注册
     document.getElementById('register-btn').onclick = async () => {
         const u = document.getElementById('reg-username').value.trim();
         const e = document.getElementById('reg-email').value.trim();
@@ -519,24 +294,13 @@ function bindLoginRegister() {
         const p = document.getElementById('reg-password').value.trim();
         if (!u || !e || !p) return showMsg('register-message', '请填写用户名、邮箱和密码', false);
         try {
-            const res = await fetch(API_BASE + '/register', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username: u, email: e, password: p, qq: q })
-            });
+            const res = await fetch(API_BASE + '/register', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: u, email: e, password: p, qq: q }) });
             const d = await res.json();
-            if (d.ok) {
-                showMsg('register-message', '注册成功！', true);
-                setTimeout(() => document.querySelectorAll('.tab')[0].click(), 1000);
-            } else {
-                showMsg('register-message', d.error || '注册失败', false);
-            }
-        } catch (err) { 
-            showMsg('register-message', '网络错误，请检查连接', false); 
-        }
+            if (d.ok) { showMsg('register-message', '注册成功！', true); setTimeout(() => document.querySelectorAll('.tab')[0].click(), 1000); }
+            else showMsg('register-message', d.error || '注册失败', false);
+        } catch { showMsg('register-message', '网络错误，请检查连接', false); }
     };
 
-    // 保存头像
     document.getElementById('saveAvatarBtn').onclick = async () => {
         const user = JSON.parse(localStorage.getItem(USER_KEY));
         if (!user) return showMsg('avatar-message', '请先登录', false);
@@ -544,31 +308,14 @@ function bindLoginRegister() {
         const avatar = document.getElementById('setting-avatar-url').value.trim();
         if (!qq && !avatar) return showMsg('avatar-message', '请输入QQ号或自定义头像URL', false);
         try {
-            const r = await fetch(API_BASE + '/update-user-info', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ userId: user.id, qq, avatar })
-            });
+            const r = await fetch(API_BASE + '/update-user-info', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ userId: user.id, qq, avatar }) });
             const d = await r.json();
-            if (d.ok) {
-                user.qq = d.user.qq;
-                user.avatar = d.user.avatar;
-                localStorage.setItem(USER_KEY, JSON.stringify(user));
-                showMsg('avatar-message', '头像保存成功！', true);
-                setTimeout(() => {
-                    document.getElementById('avatarSettingModal').classList.remove('active');
-                    renderUserBar();
-                }, 1000);
-            } else {
-                showMsg('avatar-message', d.error || '头像保存失败', false);
-            }
-        } catch (e) { 
-            showMsg('avatar-message', '网络错误，请检查连接', false); 
-        }
+            if (d.ok) { user.qq = d.user.qq; user.avatar = d.user.avatar; localStorage.setItem(USER_KEY, JSON.stringify(user)); showMsg('avatar-message', '头像保存成功！', true); setTimeout(() => { document.getElementById('avatarSettingModal').classList.remove('active'); renderUserBar(); }, 1000); }
+            else showMsg('avatar-message', d.error || '头像保存失败', false);
+        } catch { showMsg('avatar-message', '网络错误，请检查连接', false); }
     };
 }
 
-// 提示消息
 function showMsg(id, text, ok) {
     const el = document.getElementById(id);
     el.textContent = text;

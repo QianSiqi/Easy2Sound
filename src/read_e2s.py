@@ -325,7 +325,7 @@ def call_resampler(notes: list[dict]):
 # ── 拼接 ───────────────────────────────────────────────────────────────
 
 def call_wavtool(notes: list[dict]):
-    global wavtool
+    global wavtool, singer
     wavs = []
     for i, note in enumerate(notes):
         phoneme = note.get('phoneme', note.get('lyric', ''))
@@ -334,12 +334,21 @@ def call_wavtool(notes: list[dict]):
         wavs.append(f'tmp/{name}_{i}.wav')
     wavs.append('tmp/out.wav')
 
+    # 从 meta.txt 读取每个音素的 overlap 值
+    meta_overlap = {}
+    meta_path = f'{singer}/meta.txt'
+    if os.path.exists(meta_path):
+        with open(meta_path, 'r', encoding='utf-8') as f:
+            for ml in f:
+                parts = ml.strip().split(',')
+                if len(parts) >= 3:
+                    meta_overlap[parts[1].strip()] = int(parts[2].strip())
+
     crossfade_vals = []
     for note in notes[:-1]:
-        length_ticks = int(float(note.get('length', '480')))
-        n_tempo = int(float(note.get('tempo', '120')))
-        note_ms = ticks_to_ms(length_ticks, n_tempo)
-        cf = min(50, max(5, int(note_ms * 0.15)))
+        phoneme = note.get('phoneme', note.get('lyric', ''))
+        # 从 meta.txt 查找 crossfade，找不到则用默认值
+        cf = meta_overlap.get(phoneme, 50)
         crossfade_vals.append(str(cf))
 
     wavs.extend(crossfade_vals)

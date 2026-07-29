@@ -50,16 +50,26 @@ class PitchAdjustableMelSpectrogramNumpy:
         win_size_new = int(np.round(self.win_size * factor))
         hop_length = int(np.round(self.hop_length * speed))
 
-        # 缓存 mel 滤波器组
+        # 缓存 mel 滤波器组（优先用 librosa 与 torch 版一致）
         mel_basis_key = f"{self.f_max}"
         if mel_basis_key not in self.mel_basis:
-            mel = _mel_filterbank(
-                sr=self.sample_rate,
-                n_fft=self.n_fft,
-                n_mels=self.n_mels,
-                fmin=self.f_min,
-                fmax=self.f_max,
-            )  # [n_mels, n_fft//2+1]
+            try:
+                from librosa.filters import mel as librosa_mel_fn
+                mel = librosa_mel_fn(
+                    sr=self.sample_rate,
+                    n_fft=self.n_fft,
+                    n_mels=self.n_mels,
+                    fmin=self.f_min,
+                    fmax=self.f_max,
+                )
+            except ImportError:
+                mel = _mel_filterbank(
+                    sr=self.sample_rate,
+                    n_fft=self.n_fft,
+                    n_mels=self.n_mels,
+                    fmin=self.f_min,
+                    fmax=self.f_max,
+                )
             self.mel_basis[mel_basis_key] = mel.astype(np.float32)
 
         # 缓存 hann 窗
@@ -100,7 +110,7 @@ class PitchAdjustableMelSpectrogramNumpy:
 
         return mel_spec
 
-    def dynamic_range_compression(self, x, C=1, clip_val=1e-5):
+    def dynamic_range_compression(self, x, C=1, clip_val=1e-9):
         return np.log(np.clip(x, a_min=clip_val, a_max=None) * C)
 
 

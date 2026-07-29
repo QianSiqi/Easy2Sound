@@ -256,8 +256,11 @@ class Resampler:
         self.flags['Ht'] = self.flags.get('Ht', 0)
         self.flags['g'] = self.flags.get('g', 0)
 
+        # 包含 gender offset 以区分不同代码修改的缓存
+        gender_offset = 200
         flag_suffix = '_'.join(f"{k}{v if v is not None else ''}" for k, v in sorted(
             self.flags.items()) if k in ['Hb', 'Hv', 'Ht', 'g'])
+        flag_suffix += f'_go{gender_offset}'
         if flag_suffix:
             features_path = features_path.with_name(
                 f'{self.in_file.stem}_{flag_suffix}{cache_ext}')
@@ -606,7 +609,17 @@ class Resampler:
                         render, Config.sample_rate, peak=-1, loudness=-16.0, block_size=0.400)
 
         if new_max > Config.peak_limit:
-            render = render / new_max
+            # Soft clipping: tanh compression 替代硬归一化，保留动态范围
+            threshold = 0.8
+            mask = np.abs(render) > threshold
+            if np.any(mask):
+                sign = np.sign(render[mask])
+                over = np.abs(render[mask]) - threshold
+                render[mask] = sign * (threshold + (1 - threshold) * np.tanh(over / (1 - threshold)))
+            # 安全归一化
+            peak = np.max(np.abs(render))
+            if peak > Config.peak_limit:
+                render = render * (Config.peak_limit / peak) * 0.98
         save_wav(self.out_file, render)
 
 

@@ -1,0 +1,29 @@
+[
+    {
+        "id": "teto",
+        "name": "重音テ卜",
+        "desc": "重音テ卜（Kasane Teto）经典虚拟歌姬声库，音色独特富有辨识度，适合多种曲风演绎。",
+        "img": "teto.bmp",
+        "tag": "女声",
+        "demo": "",
+        "bvid": "BV11S3M6cEdY"
+    },
+    {
+        "id": "sample1",
+        "name": "示例声库 A",
+        "desc": "高质量采样声库，支持 UTAU 和 OpenUTAU 引擎，音域宽广，表现力丰富。",
+        "img": "图标.jpg",
+        "tag": "女声",
+        "demo": "",
+        "bvid": "BV1uT4y1P7CX"
+    },
+    {
+        "id": "sample2",
+        "name": "示例声库 B",
+        "desc": "低沉磁性的男声声库，适合抒情和摇滚曲风，自带多音阶采样。",
+        "img": "图标.jpg",
+        "tag": "男声",
+        "demo": "",
+        "bvid": "BV1uT4y1P7CX"
+    }
+]
