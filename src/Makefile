@@ -1,5 +1,5 @@
 # Makefile for Easy2Sound Rust components
-# Builds arpabet, ch-ddy-ysq, ipa-ysq-pack, jp-ddy-ysq, resampler_cilent
+# Builds arpabet, ch-ddy-ysq, ipa-ysq-pack, jp-ddy-ysq, resampler_cilent, server_onnx_rs
 # Output binaries are placed in Main-Run/
 
 CARGO   = cargo
@@ -14,6 +14,7 @@ BIN_CH_DDY       = ch-ddy-ysq.exe
 BIN_IPA          = ipa-ysq.exe
 BIN_JP_DDY       = jp-ddy-ysq.exe
 BIN_RESAMPLER    = resampler.exe
+BIN_SERVER_ONNX  = server_onnx_rs.exe
 
 # Project directories
 DIR_ARPABET      = arpabet
@@ -21,11 +22,12 @@ DIR_CH_DDY       = ch-ddy-ysq
 DIR_IPA          = ipa-ysq-pack
 DIR_JP_DDY       = jp-ddy-ysq
 DIR_RESAMPLER    = resampler_cilent
+DIR_SERVER_ONNX  = server_onnx_rs
 DIR_PYCACHE      = _pycache_
 
-.PHONY: all clean arpabet ch-ddy ipa jp-ddy resampler
+.PHONY: all clean arpabet ch-ddy ipa jp-ddy resampler server-onnx
 
-all: arpabet ch-ddy ipa jp-ddy resampler
+all: arpabet ch-ddy ipa jp-ddy resampler server-onnx
 
 arpabet:
 	cd $(DIR_ARPABET) && $(CARGO) build --release
@@ -47,15 +49,21 @@ resampler:
 	cd $(DIR_RESAMPLER) && $(CARGO) build --release
 	$(COPY) $(DIR_RESAMPLER)/$(TARGET)/$(BIN_RESAMPLER) $(OUTDIR)/
 
+server-onnx:
+	cd $(DIR_SERVER_ONNX) && $(CARGO) build --release
+	$(COPY) $(DIR_SERVER_ONNX)/$(TARGET)/$(BIN_SERVER_ONNX) $(OUTDIR)/
+
 clean:
 	cd $(DIR_ARPABET) && $(CARGO) clean
 	cd $(DIR_CH_DDY) && $(CARGO) clean
 	cd $(DIR_IPA) && $(CARGO) clean
 	cd $(DIR_JP_DDY) && $(CARGO) clean
 	cd $(DIR_RESAMPLER) && $(CARGO) clean
+	cd $(DIR_SERVER_ONNX) && $(CARGO) clean
 	-$(RM) $(OUTDIR)/$(BIN_ARPABET)
 	-$(RM) $(OUTDIR)/$(BIN_CH_DDY)
 	-$(RM) $(OUTDIR)/$(BIN_IPA)
 	-$(RM) $(OUTDIR)/$(BIN_JP_DDY)
 	-$(RM) $(OUTDIR)/$(BIN_RESAMPLER)
+	-$(RM) $(OUTDIR)/$(BIN_SERVER_ONNX)
 	-$(RM) $(OUTDIR)/$(DIR_PYCACHE)

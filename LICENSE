@@ -2,6 +2,14 @@ MIT License
 
 Copyright (c) 2026 钱思齐
 
+本项目基于以下开源项目修改，各上游项目的版权归其原作者所有：
+- openhachimi/hifisampler（渲染引擎 / HN-SEP 分离 / resampler 客户端）
+- openvpi/vocoders（PC-NSF-HiFiGAN 声码器）
+- UtaUtaUtau/straycat（hifisampler 的上游）
+- wolfgitpr/HubertFA（音素强制对齐）
+
+上游项目的完整版权声明与许可证以其仓库为准。
+
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights

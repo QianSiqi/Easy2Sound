@@ -1,17 +1,37 @@
 # Easy2Sound
 
-一个免费、开源的歌声合成软件，基于 AI 技术实现高质量的声音合成。
-（有AI编写成分）
+一个基于 **hifisampler** 二次开发的 UTAU 兼容歌声合成工具链（非官方、非关联项目）。
+
+> ⚠️ 本项目渲染引擎（server / server_onnx / server_onnx_rs / resampler 客户端 / HN-SEP 模型）
+> 均衍生自 [openhachimi/hifisampler](https://github.com/openhachimi/hifisampler)，遵循其开源许可；
+> 自研部分为 e2s/mue2s 格式、WebUI 编辑器、多语言词典工具与音源制作工具。
+> 详见下方 [上游项目与致谢](#上游项目与致谢)。
 
 ## 目录
 
+- [上游项目与致谢](#上游项目与致谢)
 - [功能特性](#功能特性)
 - [快速开始](#快速开始)
 - [从源码构建](#从源码构建)
 - [命令行参数](#命令行参数)
 - [报错解决方案](#报错解决方案)
 - [相关法律条文](#相关法律条文)
-- [开发团队](#开发团队)
+- [贡献者](#贡献者)
+
+---
+
+## 上游项目与致谢
+
+本项目离不开以下开源项目的贡献，特此致谢：
+
+| 项目 | 用途 | 许可证 |
+|---|---|---|
+| [openhachimi/hifisampler](https://github.com/openhachimi/hifisampler) | 渲染服务器（PyTorch/ONNX/Rust 版）、HN-SEP 分离、resampler 客户端 | 待确认（以仓库为准） |
+| [openvpi/vocoders](https://github.com/openvpi/vocoders) | PC-NSF-HiFiGAN 声码器（44.1k/hop512/128bin） | 待确认（以仓库为准） |
+| [UtaUtaUtau/straycat](https://github.com/UtaUtaUtau/straycat) | hifisampler 的上游（WORLD resampler） | 待确认（以仓库为准） |
+| [wolfgitpr/HubertFA](https://relatedrepos.com/gh/wolfgitpr/HubertFA) | Hubert 强制对齐（音素边界 TextGrid） | 待确认（以仓库为准） |
+
+> 各上游项目的许可证以其仓库内 LICENSE 文件为准；使用本项目包含的模型权重时，请一并遵守对应模型发布页的条款。
 
 ---
 
@@ -153,21 +173,15 @@ resampler <输入文件> <输出文件> <音高> <力度> [选项]
 
 ## 相关法律条文
 
-**本程序遵守 MIT 协议**
-
-完整协议内容请参阅 [LICENSE](LICENSE) 文件。
-
-**重要提醒：**
-
-1. 您不得以任何方式盗用或倒卖此程序，否则我们将追究法律责任
-2. 如需借用此程序，请署名且仅限非商业使用
-3. 本软件为开源软件，任何收费行为均为盗版
+- 本项目**自研代码**采用 MIT 许可证，完整协议内容请参阅 [LICENSE](LICENSE) 文件。
+- 本项目包含的**第三方代码与模型**版权归其原作者所有，使用、修改、再分发时请遵守各上游项目（见 [上游项目与致谢](#上游项目与致谢)）的许可证要求。
+- 任何对第三方成果的再分发均不得移除或篡改原作者的版权声明。
 
 ---
 
-## 开发团队
+## 贡献者
 
-### 底层开发
+### 自研部分开发
 
 - 钱思齐
 - L7
@@ -208,6 +222,11 @@ resampler <输入文件> <输出文件> <音高> <力度> [选项]
 ### 自动音高组
 
 - Evidence"
+
+### 上游致谢
+
+渲染引擎、分离模型与声码器部分基于 [openhachimi/hifisampler](https://github.com/openhachimi/hifisampler)
+及其上游 [straycat](https://github.com/UtaUtaUtau/straycat)、[openvpi/vocoders](https://github.com/openvpi/vocoders) 二次开发，特此感谢原作者。
 
 ---
 

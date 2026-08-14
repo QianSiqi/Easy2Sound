@@ -1,0 +1,56 @@
+# ═══════════════════════════════════════════════════════════════
+# Easy2Sound — Git 忽略规则
+# ═══════════════════════════════════════════════════════════════
+
+# ── 测试文件 ──────────────────────────────────────────────────
+test/
+test3/
+*.ust
+*.log
+spec_dump.bin
+nuitka-crash-report.xml
+
+# ── E2S / MUE2S 项目文件（含示例与测试用例） ──────────────────
+*.e2s
+*.mue2s
+*.e2sp
+
+# ── 音频文件（音源采样 / 测试音频） ────────────────────────────
+*.wav
+
+# ── 构建产物与打包输出 ────────────────────────────────────────
+build/
+dist_nuitka/
+*.exe
+*.dll
+*.pyd
+*.obj
+*.o
+target/
+__pycache__/
+*.pyc
+
+# server_onnx_rs 运行时依赖 DLL（随仓库分发，clone 后可直接运行）
+!src/server_onnx_rs/*.dll
+
+# ── 模型权重（默认不提交；下列模型随仓库分发，其余忽略） ──
+*.onnx
+*.ckpt
+*.pt
+*.npz
+*.npy
+
+# 随仓库分发的模型（HN-SEP 分离模型 + PC-NSF-HiFiGAN 声码器）
+!src/hnsep/vr/model.onnx
+!src/hnsep/vr/model.pt
+!src/pc_nsf_hifigan_44.1k_hop512_128bin_2025.02/model.onnx
+!src/pc_nsf_hifigan_44.1k_hop512_128bin_2025.02/model.ckpt
+
+# ── HubertFA（第三方工具目录，不随仓库分发） ──────────────────
+HubertFA/
+
+# ── 环境与运行时目录 ──────────────────────────────────────────
+venv/
+.venv/
+tmp/
+.mimocode/
