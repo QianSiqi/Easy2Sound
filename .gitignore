@@ -17,6 +17,13 @@ nuitka-crash-report.xml
 
 # ── 音频文件（音源采样 / 测试音频） ────────────────────────────
 *.wav
+*.lab
+teto_hira/
+teto_hira_vcv/
+teto_roma/
+teto_roma_vcv/
+teto_sample/
+
 
 # ── 构建产物与打包输出 ────────────────────────────────────────
 build/
@@ -40,11 +47,8 @@ __pycache__/
 *.npz
 *.npy
 
-# 随仓库分发的模型（HN-SEP 分离模型 + PC-NSF-HiFiGAN 声码器）
-!src/hnsep/vr/model.onnx
-!src/hnsep/vr/model.pt
-!src/pc_nsf_hifigan_44.1k_hop512_128bin_2025.02/model.onnx
-!src/pc_nsf_hifigan_44.1k_hop512_128bin_2025.02/model.ckpt
+
+
 
 # ── HubertFA（第三方工具目录，不随仓库分发） ──────────────────
 HubertFA/

@@ -51,6 +51,8 @@ fn parse_flags(s: &str) -> HashMap<String, Option<i32>> {
 
 /// scipy interp1d(kind='linear')：x 严格递增，xq 在范围内
 fn interp1d_linear(x: &[f32], y: &[f32], xq: &[f32]) -> Vec<f32> {
+    if x.len() == 0 { return vec![0.0; xq.len()]; }
+    if x.len() == 1 { return vec![y[0]; xq.len()]; }
     xq.iter()
         .map(|&q| {
             if q <= x[0] { return y[0]; }
@@ -70,6 +72,9 @@ fn interp1d_linear(x: &[f32], y: &[f32], xq: &[f32]) -> Vec<f32> {
 /// scipy Akima1DInterpolator（修正 Akima，端点斜率 = 端点段斜率，三次 Hermite 求值）
 fn akima_interp1d(x: &[f32], y: &[f32], xq: &[f32]) -> Vec<f32> {
     let n = x.len();
+    // 边界保护：0 或 1 个控制点时返回常量（平直音高），避免越界
+    if n == 0 { return vec![0.0; xq.len()]; }
+    if n == 1 { return vec![y[0]; xq.len()]; }
     let mut d = vec![0f32; n - 1];
     for i in 0..n - 1 {
         d[i] = (y[i + 1] - y[i]) / (x[i + 1] - x[i]);

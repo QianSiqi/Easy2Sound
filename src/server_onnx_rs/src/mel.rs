@@ -156,13 +156,6 @@ impl MelAnalysis {
         }
 
         // mel 滤波: [n_mels][n_freqs] @ [n_freqs][n_frames]
-        {
-            let mut bytes = Vec::new();
-            for row in &spec_out {
-                for v in row { bytes.extend(v.to_le_bytes()); }
-            }
-            std::fs::write("spec_dump.bin", bytes).ok();
-        }
         let mut mel_spec = vec![vec![0f32; n_frames]; self.n_mels];
         for m in 0..self.n_mels {
             for k in 0..size {

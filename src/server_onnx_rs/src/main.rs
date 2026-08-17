@@ -91,14 +91,8 @@ fn main() {
         }
     };
     log::info(&format!("loading vocoder: {}", vocoder_path.display()));
-    let mut builder = match Session::builder() {
-        Ok(b) => b,
-        Err(e) => {
-            log::error(&format!("failed to build session: {e}"));
-            std::process::exit(1);
-        }
-    };
-    let session = match builder.commit_from_file(&vocoder_path) {
+    // 优先 DirectML (GPU)，DirectML 不可用时自动回退 CPU（不阻塞启动）
+    let session = match build_session(&vocoder_path) {
         Ok(s) => s,
         Err(e) => {
             log::error(&format!("failed to load vocoder: {e}"));
@@ -112,7 +106,7 @@ fn main() {
     let hnsep_path = find_file(&cfg.hnsep_model_path);
     let hnsep_arc: Option<Arc<Mutex<Session>>> = if hnsep_path.exists() {
         log::info(&format!("loading HN-SEP: {}", hnsep_path.display()));
-        match Session::builder().and_then(|mut b| b.commit_from_file(&hnsep_path)) {
+        match build_session(&hnsep_path) {
             Ok(s) => Some(Arc::new(Mutex::new(s))),
             Err(e) => {
                 log::warn(&format!("failed to load HN-SEP, Hb/Hv/Ht flags unavailable: {e}"));
@@ -200,6 +194,40 @@ fn main() {
             log::error(&format!("respond failed: {e}"));
         }
     }
+}
+
+/// 构建 ONNX session：优先 DirectML (GPU)，DirectML 注册失败时回退 CPU。
+/// 同时限制 intra-op CPU 线程数，避免辅助算子打满所有核心。
+fn build_session(model_path: &std::path::Path) -> Result<ort::session::Session, String> {
+    let mut builder = Session::builder().map_err(|e| e.to_string())?;
+
+    // 限制 CPU 线程：DirectML 下大部分算子在 GPU 执行，CPU 线程池主要用于
+    // 少量 fallback 算子与数据搬运，取逻辑核心数一半、上限 8、下限 2。
+    if let Ok(n) = std::thread::available_parallelism() {
+        let threads = (n.get() / 2).clamp(2, 8);
+        builder = builder
+            .with_intra_threads(threads)
+            .map_err(|e| format!("failed to set intra threads: {e}"))?;
+        log::info(&format!("intra_op threads: {threads}"));
+    }
+
+    // DirectML 仅 Windows 可用；注册失败不致命，回退 CPU 继续启动
+    #[cfg(target_os = "windows")]
+    {
+        use ort::ep::DirectML;
+        // 克隆 builder：with_execution_providers 会消费 self，注册失败时保留原 CPU builder
+        match builder.clone().with_execution_providers([DirectML::default().build()]) {
+            Ok(b) => {
+                builder = b;
+                log::info("execution provider: DirectML (GPU)");
+            }
+            Err(e) => {
+                log::warn(&format!("DirectML EP unavailable, falling back to CPU: {e}"));
+            }
+        }
+    }
+
+    builder.commit_from_file(model_path).map_err(|e| e.to_string())
 }
 
 /// 读取 hnsep/vr/config.yaml 的 n_fft / hop_length / sr

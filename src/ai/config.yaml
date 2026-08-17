@@ -1,0 +1,31 @@
+# Easy2Sound AI 合成模块配置
+# 自研"完全 AI 歌声合成"：音素 → mel 生成 → NSF-HiFiGAN 声码器
+
+data:
+  source_dir: "../teto_roma"      # 音素采样数据（wav + TextGrid），相对 ai/ 目录
+  cache_dir: "data_cache"         # 预处理输出
+  sample_rate: 44100
+  sample_pitch: 63                # 采样的实际音高（MIDI，teto_roma ≈ D#4）
+  singer_pitch: 66                # teto_sample 真人演唱的平均音高（MIDI ≈ F#4）
+
+mel:                              # 与 NSF-HiFiGAN vocoder 训练参数严格一致
+  n_fft: 2048
+  win_size: 2048
+  hop_size: 512
+  n_mels: 128
+  f_min: 40
+  f_max: 16000
+
+model:
+  phoneme_dim: 64                 # 音素 embedding 维度
+  hidden_dim: 256                 # 声学模型隐藏层
+  acoustic_layers: 4
+
+vocoder:
+  path: "../pc_nsf_hifigan_44.1k_hop512_128bin_2025.02/model.onnx"
+  hop_size: 512
+
+render:
+  crossfade_frames: 6             # 音素 mel 拼接的重叠平滑帧数
+  default_tempo: 120
+  mix_model: 0.4                  # neural 模式混合比例：模型 mel 占比（其余为模板 mel）

@@ -206,7 +206,7 @@ def read_e2s(path: str, execute_phonemer: bool = True) -> list[dict]:
     notes: list[dict] = []
     header_done = False
 
-    with open(path, 'r', encoding='utf-8') as f:
+    with open(path, 'r', encoding='utf-8-sig') as f:
         lines = f.readlines()
 
     for line in lines:
@@ -251,8 +251,124 @@ def read_e2s(path: str, execute_phonemer: bool = True) -> list[dict]:
 
 # ── 重采样 ─────────────────────────────────────────────────────────────
 
+def note_name_to_midi(name: str) -> int:
+    """音名字符串（如 'C4', 'D#5', 'Bb3'）→ MIDI 编号。解析失败默认 60 (C4)。"""
+    import re
+    name = name.strip()
+    m = re.match(r'^([A-Ga-g])(#{1,2}|b{1,2})?(-?\d+)$', name)
+    if not m:
+        return 60
+    base = m.group(1).upper()
+    sharp_flat = m.group(2) or ''
+    octave = int(m.group(3))
+    note_map = {'C': 0, 'D': 2, 'E': 4, 'F': 5, 'G': 7, 'A': 9, 'B': 11}
+    midi = note_map[base]
+    for ch in sharp_flat:
+        if ch == '#':
+            midi += 1
+        elif ch == 'b':
+            midi -= 1
+    midi += (octave + 1) * 12
+    return max(0, min(127, midi))
+
+
+def call_ai_render(notes: list[dict]):
+    """AI 合成：resampler=ai_default 时整条渲染，输出 tmp/out.wav。
+    优先 neural（训练好的声学模型），无 checkpoint 回退 template（mel 模板）。
+    """
+    global tempo, singer
+    try:
+        ai_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'ai')
+        sys.path.insert(0, ai_dir)
+        from render.renderer import Renderer
+    except ImportError as e:
+        print(f"[ERROR] AI render unavailable: {e}")
+        return
+
+    # 模式：默认 template（真实采样 mel，验证过有人声/元音正确/可听）。
+    # neural（完全生成）受数据量限制，需 30min+ 真实演唱数据才可用；
+    # 想试 neural 时用环境变量 AI_MODE=neural。
+    singer_name = os.path.basename(singer) if singer else 'teto_roma'
+    mode = os.environ.get('AI_MODE', 'template')
+    if mode not in ('neural', 'template'):
+        mode = 'template'
+    device = 'cpu'
+    if mode == 'neural':
+        try:
+            import torch
+            device = 'cuda' if torch.cuda.is_available() else 'cpu'
+        except ImportError:
+            mode = 'template'
+            print('[ai] torch not available, using template mode')
+        # 按 singer 路径自动查找模型（与 renderer 的查找顺序一致）
+        ckpt_candidates = [
+            os.path.join(singer, 'acoustic.pt'),                      # 音源目录内
+            os.path.join(ai_dir, 'checkpoints', singer_name, 'acoustic.pt'),  # 集中管理
+            os.path.join(ai_dir, 'checkpoints', 'acoustic.pt'),       # 默认（兼容）
+        ]
+        if not any(os.path.exists(p) for p in ckpt_candidates):
+            mode = 'template'
+            print(f'[ai] no checkpoint for singer "{singer_name}", using template mode')
+
+    print(f'[ai] rendering with {mode} mode (device={device}, singer={singer_name})')
+    r = Renderer(mode=mode, device=device, singer=singer or 'teto_roma')
+    bpm = float(tempo)
+
+    # e2s 音符 → AI 音符（pitch 转 MIDI，时长转 ms，累计 start_ms）
+    ai_notes = []
+    start_ms = 0.0
+    for note in notes:
+        phoneme = note.get('phoneme', note.get('lyric', ''))
+        length_ticks = int(float(note.get('length', '480')))
+        n_tempo = float(note.get('tempo', tempo))
+        length_ms = ticks_to_ms(length_ticks, n_tempo)
+
+        if phoneme.lower() in ('r', 'sil', 'pau'):
+            # 休止符：AI 渲染器支持，音素保留
+            pass
+
+        note_num = note.get('NoteNum', note.get('note_num', ''))
+        if note_num:
+            try:
+                pitch_midi = int(note_num)
+            except (ValueError, TypeError):
+                pitch_midi = note_name_to_midi(note.get('pitch', 'C4'))
+        else:
+            pitch_midi = note_name_to_midi(note.get('pitch', 'C4'))
+
+        ai_notes.append({
+            'pitch': pitch_midi,
+            'start_ms': start_ms,
+            'length_ms': length_ms,
+            'phoneme': phoneme,
+            'flags': note.get('flags', ''),
+            'pt_x': note.get('pt_x', ''),
+            'pt_y': note.get('pt_y', ''),
+            'pitch_string': note.get('pitch_string', ''),
+            'vib_start': note.get('vib_start', ''),
+            'vib_end': note.get('vib_end', ''),
+            'vib_hz': note.get('vib_hz', ''),
+            'vib_hard': note.get('vib_hard', ''),
+        })
+        start_ms += length_ms
+
+    if not ai_notes:
+        print('[ai] no notes to render')
+        return
+
+    wav = r.render_notes(ai_notes, bpm=bpm)
+    os.makedirs('tmp', exist_ok=True)
+    out = os.path.join('tmp', 'out.wav')
+    sf.write(out, wav, r.sr)
+    print(f'[ai] rendered {len(ai_notes)} notes -> {out} ({len(wav) / r.sr:.2f}s)')
+
+
 def call_resampler(notes: list[dict]):
     global singer, resampler
+    # AI 合成模式：resampler=ai_default
+    if resampler == 'ai_default':
+        call_ai_render(notes)
+        return
     print("----------------------------")
     cnt = 0
     for note in notes:
@@ -376,4 +492,6 @@ if __name__ == "__main__":
     os.makedirs('tmp', exist_ok=True)
 
     call_resampler(notes)
-    call_wavtool(notes)
+    # AI 合成已整条渲染（tmp/out.wav），无需 wavtool 拼接
+    if resampler != 'ai_default':
+        call_wavtool(notes)

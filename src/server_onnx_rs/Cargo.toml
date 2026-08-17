@@ -4,7 +4,7 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-ort = { version = "2.0.0-rc.13", default-features = false, features = ["load-dynamic", "ndarray", "api-23", "std"] }
+ort = { version = "2.0.0-rc.13", default-features = false, features = ["load-dynamic", "ndarray", "api-23", "std", "directml"] }
 ndarray = "0.16"
 hound = "3.5"
 rustfft = "6.2"
