@@ -6,6 +6,7 @@
 > 均衍生自 [openhachimi/hifisampler](https://github.com/openhachimi/hifisampler)，遵循其开源许可；
 > 自研部分为 e2s/mue2s 格式、WebUI 编辑器、多语言词典工具与音源制作工具。
 > 详见下方 [上游项目与致谢](#上游项目与致谢)。
+> ⚠️ 本项目有AI编写成分 ⚠️
 
 ## 目录
 
